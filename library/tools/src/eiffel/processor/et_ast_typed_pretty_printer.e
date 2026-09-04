@@ -24,6 +24,7 @@ inherit
 		redefine
 			reset,
 			process_attribute,
+			process_class,
 			process_constant_attribute,
 			process_deferred_function,
 			process_deferred_procedure,
@@ -56,6 +57,8 @@ inherit
 			make_ast_processor as make_null_pretty_printer
 		undefine
 			make_null_pretty_printer
+		redefine
+			set_current_class
 		end
 
 create
@@ -75,6 +78,7 @@ feature {NONE} -- Initialization
 			current_closure := tokens.unknown_feature
 			current_closure_impl := tokens.unknown_feature
 			current_class_impl := tokens.unknown_class
+			current_type := current_class
 			create expression_type_finder.make (a_system_processor)
 			make_pretty_printer (a_file)
 			create internal_type_context.make_with_capacity (current_class, 100)
@@ -106,6 +110,35 @@ feature -- Initialization
 			current_closure_impl := tokens.unknown_feature
 			current_class_impl := tokens.unknown_class
 			current_class := tokens.unknown_class
+			current_type := current_class
+		end
+
+feature -- Access
+
+	current_type: ET_TYPE_CONTEXT
+			-- Type of the objects on which features and invariants apply
+
+feature -- Setting
+
+	set_current_class (a_class: like current_class)
+			-- Set `current_class' to `a_class'.
+		do
+			current_class := a_class
+			current_type := a_class
+		ensure then
+			current_type_set: current_type = a_class
+		end
+
+	set_current_type (a_type_context: like current_type)
+			-- Set `current_type' to `a_type_context'.
+		require
+			a_type_context_not_void: a_type_context /= Void
+		do
+			current_type := a_type_context
+			current_class := a_type_context.base_class
+		ensure
+			current_type_set: current_type = a_type_context
+			current_class_set: current_class = a_type_context.base_class
 		end
 
 feature {ET_AST_PROCESSOR} -- Processing
@@ -127,6 +160,20 @@ feature {ET_AST_PROCESSOR} -- Processing
 			current_closure := l_old_closure
 			current_closure_impl := l_old_closure_impl
 			current_class_impl := l_old_class_impl
+		end
+
+	process_class (a_class: ET_CLASS)
+			-- Process `a_class'.
+		local
+			l_old_current_class: like current_class
+			l_old_current_type: like current_type
+		do
+			l_old_current_class := current_class
+			l_old_current_type := current_type
+			set_current_class (a_class)
+			precursor (a_class)
+			current_class := l_old_current_class
+			current_type := l_old_current_type
 		end
 
 	process_constant_attribute (a_feature: ET_CONSTANT_ATTRIBUTE)
@@ -533,7 +580,7 @@ feature {NONE} -- Call targets
 				target_class := Void
 			else
 				l_context := internal_type_context
-				l_context.reset (current_class)
+				current_type.copy_to_type_context (l_context)
 				expression_type_finder.find_expression_type_in_closure (a_target, current_closure_impl, current_closure, current_class_impl, l_context, current_universe.any_type)
 				target_class := l_context.base_class
 			end
@@ -551,7 +598,7 @@ feature {NONE} -- Call targets
 			if a_type = Void then
 				target_class := Void
 			else
-				target_class := a_type.base_class (current_class)
+				target_class := a_type.base_class (current_type)
 			end
 		end
 
@@ -560,13 +607,16 @@ feature {NONE} -- Call targets
 			-- In case of a formal parameter, choose one of its constraint
 			-- adapted base classes containing a feature with seed `a_seed'
 			-- (or any of the constraints if none contains such feature).
+		local
+			l_context: ET_NESTED_TYPE_CONTEXT
 		do
 			if a_type = Void then
 				target_class := Void
 			else
-				internal_type_context.reset (current_class)
-				internal_type_context.put_last (a_type)
-				target_class := internal_type_context.adapted_base_class_with_seeded_feature (a_seed).base_class
+				l_context := internal_type_context
+				current_type.copy_to_type_context (l_context)
+				l_context.put_last (a_type)
+				target_class := l_context.adapted_base_class_with_seeded_feature (a_seed).base_class
 			end
 		end
 
@@ -583,6 +633,8 @@ invariant
 	current_closure_not_void: current_closure /= Void
 	current_closure_impl_not_void: current_closure_impl /= Void
 	current_class_impl_not_void: current_class_impl /= Void
+	current_type_not_void: current_type /= Void
+	current_type_is_valid_context: current_type.is_valid_context
 	expression_type_finder_not_void: expression_type_finder /= Void
 	internal_type_context_not_void: internal_type_context /= Void
 

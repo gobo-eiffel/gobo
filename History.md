@@ -7,6 +7,11 @@
 * Added the generation of the contract-view of classes
   when using the format `html-stylesheet`.
 
+### gelsp
+
+* Added pre- and postconditions to the feature signature in
+  the tooltip shown when mouse hovering over a feature name.
+
 ## Version 26.09.03 - 3 September 2026
 
 ### gec

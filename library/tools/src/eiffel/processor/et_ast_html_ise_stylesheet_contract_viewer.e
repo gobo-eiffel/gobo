@@ -45,6 +45,8 @@ inherit
 		end
 
 	ET_AST_HTML_ISE_STYLESHEET_PRINTER
+		rename
+			process_features as process_exported_features
 		undefine
 			reset,
 			process_alias_name,
@@ -60,6 +62,7 @@ inherit
 			process_do_procedure,
 			process_dotnet_function,
 			process_dotnet_procedure,
+			process_exported_features,
 			process_extended_attribute,
 			process_extended_feature_name,
 			process_external_function,
@@ -67,7 +70,6 @@ inherit
 			process_manifest_type,
 			process_once_function,
 			process_once_procedure,
-			process_features,
 			process_tuple_type,
 			process_type,
 			process_unique_attribute

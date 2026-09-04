@@ -114,6 +114,8 @@ feature -- Output
 			l_nested_type_context: ET_NESTED_TYPE_CONTEXT
 			l_target_base_type: ET_BASE_TYPE
 			l_creation_clients: ET_CLIENT_LIST
+			l_contract_viewer: ET_AST_CONTRACT_VIEWER
+			l_stream: KL_STRING_OUTPUT_STREAM
 		do
 			create l_nested_type_context.make_with_capacity (current_class, 1)
 			l_nested_type_context.put_last (target_type)
@@ -138,6 +140,15 @@ feature -- Output
 				a_string.append_string ("%N%T%T%T-- (from class ")
 				a_string.append_string (a_feature.implementation_class.upper_name)
 				a_string.append_character (')')
+			end
+			create l_stream.make (a_string)
+			create l_contract_viewer.make (l_stream, tokens.null_system_processor)
+			a_string.append_character ('%N')
+			l_contract_viewer.indent
+			l_contract_viewer.indent
+			l_contract_viewer.print_feature_assertions (a_feature, l_nested_type_context)
+			if a_string.ends_with ("%N") then
+				a_string.remove_tail (1)
 			end
 		end
 

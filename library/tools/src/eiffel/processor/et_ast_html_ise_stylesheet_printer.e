@@ -128,11 +128,13 @@ feature -- Printing
 			a_class_not_void: a_class /= Void
 		local
 			l_old_comments_ignored: BOOLEAN
-			l_old_class: like current_class
+			l_old_current_class: like current_class
+			l_old_current_type: like current_type
 		do
 			l_old_comments_ignored := comments_ignored
 			set_comments_ignored (True)
-			l_old_class := current_class
+			l_old_current_class := current_class
+			l_old_current_type := current_type
 			set_current_class (a_class)
 			process_name_of_named_class (a_class.name, a_class)
 			if a_with_deferred_info and then a_class.is_deferred then
@@ -144,7 +146,8 @@ feature -- Printing
 				print_space
 				l_formal_parameters.process (Current)
 			end
-			set_current_class (l_old_class)
+			current_class := l_old_current_class
+			current_type := l_old_current_type
 			set_comments_ignored (l_old_comments_ignored)
 		end
 
@@ -727,8 +730,8 @@ feature {ET_AST_PROCESSOR} -- Processing
 	process_formal_parameter_type (a_type: ET_FORMAL_PARAMETER_TYPE)
 			-- Process `a_type'.
 		do
-			if a_type.implementation_class /= current_class then
-				a_type.named_type (current_class).process (Current)
+			if a_type.implementation_class /= current_class or current_class /= current_type then
+				a_type.named_type (current_type).process (Current)
 			else
 				precursor (a_type)
 			end
