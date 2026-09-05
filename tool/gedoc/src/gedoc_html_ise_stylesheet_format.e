@@ -1242,7 +1242,6 @@ feature {GEDOC_HTML_ISE_STYLESHEET_FORMAT} -- Output
 							l_printer.set_class_mapping (a_class_mapping)
 							l_printer.set_feature_mapping (a_feature_mapping)
 							l_printer.set_root_path (a_root_path)
-							l_printer.set_current_class (a_class)
 							l_printer.set_bom_enabled (False)
 							l_printer.print_bom
 							l_title := concat (l_class_name, title_suffix_text)
@@ -1298,7 +1297,6 @@ feature {GEDOC_HTML_ISE_STYLESHEET_FORMAT} -- Output
 							l_contract_viewer.set_class_mapping (a_class_mapping)
 							l_contract_viewer.set_feature_mapping (a_feature_mapping)
 							l_contract_viewer.set_root_path (a_root_path)
-							l_contract_viewer.set_current_class (a_class)
 							l_contract_viewer.set_bom_enabled (False)
 							l_contract_viewer.print_bom
 							l_title := concat (l_class_name, title_suffix_contract_view)
@@ -1354,7 +1352,6 @@ feature {GEDOC_HTML_ISE_STYLESHEET_FORMAT} -- Output
 							l_contract_viewer.set_class_mapping (a_class_mapping)
 							l_contract_viewer.set_feature_mapping (a_feature_mapping)
 							l_contract_viewer.set_root_path (a_root_path)
-							l_contract_viewer.set_current_class (a_class)
 							l_contract_viewer.set_bom_enabled (False)
 							l_contract_viewer.print_bom
 							l_title := concat (l_class_name, title_suffix_flat_contract_view)

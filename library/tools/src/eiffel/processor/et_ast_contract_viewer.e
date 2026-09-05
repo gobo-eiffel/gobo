@@ -19,6 +19,8 @@ class ET_AST_CONTRACT_VIEWER
 inherit
 
 	ET_AST_TYPED_PRETTY_PRINTER
+		rename
+			process_features as process_exported_features
 		redefine
 			make,
 			reset,
@@ -35,16 +37,16 @@ inherit
 			process_do_procedure,
 			process_dotnet_function,
 			process_dotnet_procedure,
+			process_exported_features,
 			process_extended_attribute,
 			process_extended_feature_name,
 			process_external_function,
 			process_external_procedure,
+			process_feature_name,
 			process_identifier,
 			process_manifest_type,
 			process_once_function,
 			process_once_procedure,
-			process_feature_name,
-			process_features,
 			process_tuple_type,
 			process_type,
 			process_unique_attribute
@@ -112,6 +114,28 @@ feature -- Status setting
 			flat_enabled_set: flat_enabled = b
 		end
 
+feature -- Printing
+
+	print_feature_assertions (a_feature: ET_FEATURE; a_type: ET_TYPE_CONTEXT)
+			-- Print pre- and postconditions of `a_feature` when applied to
+			-- and object of type `a_type`.
+			-- Also print inherited pre- and postconditions.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_type_not_void: a_type /= Void
+		local
+			l_old_current_class: like current_class
+			l_old_current_type: like current_type
+		do
+			l_old_current_class := current_class
+			l_old_current_type := current_type
+			set_current_type (a_type)
+			process_all_preconditions (a_feature)
+			process_all_postconditions (a_feature)
+			current_class := l_old_current_class
+			current_type := l_old_current_type
+		end
+
 feature {ET_AST_NODE} -- Processing
 
 	process_alias_name (a_name: ET_ALIAS_NAME)
@@ -126,110 +150,8 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_all_invariants (a_class: ET_CLASS)
-			-- Process all invariants of `a_class`.
-			-- Do not print assertions which contain non-exported
-			-- feature calls.
-		require
-			a_class_not_void: a_class /= Void
-		local
-			l_ancestors: ET_BASE_TYPE_LIST
-			l_base_class: ET_CLASS
-			i: INTEGER
-			j, nb2: INTEGER
-			l_assertion: ET_ASSERTION
-			l_has_assertion: BOOLEAN
-			l_has_invariants: BOOLEAN
-			l_old_closure: like current_closure
-			l_old_closure_impl: like current_closure_impl
-			l_old_class_impl: like current_class_impl
-		do
-			l_old_closure := current_closure
-			l_old_closure_impl := current_closure_impl
-			l_old_class_impl := current_class_impl
-			if flat_enabled then
-				l_ancestors := a_class.ancestors
-				from i := l_ancestors.count until i = 0 loop
-					l_base_class := l_ancestors.item (i).base_class
-					if attached l_base_class.invariants as l_invariants and then not l_invariants.are_all_true then
-						l_has_assertion := False
-						current_closure := l_invariants
-						current_closure_impl := l_invariants.implementation_feature
-						current_class_impl := l_invariants.implementation_class
-						nb2 := l_invariants.count
-						from j := 1 until j > nb2 loop
-							l_assertion := l_invariants.assertion (j)
-							if not has_non_exported_feature_calls (l_assertion) then
-								if not l_has_invariants then
-									tokens.invariant_keyword.process (Current)
-									print_new_line
-									print_new_line
-									indent
-									l_has_invariants := True
-								end
-								if not l_has_assertion then
-									indent
-									print_comment_text (once "-- from class {" + l_base_class.upper_name  + "}")
-									print_new_line
-									dedent
-									l_has_assertion := True
-								end
-								l_assertion.process (Current)
-								print_new_line
-							end
-							j := j + 1
-						end
-						if l_has_assertion then
-							print_new_line
-						end
-					end
-					i := i - 1
-				end
-			end
-			if attached a_class.invariants as l_invariants and then not l_invariants.are_all_true then
-				l_has_assertion := False
-				current_closure := l_invariants
-				current_closure_impl := l_invariants.implementation_feature
-				current_class_impl := l_invariants.implementation_class
-				nb2 := l_invariants.count
-				from j := 1 until j > nb2 loop
-					l_assertion := l_invariants.assertion (j)
-					if not has_non_exported_feature_calls (l_assertion) then
-						if not l_has_invariants then
-							tokens.invariant_keyword.process (Current)
-							print_new_line
-							print_new_line
-							indent
-							l_has_invariants := True
-						end
-						if not l_has_assertion then
-							if flat_enabled then
-								indent
-								print_comment_text (once "-- from class {" + a_class.upper_name  + "}")
-								print_new_line
-								dedent
-							end
-							l_has_assertion := True
-						end
-						l_assertion.process (Current)
-						print_new_line
-					end
-					j := j + 1
-				end
-				if l_has_assertion then
-					print_new_line
-				end
-			end
-			if l_has_invariants then
-				dedent
-			end
-			current_closure := l_old_closure
-			current_closure_impl := l_old_closure_impl
-			current_class_impl := l_old_class_impl
-		end
-
-	process_all_postconditions (a_feature: ET_FEATURE)
-			-- Process all postconditions of `a_feature`.
+	process_all_exported_postconditions (a_feature: ET_FEATURE)
+			-- Process all postconditions of `a_feature`, even those inherited.
 			-- Do not print assertions which contain non-exported
 			-- feature calls.
 		require
@@ -291,11 +213,67 @@ feature {ET_AST_NODE} -- Processing
 			current_class_impl := l_old_class_impl
 		end
 
+	process_all_postconditions (a_feature: ET_FEATURE)
+			-- Process all postconditions of `a_feature`, even those inherited.
+		require
+			a_feature_not_void: a_feature /= Void
+		local
+			l_precursors: like precursors
+			l_precursor: ET_FEATURE
+			i, nb: INTEGER
+			l_assertion: ET_ASSERTION
+			l_has_assertion: BOOLEAN
+			l_old_closure: like current_closure
+			l_old_closure_impl: like current_closure_impl
+			l_old_class_impl: like current_class_impl
+		do
+			l_old_closure := current_closure
+			current_closure := a_feature
+			l_old_closure_impl := current_closure_impl
+			l_old_class_impl := current_class_impl
+			l_precursors := precursors
+			l_precursors.wipe_out
+			a_feature.add_precursors_impl (l_precursors)
+			l_precursors.force_last (a_feature.implementation_feature)
+			from l_precursors.start until l_precursors.after loop
+				l_precursor := l_precursors.item_for_iteration
+				if attached l_precursor.postconditions as l_postconditions and then not l_postconditions.are_all_true then
+					l_has_assertion := False
+					current_closure_impl := l_precursor.implementation_feature
+					current_class_impl := l_precursor.implementation_class
+					nb := l_postconditions.count
+					from i := 1 until i > nb loop
+						l_assertion := l_postconditions.assertion (i)
+						if not l_has_assertion then
+							tokens.ensure_keyword.process (Current)
+							if l_postconditions.then_keyword /= Void then
+								print_space
+								tokens.then_keyword.process (Current)
+							end
+							if current_class_impl /= current_class then
+								print_space
+								print_comment_text (once "-- from class {" + current_class_impl.upper_name  + "}")
+							end
+							print_new_line
+							l_has_assertion := True
+						end
+						indent
+						l_assertion.process (Current)
+						print_new_line
+						dedent
+						i := i + 1
+					end
+				end
+				l_precursors.forth
+			end
+			l_precursors.wipe_out
+			current_closure := l_old_closure
+			current_closure_impl := l_old_closure_impl
+			current_class_impl := l_old_class_impl
+		end
+
 	process_all_preconditions (a_feature: ET_FEATURE)
-			-- Process all preconditions of `a_feature`.
-			-- Note the in valid Eiffel code, a precondition of an exported
-			-- feature cannot contain non-exported feature calls (validity
-			-- rule VAPE). So no need to take that case into account here.
+			-- Process all preconditions of `a_feature`, even those inherited.
 		require
 			a_feature_not_void: a_feature /= Void
 		local
@@ -415,7 +393,8 @@ feature {ET_AST_NODE} -- Processing
 	process_class (a_class: ET_CLASS)
 			-- Process `a_class'.
 		local
-			l_old_class: ET_CLASS
+			l_old_current_class: like current_class
+			l_old_current_type: like current_type
 			l_obsolete_string: ET_MANIFEST_STRING
 		do
 			if use_as_type then
@@ -425,8 +404,9 @@ feature {ET_AST_NODE} -- Processing
 					l_formal_parameters.process (Current)
 				end
 			else
-				l_old_class := current_class
-				current_class := a_class
+				l_old_current_class := current_class
+				l_old_current_type := current_type
+				set_current_class (a_class)
 				if bom_enabled and then a_class.has_utf8_bom then
 					print_bom
 				end
@@ -477,8 +457,8 @@ feature {ET_AST_NODE} -- Processing
 					print_new_line
 					print_new_line
 				end
-				process_features (a_class)
-				process_all_invariants (a_class)
+				process_exported_features (a_class)
+				process_exported_invariants (a_class)
 				if attached a_class.second_note_clause as l_note_clause then
 					l_note_clause.process (Current)
 					print_new_line
@@ -486,7 +466,8 @@ feature {ET_AST_NODE} -- Processing
 				end
 				a_class.end_keyword.process (Current)
 				print_new_line
-				current_class := l_old_class
+				current_class := l_old_current_class
+				current_type := l_old_current_type
 			end
 		end
 
@@ -580,134 +561,9 @@ feature {ET_AST_NODE} -- Processing
 			process_feature (a_feature)
 		end
 
-	process_extended_attribute (a_feature: ET_EXTENDED_ATTRIBUTE)
-			-- Process `a_feature'.
-		do
-			process_feature (a_feature)
-		end
-
-	process_extended_feature_name (a_extended_feature_name: ET_EXTENDED_FEATURE_NAME)
-			-- Process `a_extended_feature_name'.
-		local
-			l_feature_name: ET_FEATURE_NAME
-		do
-			l_feature_name := a_extended_feature_name.feature_name
-			print_string (l_feature_name.lower_name)
-			if attached a_extended_feature_name.alias_names as l_alias_names and then not l_alias_names.is_empty then
-				print_space
-				l_alias_names.process (Current)
-			end
-		end
-
-	process_external_function (a_feature: ET_EXTERNAL_FUNCTION)
-			-- Process `a_feature'.
-		do
-			process_feature (a_feature)
-		end
-
-	process_external_procedure (a_feature: ET_EXTERNAL_PROCEDURE)
-			-- Process `a_feature'.
-		do
-			process_feature (a_feature)
-		end
-
-	process_feature (a_feature: ET_FEATURE)
-			-- Process `a_feature'.
-		require
-			a_feature_not_void: a_feature /= Void
-		local
-			l_obsolete_string: ET_MANIFEST_STRING
-			l_old_closure: like current_closure
-			l_old_closure_impl: like current_closure_impl
-			l_old_class_impl: like current_class_impl
-		do
-			l_old_closure := current_closure
-			current_closure := a_feature
-			l_old_closure_impl := current_closure_impl
-			current_closure_impl := a_feature.implementation_feature
-			l_old_class_impl := current_class_impl
-			current_class_impl := a_feature.implementation_class
-			if a_feature.frozen_keyword /= Void then
-				tokens.frozen_keyword.process (Current)
-				print_space
-			end
-			process_extended_feature_name_of_feature (a_feature)
-			if attached a_feature.arguments as l_arguments and then not l_arguments.is_empty then
-				print_space
-				l_arguments.process (Current)
-			end
-			if attached a_feature.type as l_type then
-				tokens.colon_symbol.process (Current)
-				print_space
-				process_type (l_type)
-			end
-			if attached {ET_QUERY} a_feature as l_query then
-				if attached l_query.assigner as l_assigner then
-					print_space
-					l_assigner.process (Current)
-				end
-				if attached {ET_CONSTANT_ATTRIBUTE} l_query as l_constant_attribute then
-					print_space
-					tokens.equal_symbol.process (Current)
-					print_space
-					l_constant_attribute.constant.process (Current)
-				elseif attached {ET_UNIQUE_ATTRIBUTE} l_query as l_unique_attribute then
-					print_space
-					tokens.equal_symbol.process (Current)
-					print_space
-					tokens.unique_keyword.process (Current)
-				end
-			end
-			print_new_line
-			indent
-			if a_feature.has_non_empty_header_comment then
-				indent
-				process_header_comment (a_feature)
-				if current_class /= a_feature.implementation_class then
-					print_comment_text (once "-- (from class {" + a_feature.implementation_class.upper_name  + "})")
-				end
-				print_new_line
-				dedent
-			end
-			if attached a_feature.first_note as l_note then
-				process_note_clause (l_note, False)
-				print_new_line
-			end
-			if attached a_feature.obsolete_message as l_obsolete_message then
-				tokens.obsolete_keyword.process (Current)
-				print_new_line
-				indent
-				l_obsolete_string := l_obsolete_message.manifest_string
-				l_obsolete_string.process (Current)
-				print_new_line
-				dedent
-			end
-			process_all_preconditions (a_feature)
-			process_all_postconditions (a_feature)
-			dedent
-			current_closure := l_old_closure
-			current_closure_impl := l_old_closure_impl
-			current_class_impl := l_old_class_impl
-		end
-
-	process_feature_name (a_feature_name: ET_FEATURE_NAME)
-			-- Process `a_feature_name'.
-		local
-			l_feature_name: ET_FEATURE_NAME
-		do
-			l_feature_name := a_feature_name
-			if a_feature_name.is_feature_name then
-				if attached target_class as l_target_class then
-					if attached l_target_class.seeded_feature (a_feature_name.seed) as l_feature then
-						l_feature_name := l_feature.name
-					end
-				end
-			end
-			l_feature_name.process (Current)
-		end
-
-	process_features (a_class: ET_CLASS)
-			-- Process features of `a_class'.
+	process_exported_features (a_class: ET_CLASS)
+			-- Process exported features of `a_class'.
+			-- Process inherited features if `flat_enabled` is True.
 		local
 			l_feature_clause: ET_FEATURE_CLAUSE
 			l_queries: ET_QUERY_LIST
@@ -813,6 +669,238 @@ feature {ET_AST_NODE} -- Processing
 			features.wipe_out
 		end
 
+	process_exported_invariants (a_class: ET_CLASS)
+			-- Process invariants of `a_class`.
+			-- Process inherited invariants if `flat_enabled` is True.
+			-- Do not print assertions which contain non-exported
+			-- feature calls.
+		require
+			a_class_not_void: a_class /= Void
+		local
+			l_ancestors: ET_BASE_TYPE_LIST
+			l_base_class: ET_CLASS
+			i: INTEGER
+			j, nb2: INTEGER
+			l_assertion: ET_ASSERTION
+			l_has_assertion: BOOLEAN
+			l_has_invariants: BOOLEAN
+			l_old_closure: like current_closure
+			l_old_closure_impl: like current_closure_impl
+			l_old_class_impl: like current_class_impl
+		do
+			l_old_closure := current_closure
+			l_old_closure_impl := current_closure_impl
+			l_old_class_impl := current_class_impl
+			if flat_enabled then
+				l_ancestors := a_class.ancestors
+				from i := l_ancestors.count until i = 0 loop
+					l_base_class := l_ancestors.item (i).base_class
+					if attached l_base_class.invariants as l_invariants and then not l_invariants.are_all_true then
+						l_has_assertion := False
+						current_closure := l_invariants
+						current_closure_impl := l_invariants.implementation_feature
+						current_class_impl := l_invariants.implementation_class
+						nb2 := l_invariants.count
+						from j := 1 until j > nb2 loop
+							l_assertion := l_invariants.assertion (j)
+							if not has_non_exported_feature_calls (l_assertion) then
+								if not l_has_invariants then
+									tokens.invariant_keyword.process (Current)
+									print_new_line
+									print_new_line
+									indent
+									l_has_invariants := True
+								end
+								if not l_has_assertion then
+									indent
+									print_comment_text (once "-- from class {" + l_base_class.upper_name  + "}")
+									print_new_line
+									dedent
+									l_has_assertion := True
+								end
+								l_assertion.process (Current)
+								print_new_line
+							end
+							j := j + 1
+						end
+						if l_has_assertion then
+							print_new_line
+						end
+					end
+					i := i - 1
+				end
+			end
+			if attached a_class.invariants as l_invariants and then not l_invariants.are_all_true then
+				l_has_assertion := False
+				current_closure := l_invariants
+				current_closure_impl := l_invariants.implementation_feature
+				current_class_impl := l_invariants.implementation_class
+				nb2 := l_invariants.count
+				from j := 1 until j > nb2 loop
+					l_assertion := l_invariants.assertion (j)
+					if not has_non_exported_feature_calls (l_assertion) then
+						if not l_has_invariants then
+							tokens.invariant_keyword.process (Current)
+							print_new_line
+							print_new_line
+							indent
+							l_has_invariants := True
+						end
+						if not l_has_assertion then
+							if flat_enabled then
+								indent
+								print_comment_text (once "-- from class {" + a_class.upper_name  + "}")
+								print_new_line
+								dedent
+							end
+							l_has_assertion := True
+						end
+						l_assertion.process (Current)
+						print_new_line
+					end
+					j := j + 1
+				end
+				if l_has_assertion then
+					print_new_line
+				end
+			end
+			if l_has_invariants then
+				dedent
+			end
+			current_closure := l_old_closure
+			current_closure_impl := l_old_closure_impl
+			current_class_impl := l_old_class_impl
+		end
+
+	process_extended_attribute (a_feature: ET_EXTENDED_ATTRIBUTE)
+			-- Process `a_feature'.
+		do
+			process_feature (a_feature)
+		end
+
+	process_extended_feature_name (a_extended_feature_name: ET_EXTENDED_FEATURE_NAME)
+			-- Process `a_extended_feature_name'.
+		local
+			l_feature_name: ET_FEATURE_NAME
+		do
+			l_feature_name := a_extended_feature_name.feature_name
+			print_string (l_feature_name.lower_name)
+			if attached a_extended_feature_name.alias_names as l_alias_names and then not l_alias_names.is_empty then
+				print_space
+				l_alias_names.process (Current)
+			end
+		end
+
+	process_external_function (a_feature: ET_EXTERNAL_FUNCTION)
+			-- Process `a_feature'.
+		do
+			process_feature (a_feature)
+		end
+
+	process_external_procedure (a_feature: ET_EXTERNAL_PROCEDURE)
+			-- Process `a_feature'.
+		do
+			process_feature (a_feature)
+		end
+
+	process_feature (a_feature: ET_FEATURE)
+			-- Process `a_feature'.
+		require
+			a_feature_not_void: a_feature /= Void
+		local
+			l_obsolete_string: ET_MANIFEST_STRING
+			l_old_closure: like current_closure
+			l_old_closure_impl: like current_closure_impl
+			l_old_class_impl: like current_class_impl
+		do
+			l_old_closure := current_closure
+			current_closure := a_feature
+			l_old_closure_impl := current_closure_impl
+			current_closure_impl := a_feature.implementation_feature
+			l_old_class_impl := current_class_impl
+			current_class_impl := a_feature.implementation_class
+			if a_feature.frozen_keyword /= Void then
+				tokens.frozen_keyword.process (Current)
+				print_space
+			end
+			process_extended_feature_name_of_feature (a_feature)
+			if attached a_feature.arguments as l_arguments and then not l_arguments.is_empty then
+				print_space
+				l_arguments.process (Current)
+			end
+			if attached a_feature.type as l_type then
+				tokens.colon_symbol.process (Current)
+				print_space
+				process_type (l_type)
+			end
+			if attached {ET_QUERY} a_feature as l_query then
+				if attached l_query.assigner as l_assigner then
+					print_space
+					l_assigner.process (Current)
+				end
+				if attached {ET_CONSTANT_ATTRIBUTE} l_query as l_constant_attribute then
+					print_space
+					tokens.equal_symbol.process (Current)
+					print_space
+					l_constant_attribute.constant.process (Current)
+				elseif attached {ET_UNIQUE_ATTRIBUTE} l_query as l_unique_attribute then
+					print_space
+					tokens.equal_symbol.process (Current)
+					print_space
+					tokens.unique_keyword.process (Current)
+				end
+			end
+			print_new_line
+			indent
+			if a_feature.has_non_empty_header_comment then
+				indent
+				process_header_comment (a_feature)
+				if current_class /= a_feature.implementation_class then
+					print_comment_text (once "-- (from class {" + a_feature.implementation_class.upper_name  + "})")
+				end
+				print_new_line
+				dedent
+			end
+			if attached a_feature.first_note as l_note then
+				process_note_clause (l_note, False)
+				print_new_line
+			end
+			if attached a_feature.obsolete_message as l_obsolete_message then
+				tokens.obsolete_keyword.process (Current)
+				print_new_line
+				indent
+				l_obsolete_string := l_obsolete_message.manifest_string
+				l_obsolete_string.process (Current)
+				print_new_line
+				dedent
+			end
+				-- Note the in valid Eiffel code, a precondition of an exported
+				-- feature cannot contain non-exported feature calls (validity
+				-- rule VAPE). So no need to take that case into account here.
+			process_all_preconditions (a_feature)
+			process_all_exported_postconditions (a_feature)
+			dedent
+			current_closure := l_old_closure
+			current_closure_impl := l_old_closure_impl
+			current_class_impl := l_old_class_impl
+		end
+
+	process_feature_name (a_feature_name: ET_FEATURE_NAME)
+			-- Process `a_feature_name'.
+		local
+			l_feature_name: ET_FEATURE_NAME
+		do
+			l_feature_name := a_feature_name
+			if a_feature_name.is_feature_name then
+				if attached target_class as l_target_class then
+					if attached l_target_class.seeded_feature (a_feature_name.seed) as l_feature then
+						l_feature_name := l_feature.name
+					end
+				end
+			end
+			l_feature_name.process (Current)
+		end
+
 	process_header_comment (a_feature: ET_FEATURE)
 			-- Process header commend of `a_feature` if any.
 			-- Replace "-- <Precursor>" with the header comment of the precursors
@@ -905,7 +993,7 @@ feature {ET_AST_NODE} -- Processing
 			l_named_type: ET_NAMED_TYPE
 			l_old_use_as_type: BOOLEAN
 		do
-			l_named_type := a_type.named_type (current_class)
+			l_named_type := a_type.named_type (current_type)
 			if not attached {ET_BASE_TYPE} l_named_type and then attached l_named_type.type_mark as l_type_mark then
 				if l_type_mark.is_detachable_mark then
 					tokens.detachable_keyword.process (Current)
