@@ -408,6 +408,7 @@ static void GE_remove_scoop_session(GE_scoop_session* a_session)
 	GE_scoop_region* l_region;
 	GE_scoop_session* l_other_session;
 	char l_no_wait_condition_notification;
+	char l_has_wait_condition;
 
 	l_region = a_session->callee;
 	GE_mutex_lock((EIF_POINTER)l_region->mutex);
@@ -426,13 +427,14 @@ static void GE_remove_scoop_session(GE_scoop_session* a_session)
 	if (!l_region->first_session) {
 		*(l_region->keep_alive) = 0;
 	}
+	l_has_wait_condition = (l_region->first_precondition != 0);
 	GE_mutex_unlock((EIF_POINTER)l_region->mutex);
 	l_no_wait_condition_notification = a_session->no_wait_condition_notification;
 	GE_free_scoop_session(a_session);
-	GE_decrement_scoop_sessions_count();
-	if (!l_no_wait_condition_notification) {
+	if (l_has_wait_condition && !l_no_wait_condition_notification) {
 		GE_scoop_region_notify_preconditions(l_region);
 	}
+	GE_decrement_scoop_sessions_count();
 }
 
 /* 
@@ -1289,6 +1291,15 @@ void GE_scoop_processor_run(GE_context* a_context)
 	EIF_POINTER l_mutex = GE_scoop_processor_run_mutex(a_context);
 	EIF_POINTER l_condition_variable = GE_scoop_processor_run_condition_variable(a_context);
 
+	/* The code before the while-loop is so that the C compiler does
+	 * not inline the call to `GE_scoop_processor_run_one_iteration` 
+	 * and hence does not keep a reference to region in a local variable
+	 * which would prevent the GC from collecting it. */
+	if (a_context->is_region_alive) {
+		if (!GE_scoop_processor_run_one_iteration(a_context)) {
+			GE_mutex_unlock(l_mutex);
+		}
+	}
 	while (1) {
 		if (a_context->is_region_alive) {
 			if (GE_scoop_processor_run_one_iteration(a_context)) {
