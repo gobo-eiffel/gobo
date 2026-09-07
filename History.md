@@ -2,6 +2,12 @@
 
 ## Version xx.xx.xx - xxxxxx
 
+### gec
+
+* Fixed some issues that prevented the GC from collecting a
+  SCOOP region (and stopping its thread) when no objects in
+  this region were referenced from other regions anymore.
+
 ### gedoc
 
 * Added the generation of the contract-view of classes

@@ -4,7 +4,7 @@
 		"C functions used to implement once features"
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2017-2024, Eric Bezault and others"
+	copyright: "Copyright (c) 2017-2026, Eric Bezault and others"
 	license: "MIT License"
 */
 
@@ -119,7 +119,7 @@ GE_onces* GE_new_onces(
 {
 	GE_onces* l_onces;
 
-	l_onces = (GE_onces*)GE_calloc_uncollectable(1, sizeof(GE_onces));
+	l_onces = (GE_onces*)GE_calloc(1, sizeof(GE_onces));
 	if (a_boolean_count > 0) {
 		l_onces->boolean_value = (EIF_BOOLEAN*)GE_calloc_atomic(1, a_boolean_count * sizeof(EIF_BOOLEAN));
 		l_onces->boolean_exception = (EIF_REFERENCE*)GE_calloc(1, a_boolean_count * sizeof(EIF_REFERENCE));
