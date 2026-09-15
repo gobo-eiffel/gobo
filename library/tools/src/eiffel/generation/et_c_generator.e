@@ -23146,6 +23146,17 @@ feature {NONE} -- SCOOP
 					current_file.put_string (c_callee)
 					current_file.put_character (')')
 					print_semicolon_newline
+					print_indentation
+					current_file.put_string (c_ge_scoop_session_set_eiffel_called)
+					current_file.put_character ('(')
+					current_file.put_string (c_se)
+					print_comma
+					current_file.put_character ('%'')
+					current_file.put_character ('\')
+					current_file.put_character ('1')
+					current_file.put_character ('%'')
+					current_file.put_character (')')
+					print_semicolon_newline
 					if l_is_creation_call then
 						check is_passive: l_is_passive_region end
 						print_indentation
@@ -23159,17 +23170,6 @@ feature {NONE} -- SCOOP
 						current_file.put_character (')')
 						print_semicolon_newline
 					end
-					print_indentation
-					current_file.put_string (c_ge_scoop_session_set_eiffel_called)
-					current_file.put_character ('(')
-					current_file.put_string (c_se)
-					print_comma
-					current_file.put_character ('%'')
-					current_file.put_character ('\')
-					current_file.put_character ('1')
-					current_file.put_character ('%'')
-					current_file.put_character (')')
-					print_semicolon_newline
 					dedent
 					print_indentation
 					current_file.put_character ('}')
