@@ -3206,14 +3206,11 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 					current_file.put_string (c_ac)
 					current_file.put_string (c_arrow)
 					current_file.put_string (c_call)
-					current_file.put_character (' ')
-					current_file.put_character ('=')
-					current_file.put_character (' ')
+					print_assign_to
 					current_file.put_string (c_tc)
 					current_file.put_character ('.')
 					current_file.put_string (c_caller)
-					current_file.put_character (';')
-					current_file.put_new_line
+					print_semicolon_newline
 				end
 			end
 			if l_arguments /= Void and then l_has_reference_arguments then
@@ -8327,14 +8324,11 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 					current_file.put_string (c_ac)
 					current_file.put_string (c_arrow)
 					current_file.put_string (c_call)
-					current_file.put_character (' ')
-					current_file.put_character ('=')
-					current_file.put_character (' ')
+					print_assign_to
 					current_file.put_string (c_tc)
 					current_file.put_character ('.')
 					current_file.put_string (c_caller)
-					current_file.put_character (';')
-					current_file.put_new_line
+					print_semicolon_newline
 				end
 					-- Return attribute value.
 				print_indentation
@@ -19849,14 +19843,11 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_once_procedure_inlin
 				current_file.put_string (c_ac)
 				current_file.put_string (c_arrow)
 				current_file.put_string (c_call)
-				current_file.put_character (' ')
-				current_file.put_character ('=')
-				current_file.put_character (' ')
+				print_assign_to
 				current_file.put_string (c_tc)
 				current_file.put_character ('.')
 				current_file.put_string (c_caller)
-				current_file.put_character (';')
-				current_file.put_new_line
+				print_semicolon_newline
 			end
 			if l_result_type /= Void then
 				print_indentation
@@ -23155,6 +23146,30 @@ feature {NONE} -- SCOOP
 					current_file.put_string (c_callee)
 					current_file.put_character (')')
 					print_semicolon_newline
+					if l_is_creation_call then
+						check is_passive: l_is_passive_region end
+						print_indentation
+						current_file.put_string (c_ge_scoop_session_close)
+						current_file.put_character ('(')
+						current_file.put_string (c_sr)
+						print_comma
+						current_file.put_string (c_se)
+						print_comma
+						current_file.put_character ('0')
+						current_file.put_character (')')
+						print_semicolon_newline
+					end
+					print_indentation
+					current_file.put_string (c_ge_scoop_session_set_eiffel_called)
+					current_file.put_character ('(')
+					current_file.put_string (c_se)
+					print_comma
+					current_file.put_character ('%'')
+					current_file.put_character ('\')
+					current_file.put_character ('1')
+					current_file.put_character ('%'')
+					current_file.put_character (')')
+					print_semicolon_newline
 					dedent
 					print_indentation
 					current_file.put_character ('}')
@@ -23735,9 +23750,7 @@ feature {NONE} -- SCOOP
 				-- Create separate call object.
 			print_indentation
 			current_file.put_string (c_sc)
-			current_file.put_character (' ')
-			current_file.put_character ('=')
-			current_file.put_character (' ')
+			print_assign_to
 			current_file.put_character ('(')
 			print_separate_call_object_type_name (i, current_feature, current_type, current_file)
 			current_file.put_character ('*')
@@ -23780,9 +23793,7 @@ feature {NONE} -- SCOOP
 				current_file.put_string (c_sc)
 				current_file.put_string (c_arrow)
 				print_result_name (current_file)
-				current_file.put_character (' ')
-				current_file.put_character ('=')
-				current_file.put_character (' ')
+				print_assign_to
 				print_result_name (current_file)
 				print_semicolon_newline
 			end
@@ -23792,9 +23803,7 @@ feature {NONE} -- SCOOP
 				current_file.put_string (c_sc)
 				current_file.put_string (c_arrow)
 				print_argument_name (l_operand, current_file)
-				current_file.put_character (' ')
-				current_file.put_character ('=')
-				current_file.put_character (' ')
+				print_assign_to
 				print_argument_name (l_operand, current_file)
 				print_semicolon_newline
 				j := j + 1
@@ -23808,8 +23817,7 @@ feature {NONE} -- SCOOP
 			current_file.put_character ('*')
 			current_file.put_character (')')
 			current_file.put_string (c_sc)
-			current_file.put_character (';')
-			current_file.put_new_line
+			print_semicolon_newline
 			dedent
 			current_file.put_character ('}')
 			current_file.put_new_line
@@ -49739,7 +49747,6 @@ feature {NONE} -- Constants
 	c_exception_manager: STRING = "exception_manager"
 	c_exception_suffix: STRING = "_exception"
 	c_exception_tag: STRING = "exception_tag"
-	c_execute: STRING = "execute"
 	c_extern: STRING = "extern"
 	c_find_referers: STRING = "find_referers"
 	c_flags: STRING = "flags"

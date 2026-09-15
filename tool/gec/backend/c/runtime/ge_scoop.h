@@ -59,7 +59,7 @@ extern "C" {
  * - `wait` indicates whether there is a need to wait for synchronization.
  *   It can be set by any thread and is protected by `mutex`.
  * 
- * - `mutex` and `condition_variable` are used to wait for synchorization.
+ * - `mutex` and `condition_variable` are used to wait for synchronization.
  */
 typedef volatile struct {
 	char volatile wait;
