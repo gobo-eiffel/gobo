@@ -7,6 +7,11 @@
 * Fixed some issues that prevented the GC from collecting a
   SCOOP region (and stopping its thread) when no objects in
   this region were referenced from other regions anymore.
+* Made sure to properly synchronize with already locked regions
+  in case of multiple separate arguments. The new implementation
+  ensures that the already locked regions are ready to execute
+  upcoming separate calls on their processors before synchronizing.
+* Improved the way SCOOP passive regions are handled at run time.
 
 ### gedoc
 

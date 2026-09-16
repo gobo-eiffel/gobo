@@ -181,6 +181,13 @@ extern void GE_init_thread(GE_context* a_context);
  */
 extern void GE_thread_create_with_attr(EIF_REFERENCE current, void (*routine)(EIF_REFERENCE, EIF_INTEGER), void (*set_terminated)(EIF_REFERENCE,EIF_BOOLEAN), EIF_THR_ATTR_TYPE* attr, int is_scoop_processor);
 
+#ifdef GE_USE_SCOOP
+/*
+ * Create a new thread with attributes `attr' to handle the sessions of passive regions.
+ */
+extern void GE_scoop_passive_regions_thread_create_with_attr(EIF_THR_ATTR_TYPE* attr);
+#endif
+
 /*
  * Execution context of current thread.
  */

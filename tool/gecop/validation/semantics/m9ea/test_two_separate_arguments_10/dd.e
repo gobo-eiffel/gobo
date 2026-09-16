@@ -27,10 +27,6 @@ feature
 			print ("end DD.g%N")
 		end
 
-	h
-		do
-		end
-
 	y: BOOLEAN
 		do
 			print ("DD.y%N")

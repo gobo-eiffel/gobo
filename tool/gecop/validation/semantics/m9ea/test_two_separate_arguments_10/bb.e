@@ -12,8 +12,6 @@ feature
 		do
 			create cc.make
 			create d.make (cc)
-			f (d)
-			{SCHEDULER}.wait_for_value (2)
 			print ("Calling BB.g...%N")
 			g (d)
 			{SCHEDULER}.set_value (4)
@@ -21,14 +19,10 @@ feature
 
 	cc: separate CC
 
-	f (d: separate DD)
-		do
-			d.g
-		end
-
 	g (d: separate DD)
 		do
-			d.h
+			d.g
+			{SCHEDULER}.wait_for_value (2)
 			print ("Calling BB.h...%N")
 			h (cc, d)
 		end

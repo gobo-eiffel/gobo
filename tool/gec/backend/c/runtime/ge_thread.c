@@ -1472,7 +1472,6 @@ void GE_thread_create_with_attr(EIF_REFERENCE current, void (*routine)(EIF_REFER
 #ifdef GE_USE_POSIX_THREADS
 		{
 			pthread_attr_t l_attr;
-			int res;
 
 			if (pthread_attr_init(&l_attr) == 0) {
 					/* Initialize the stack size if more than the minimum. */
@@ -1490,7 +1489,7 @@ void GE_thread_create_with_attr(EIF_REFERENCE current, void (*routine)(EIF_REFER
 				pthread_attr_setdetachstate(&l_attr, PTHREAD_CREATE_DETACHED);
 				SIGBLOCK;
 				GE_unprotected_mutex_lock((EIF_POINTER)l_current_thread_context->children_mutex);
-					/* Use the mutex even it case of success to force the thread being created to wait for its thread id to be set. */
+					/* Use the mutex even in case of success to force the thread being created to wait for its thread id to be set. */
 				if (pthread_create(&l_thread_id, &l_attr, GE_thread_routine, (void*)l_context) == 0) {
 					l_thread_context->thread_id = l_thread_id;
 #ifdef GE_USE_SCOOP
@@ -1514,7 +1513,7 @@ void GE_thread_create_with_attr(EIF_REFERENCE current, void (*routine)(EIF_REFER
 #elif defined EIF_WINDOWS
 		SIGBLOCK;
 		GE_unprotected_mutex_lock((EIF_POINTER)l_current_thread_context->children_mutex);
-			/* Use the mutex even it case of success to force the thread being created to wait for its thread id to be set. */
+			/* Use the mutex even in case of success to force the thread being created to wait for its thread id to be set. */
 		l_thread_id = (EIF_THR_TYPE)_beginthreadex(NULL, (unsigned int)l_attr_stack_size, GE_thread_routine, (void*)l_context, 0, NULL);
 		if (l_thread_id == 0) {
 			l_raise_error = 1;
@@ -1558,6 +1557,70 @@ void GE_thread_create_with_attr(EIF_REFERENCE current, void (*routine)(EIF_REFER
 #endif
 	}
 }
+
+#ifdef GE_USE_SCOOP
+/*
+ * Routine to be called from the new thread for handling SCOOP
+ * passive regions.
+ */
+#ifdef EIF_WINDOWS
+static unsigned __stdcall GE_scoop_passive_regions_thread_routine(void* arg)
+#else
+static void* GE_scoop_passive_regions_thread_routine(void* arg)
+#endif
+{
+	GE_process_scoop_passive_regions();
+#ifdef EIF_WINDOWS
+	return 0;
+#else
+	return NULL;
+#endif
+}
+
+/*
+ * Create a new thread with attributes `attr' to handle the sessions of passive regions.
+ */
+void GE_scoop_passive_regions_thread_create_with_attr(EIF_THR_ATTR_TYPE* attr)
+{
+	unsigned int l_attr_stack_size = 0;
+	unsigned int l_attr_priority = GE_thread_default_priority();
+
+	if (attr) {
+		l_attr_stack_size = attr->stack_size;
+		l_attr_priority = attr->priority;
+	}
+#ifdef GE_USE_POSIX_THREADS
+	{
+		pthread_attr_t l_attr;
+		EIF_THR_TYPE l_thread_id;
+
+		if (pthread_attr_init(&l_attr) == 0) {
+				/* Initialize the stack size if more than the minimum. */
+			if (l_attr_stack_size >= PTHREAD_STACK_MIN) {
+				pthread_attr_setstacksize(&l_attr, l_attr_stack_size);
+			}
+			if (l_attr_priority != EIF_DEFAULT_THR_PRIORITY) {
+				struct sched_param l_param;
+				GE_memset(&l_param, 0, sizeof(struct sched_param));
+				l_param.sched_priority = l_attr_priority;
+				pthread_attr_setschedpolicy(&l_attr, SCHED_OTHER);
+				pthread_attr_setschedparam(&l_attr, &l_param);
+			}
+				/* We always create threads detached. */
+			pthread_attr_setdetachstate(&l_attr, PTHREAD_CREATE_DETACHED);
+			SIGBLOCK;
+			pthread_create(&l_thread_id, &l_attr, GE_scoop_passive_regions_thread_routine, 0);
+			SIGRESUME;
+			pthread_attr_destroy(&l_attr);
+		}
+	}
+#elif defined EIF_WINDOWS
+	SIGBLOCK;
+	(EIF_THR_TYPE)_beginthreadex(NULL, (unsigned int)l_attr_stack_size, GE_scoop_passive_regions_thread_routine, 0, 0, NULL);
+	SIGRESUME;
+#endif
+}
+#endif
 
 /*
  * Execution context of current thread.

@@ -54,6 +54,20 @@ extern "C" {
  */
 
 /*
+ * Struct for synchronization.
+ * 
+ * - `wait` indicates whether there is a need to wait for synchronization.
+ *   It can be set by any thread and is protected by `mutex`.
+ * 
+ * - `mutex` and `condition_variable` are used to wait for synchronization.
+ */
+typedef volatile struct {
+	char volatile wait;
+	EIF_MUTEX_TYPE* volatile mutex;
+	EIF_COND_TYPE* volatile condition_variable;
+} GE_scoop_synchronization;
+
+/*
  * Struct for separate calls.
  *
  * - `caller` is the region of the caller of the call.
@@ -61,6 +75,8 @@ extern "C" {
  * - `is_synchronous` indicates whether the caller has to wait for the call to be
  *   executed. It can be because the region of the callee is passive, or if the call
  *   is a query, or if one of its arguments is locked.
+ * 
+ * - `synchronization` is used to establish synchronization.
  * 
  * - `execute` is the feature to be executed. It can be null in case of a synchronous
  *   call.
@@ -75,6 +91,7 @@ typedef volatile struct GE_scoop_session_struct GE_scoop_session;
 struct GE_scoop_call_struct {
 	GE_scoop_region* volatile caller;
 	char volatile is_synchronous;
+	GE_scoop_synchronization* volatile synchronization;
 	void (*volatile execute)(GE_context*, GE_scoop_session*, GE_scoop_call*);
 	GE_scoop_call* volatile next;
 };
@@ -203,9 +220,6 @@ struct GE_scoop_session_struct {
  * - `condition_variable` is used to wait for new sessions to be added or promoted.
  *   It is protected by `mutex`.
  * 
- * - `sync_mutex` and `sync_condition_variable` are used to wait for the callee
- *   to be available in case of synchronous calls.
- * 
  * - `precondition_mutex` and `precondition_condition_variable` are used to wait
  *   for some activity on the other regions before trying to evaluate a wait
  *   precondition again on the current region.
@@ -228,8 +242,6 @@ struct GE_scoop_region_struct {
 	GE_scoop_precondition* volatile last_precondition;
 	EIF_MUTEX_TYPE* volatile mutex;
 	EIF_COND_TYPE* volatile condition_variable;
-	EIF_MUTEX_TYPE* volatile sync_mutex;
-	EIF_COND_TYPE* volatile sync_condition_variable;
 	EIF_MUTEX_TYPE* volatile precondition_mutex;
 	EIF_COND_TYPE* volatile precondition_condition_variable;
 };
@@ -296,17 +308,15 @@ extern GE_scoop_session* GE_scoop_session_open(GE_scoop_region* a_caller, GE_sco
  */
 extern void GE_scoop_session_close(GE_scoop_region* a_caller, GE_scoop_session* a_session, char a_no_wait_condition_notification);
 
-/* 
- * Add SCOOP session `a_session' to the list of sessions to be executed by the processor of its callee.
- *
- * To be executed by the thread associated with the caller of `a_session'.
- * 
- * Thread-safe.
- * Protected by:
- * - `a_session->callee->mutex`.
- * - `a_session->mutex` to set `a_session->is_submitted`.
+/*
+ * New of SCOOP synchronization.
  */
-extern void GE_add_scoop_session(GE_scoop_session* a_session);
+extern GE_scoop_synchronization* GE_new_scoop_synchronization(void);
+
+/*
+ * Free memory allocated by `a_synchronization'.
+ */
+extern void GE_free_scoop_synchronization(GE_scoop_synchronization* a_synchronization);
 
 /* 
  * New SCOOP call.
@@ -330,6 +340,15 @@ extern void GE_scoop_session_add_call(GE_scoop_session* a_session, GE_scoop_call
  * Thread-safe.
  */
 extern void GE_scoop_session_add_sync_call(GE_scoop_region* a_caller, GE_scoop_session* a_session);
+
+/* 
+ * Add a SCOOP call to `a_session' to indicate that `a_session` is running.
+ *
+ * To be executed by the thread associated with `a_caller'.
+ * 
+ * Thread-safe.
+ */
+extern void GE_scoop_session_add_running_call(GE_scoop_region* a_caller, GE_scoop_session* a_session, GE_scoop_synchronization* a_synchronization);
 
 /*
  * New of SCOOP precondition to indicate that `a_caller' failed to satisfy
@@ -463,15 +482,15 @@ extern void GE_scoop_session_set_eiffel_called(GE_scoop_session* a_session, char
 extern uint32_t GE_scoop_session_is_open(GE_scoop_session* a_session);
 
 /*
- * Has `a_session` been submitted for execution to the processor of its callee's region?
+ * Is `a_session` already running?
  *
  * To be executed by the thread associated with the caller of `a_session'.
  * 
  * Thread-safe.
  * Protected by:
- * - `a_session->mutex`.
+ * - `a_session->callee->mutex`.
  */
-extern char GE_scoop_session_is_submitted(GE_scoop_session* a_session);
+extern char GE_scoop_session_is_running(GE_scoop_session* a_session);
 
 /*
  * Perform lock passing from the processor of `a_caller' to the processor of `a_callee' 
@@ -499,6 +518,12 @@ extern void GE_scoop_region_release_locks(GE_scoop_region* a_caller, GE_scoop_re
  * Execute the main loop of the SCOOP processor of `a_context->region'.
  */
 extern void GE_scoop_processor_run(GE_context* a_context);
+
+/*
+ * Handle the sessions of passive regions.
+ * To be run in a dedicated thread. 
+ */
+extern void GE_process_scoop_passive_regions(void);
 
 /* 
  * Initialization of SCOOP.
