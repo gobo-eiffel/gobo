@@ -1448,9 +1448,12 @@ static void GE_process_scoop_passive_region(GE_scoop_region* a_region)
 			l_session->is_running = '\1';
 			GE_mutex_unlock(l_mutex);
 			GE_scoop_session_execute(0, l_session);
+			GE_mutex_lock((EIF_POINTER)l_session->mutex);
 			if (!l_session->is_open) {
+				GE_mutex_unlock((EIF_POINTER)l_session->mutex);
 				GE_remove_scoop_session(l_session);
 			} else {
+				GE_mutex_unlock((EIF_POINTER)l_session->mutex);
 				break;
 			}
 		} else {
