@@ -10,7 +10,7 @@
 		same SCOOP region as the root object.
 	]"
 	library: "Gobo Eiffel Storable Library"
-	copyright: "Copyright (c) 2025, Eric Bezault and others"
+	copyright: "Copyright (c) 2025-2026, Eric Bezault and others"
 	license: "MIT License"
 
 class SB_TEST_STORABLE_SCOOP
@@ -146,9 +146,14 @@ feature {NONE} -- Implementation
 					assert_false ("attr2", l_attr2.stopped)
 				end
 			end
-			assert ("object_scoop_region", {ISE_SCOOP_RUNTIME}.region_id (a_object) = {ISE_SCOOP_RUNTIME}.region_id (Current))
-			assert ("attr1__scoop_region", a_retrieved = ({ISE_SCOOP_RUNTIME}.region_id (a_object.attr1) = {ISE_SCOOP_RUNTIME}.region_id (Current)))
-			assert ("attr2__scoop_region", a_retrieved = ({ISE_SCOOP_RUNTIME}.region_id (a_object.attr2) = {ISE_SCOOP_RUNTIME}.region_id (Current)))
+			assert_naturals_16_equal ("object_scoop_region", {ISE_SCOOP_RUNTIME}.region_id (Current), {ISE_SCOOP_RUNTIME}.region_id (a_object))
+			if a_retrieved then
+				assert_naturals_16_equal ("attr1_same_scoop_region", {ISE_SCOOP_RUNTIME}.region_id (Current), {ISE_SCOOP_RUNTIME}.region_id (a_object.attr1))
+				assert_naturals_16_equal ("attr2_same_scoop_region", {ISE_SCOOP_RUNTIME}.region_id (Current), {ISE_SCOOP_RUNTIME}.region_id (a_object.attr2))
+			else
+				assert_naturals_16_not_equal ("attr1_different_scoop_region", {ISE_SCOOP_RUNTIME}.region_id (Current), {ISE_SCOOP_RUNTIME}.region_id (a_object.attr1))
+				assert_naturals_16_not_equal ("attr2_different_scoop_region", {ISE_SCOOP_RUNTIME}.region_id (Current), {ISE_SCOOP_RUNTIME}.region_id (a_object.attr2))
+			end
 		end
 
 end

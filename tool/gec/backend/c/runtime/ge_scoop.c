@@ -1231,8 +1231,8 @@ void GE_scoop_session_close(GE_scoop_region* a_caller, GE_scoop_session* a_sessi
 				l_to_be_freed = '\1';
 			} else if (l_callee->is_passive) {
 				/* A passive region as no associated processor. Its sessions are synchronously 
-				 * executed by the processor of their callers. So the caller's processor has
-				 * to do the house cleaning (e.g. call to `GE_remove_scoop_session`).
+				 * executed by the processor of their callers. So the the thread handling passive
+				 * regions has to do the house cleaning (e.g. call to `GE_remove_scoop_session`).
 				 */
 				GE_mutex_unlock((EIF_POINTER)a_session->mutex);
 				l_mutex_unlocked = '\1';
@@ -1448,9 +1448,12 @@ static void GE_process_scoop_passive_region(GE_scoop_region* a_region)
 			l_session->is_running = '\1';
 			GE_mutex_unlock(l_mutex);
 			GE_scoop_session_execute(0, l_session);
+			GE_mutex_lock((EIF_POINTER)l_session->mutex);
 			if (!l_session->is_open) {
+				GE_mutex_unlock((EIF_POINTER)l_session->mutex);
 				GE_remove_scoop_session(l_session);
 			} else {
+				GE_mutex_unlock((EIF_POINTER)l_session->mutex);
 				break;
 			}
 		} else {
