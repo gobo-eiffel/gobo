@@ -519,12 +519,6 @@ extern void GE_scoop_region_release_locks(GE_scoop_region* a_caller, GE_scoop_re
  */
 extern void GE_scoop_processor_run(GE_context* a_context);
 
-/*
- * Handle the sessions of passive regions.
- * To be run in a dedicated thread. 
- */
-extern void GE_process_scoop_passive_regions(void);
-
 /* 
  * Initialization of SCOOP.
  */
