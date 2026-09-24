@@ -238,6 +238,10 @@ jobs:
             eiffel_compiler: ise
           - c_compiler: zig
             eiffel_compiler: debug_ise
+          - c_compiler: msc
+            eiffel_compiler: ise
+          - c_compiler: msc
+            eiffel_compiler: debug_ise
     steps:
       - uses: actions/checkout@v6
       - uses: actions/download-artifact@v8
