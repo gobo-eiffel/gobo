@@ -5,7 +5,7 @@
 		"Eiffel type parsers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2025, Eric Bezault and others"
+	copyright: "Copyright (c) 2025-2026, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_TYPE_PARSER
@@ -650,187 +650,187 @@ feature {NONE} -- Semantic actions
 					--|#line 297 "et_type_parser.y"
 				yy_do_action_66
 			when 67 then
-					--|#line 302 "et_type_parser.y"
+					--|#line 306 "et_type_parser.y"
 				yy_do_action_67
 			when 68 then
-					--|#line 307 "et_type_parser.y"
+					--|#line 315 "et_type_parser.y"
 				yy_do_action_68
 			when 69 then
-					--|#line 312 "et_type_parser.y"
+					--|#line 320 "et_type_parser.y"
 				yy_do_action_69
 			when 70 then
-					--|#line 317 "et_type_parser.y"
+					--|#line 325 "et_type_parser.y"
 				yy_do_action_70
 			when 71 then
-					--|#line 328 "et_type_parser.y"
+					--|#line 340 "et_type_parser.y"
 				yy_do_action_71
 			when 72 then
-					--|#line 339 "et_type_parser.y"
+					--|#line 355 "et_type_parser.y"
 				yy_do_action_72
 			when 73 then
-					--|#line 352 "et_type_parser.y"
+					--|#line 372 "et_type_parser.y"
 				yy_do_action_73
 			when 74 then
-					--|#line 361 "et_type_parser.y"
+					--|#line 385 "et_type_parser.y"
 				yy_do_action_74
 			when 75 then
-					--|#line 370 "et_type_parser.y"
+					--|#line 398 "et_type_parser.y"
 				yy_do_action_75
 			when 76 then
-					--|#line 372 "et_type_parser.y"
+					--|#line 400 "et_type_parser.y"
 				yy_do_action_76
 			when 77 then
-					--|#line 374 "et_type_parser.y"
+					--|#line 402 "et_type_parser.y"
 				yy_do_action_77
 			when 78 then
-					--|#line 378 "et_type_parser.y"
+					--|#line 406 "et_type_parser.y"
 				yy_do_action_78
 			when 79 then
-					--|#line 380 "et_type_parser.y"
+					--|#line 408 "et_type_parser.y"
 				yy_do_action_79
 			when 80 then
-					--|#line 382 "et_type_parser.y"
+					--|#line 410 "et_type_parser.y"
 				yy_do_action_80
 			when 81 then
-					--|#line 384 "et_type_parser.y"
+					--|#line 412 "et_type_parser.y"
 				yy_do_action_81
 			when 82 then
-					--|#line 386 "et_type_parser.y"
+					--|#line 414 "et_type_parser.y"
 				yy_do_action_82
 			when 83 then
-					--|#line 388 "et_type_parser.y"
+					--|#line 416 "et_type_parser.y"
 				yy_do_action_83
 			when 84 then
-					--|#line 390 "et_type_parser.y"
+					--|#line 418 "et_type_parser.y"
 				yy_do_action_84
 			when 85 then
-					--|#line 392 "et_type_parser.y"
+					--|#line 420 "et_type_parser.y"
 				yy_do_action_85
 			when 86 then
-					--|#line 394 "et_type_parser.y"
+					--|#line 422 "et_type_parser.y"
 				yy_do_action_86
 			when 87 then
-					--|#line 396 "et_type_parser.y"
+					--|#line 424 "et_type_parser.y"
 				yy_do_action_87
 			when 88 then
-					--|#line 398 "et_type_parser.y"
+					--|#line 426 "et_type_parser.y"
 				yy_do_action_88
 			when 89 then
-					--|#line 400 "et_type_parser.y"
+					--|#line 428 "et_type_parser.y"
 				yy_do_action_89
 			when 90 then
-					--|#line 402 "et_type_parser.y"
+					--|#line 430 "et_type_parser.y"
 				yy_do_action_90
 			when 91 then
-					--|#line 404 "et_type_parser.y"
+					--|#line 432 "et_type_parser.y"
 				yy_do_action_91
 			when 92 then
-					--|#line 406 "et_type_parser.y"
+					--|#line 434 "et_type_parser.y"
 				yy_do_action_92
 			when 93 then
-					--|#line 408 "et_type_parser.y"
+					--|#line 436 "et_type_parser.y"
 				yy_do_action_93
 			when 94 then
-					--|#line 410 "et_type_parser.y"
+					--|#line 438 "et_type_parser.y"
 				yy_do_action_94
 			when 95 then
-					--|#line 412 "et_type_parser.y"
+					--|#line 440 "et_type_parser.y"
 				yy_do_action_95
 			when 96 then
-					--|#line 414 "et_type_parser.y"
+					--|#line 442 "et_type_parser.y"
 				yy_do_action_96
 			when 97 then
-					--|#line 416 "et_type_parser.y"
+					--|#line 444 "et_type_parser.y"
 				yy_do_action_97
 			when 98 then
-					--|#line 418 "et_type_parser.y"
+					--|#line 446 "et_type_parser.y"
 				yy_do_action_98
 			when 99 then
-					--|#line 422 "et_type_parser.y"
+					--|#line 450 "et_type_parser.y"
 				yy_do_action_99
 			when 100 then
-					--|#line 424 "et_type_parser.y"
+					--|#line 452 "et_type_parser.y"
 				yy_do_action_100
 			when 101 then
-					--|#line 428 "et_type_parser.y"
+					--|#line 456 "et_type_parser.y"
 				yy_do_action_101
 			when 102 then
-					--|#line 430 "et_type_parser.y"
+					--|#line 458 "et_type_parser.y"
 				yy_do_action_102
 			when 103 then
-					--|#line 432 "et_type_parser.y"
+					--|#line 460 "et_type_parser.y"
 				yy_do_action_103
 			when 104 then
-					--|#line 434 "et_type_parser.y"
+					--|#line 462 "et_type_parser.y"
 				yy_do_action_104
 			when 105 then
-					--|#line 436 "et_type_parser.y"
+					--|#line 464 "et_type_parser.y"
 				yy_do_action_105
 			when 106 then
-					--|#line 438 "et_type_parser.y"
+					--|#line 466 "et_type_parser.y"
 				yy_do_action_106
 			when 107 then
-					--|#line 440 "et_type_parser.y"
+					--|#line 468 "et_type_parser.y"
 				yy_do_action_107
 			when 108 then
-					--|#line 448 "et_type_parser.y"
+					--|#line 476 "et_type_parser.y"
 				yy_do_action_108
 			when 109 then
-					--|#line 456 "et_type_parser.y"
+					--|#line 484 "et_type_parser.y"
 				yy_do_action_109
 			when 110 then
-					--|#line 464 "et_type_parser.y"
+					--|#line 492 "et_type_parser.y"
 				yy_do_action_110
 			when 111 then
-					--|#line 472 "et_type_parser.y"
+					--|#line 500 "et_type_parser.y"
 				yy_do_action_111
 			when 112 then
-					--|#line 474 "et_type_parser.y"
+					--|#line 502 "et_type_parser.y"
 				yy_do_action_112
 			when 113 then
-					--|#line 476 "et_type_parser.y"
+					--|#line 504 "et_type_parser.y"
 				yy_do_action_113
 			when 114 then
-					--|#line 478 "et_type_parser.y"
+					--|#line 506 "et_type_parser.y"
 				yy_do_action_114
 			when 115 then
-					--|#line 480 "et_type_parser.y"
+					--|#line 508 "et_type_parser.y"
 				yy_do_action_115
 			when 116 then
-					--|#line 482 "et_type_parser.y"
+					--|#line 510 "et_type_parser.y"
 				yy_do_action_116
 			when 117 then
-					--|#line 484 "et_type_parser.y"
+					--|#line 512 "et_type_parser.y"
 				yy_do_action_117
 			when 118 then
-					--|#line 486 "et_type_parser.y"
+					--|#line 514 "et_type_parser.y"
 				yy_do_action_118
 			when 119 then
-					--|#line 488 "et_type_parser.y"
+					--|#line 516 "et_type_parser.y"
 				yy_do_action_119
 			when 120 then
-					--|#line 494 "et_type_parser.y"
+					--|#line 522 "et_type_parser.y"
 				yy_do_action_120
 			when 121 then
-					--|#line 496 "et_type_parser.y"
+					--|#line 524 "et_type_parser.y"
 				yy_do_action_121
 			when 122 then
-					--|#line 500 "et_type_parser.y"
+					--|#line 528 "et_type_parser.y"
 				yy_do_action_122
 			when 123 then
-					--|#line 502 "et_type_parser.y"
+					--|#line 530 "et_type_parser.y"
 				yy_do_action_123
 			when 124 then
-					--|#line 504 "et_type_parser.y"
+					--|#line 532 "et_type_parser.y"
 				yy_do_action_124
 			when 125 then
-					--|#line 508 "et_type_parser.y"
+					--|#line 536 "et_type_parser.y"
 				yy_do_action_125
 			when 126 then
-					--|#line 510 "et_type_parser.y"
+					--|#line 538 "et_type_parser.y"
 				yy_do_action_126
 			when 127 then
-					--|#line 523 "et_type_parser.y"
+					--|#line 551 "et_type_parser.y"
 				yy_do_action_127
 			else
 				debug ("GEYACC")
@@ -2585,6 +2585,10 @@ debug ("GEYACC")
 end
 
 			yyval19 := ast_factory.new_actual_parameters (last_symbol, yyvs14.item (yyvsp14), counter_value + 1)
+			if attached yyvs8.item (yyvsp8) as l_label then
+				l_label.set_tuple_label (True)
+				l_label.set_seed (counter_value + 1)
+			end
 			add_to_actual_parameter_list (ast_factory.new_labeled_actual_parameter (yyvs8.item (yyvsp8), ast_factory.new_colon_type (yyvs14.item (yyvsp14 - 1), yyvs22.item (yyvsp22)), tokens.unknown_class), yyval19)
 		
 if yy_parsing_status >= yyContinue then
@@ -2605,16 +2609,20 @@ end
 		end
 
 	yy_do_action_67
-			--|#line 302 "et_type_parser.y"
+			--|#line 306 "et_type_parser.y"
 		local
 			yyval19: detachable ET_ACTUAL_PARAMETER_LIST
 		do
---|#line 302 "et_type_parser.y"
+--|#line 306 "et_type_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_type_parser.y' at line 302")
+	std.error.put_line ("Executing parser user-code from file 'et_type_parser.y' at line 306")
 end
 
 			yyval19 := ast_factory.new_actual_parameters (last_symbol, yyvs14.item (yyvsp14), counter_value + 1)
+			if attached yyvs8.item (yyvsp8) as l_label then
+				l_label.set_tuple_label (True)
+				l_label.set_seed (counter_value + 1)
+			end
 			add_to_actual_parameter_list (ast_factory.new_labeled_actual_parameter_semicolon (ast_factory.new_labeled_actual_parameter (yyvs8.item (yyvsp8), ast_factory.new_colon_type (yyvs14.item (yyvsp14 - 1), yyvs22.item (yyvsp22)), tokens.unknown_class), yyvs15.item (yyvsp15)), yyval19)
 		
 if yy_parsing_status >= yyContinue then
@@ -2636,13 +2644,13 @@ end
 		end
 
 	yy_do_action_68
-			--|#line 307 "et_type_parser.y"
+			--|#line 315 "et_type_parser.y"
 		local
 			yyval19: detachable ET_ACTUAL_PARAMETER_LIST
 		do
---|#line 307 "et_type_parser.y"
+--|#line 315 "et_type_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_type_parser.y' at line 307")
+	std.error.put_line ("Executing parser user-code from file 'et_type_parser.y' at line 315")
 end
 
 			yyval19 := yyvs19.item (yyvsp19)
@@ -2656,13 +2664,13 @@ end
 		end
 
 	yy_do_action_69
-			--|#line 312 "et_type_parser.y"
+			--|#line 320 "et_type_parser.y"
 		local
 			yyval19: detachable ET_ACTUAL_PARAMETER_LIST
 		do
---|#line 312 "et_type_parser.y"
+--|#line 320 "et_type_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_type_parser.y' at line 312")
+	std.error.put_line ("Executing parser user-code from file 'et_type_parser.y' at line 320")
 end
 
 			yyval19 := yyvs19.item (yyvsp19)
@@ -2676,17 +2684,21 @@ end
 		end
 
 	yy_do_action_70
-			--|#line 317 "et_type_parser.y"
+			--|#line 325 "et_type_parser.y"
 		local
 			yyval19: detachable ET_ACTUAL_PARAMETER_LIST
 		do
---|#line 317 "et_type_parser.y"
+--|#line 325 "et_type_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_type_parser.y' at line 317")
+	std.error.put_line ("Executing parser user-code from file 'et_type_parser.y' at line 325")
 end
 
 			yyval19 := yyvs19.item (yyvsp19)
 			if yyval19 /= Void then
+				if attached yyvs8.item (yyvsp8) as l_label then
+					l_label.set_tuple_label (True)
+					l_label.set_seed (yyval19.capacity - yyval19.count)
+				end
 				if not yyval19.is_empty then
 					add_to_actual_parameter_list (ast_factory.new_labeled_comma_actual_parameter (ast_factory.new_label_comma (yyvs8.item (yyvsp8), yyvs14.item (yyvsp14)), yyval19.first.type, tokens.unknown_class), yyval19)
 				else
@@ -2704,17 +2716,21 @@ end
 		end
 
 	yy_do_action_71
-			--|#line 328 "et_type_parser.y"
+			--|#line 340 "et_type_parser.y"
 		local
 			yyval19: detachable ET_ACTUAL_PARAMETER_LIST
 		do
---|#line 328 "et_type_parser.y"
+--|#line 340 "et_type_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_type_parser.y' at line 328")
+	std.error.put_line ("Executing parser user-code from file 'et_type_parser.y' at line 340")
 end
 
 			yyval19 := yyvs19.item (yyvsp19)
 			if yyval19 /= Void then
+				if attached yyvs8.item (yyvsp8) as l_label then
+					l_label.set_tuple_label (True)
+					l_label.set_seed (yyval19.capacity - yyval19.count)
+				end
 				if not yyval19.is_empty then
 					add_to_actual_parameter_list (ast_factory.new_labeled_comma_actual_parameter (ast_factory.new_label_comma (yyvs8.item (yyvsp8), yyvs14.item (yyvsp14)), yyval19.first.type, tokens.unknown_class), yyval19)
 				else
@@ -2732,17 +2748,21 @@ end
 		end
 
 	yy_do_action_72
-			--|#line 339 "et_type_parser.y"
+			--|#line 355 "et_type_parser.y"
 		local
 			yyval19: detachable ET_ACTUAL_PARAMETER_LIST
 		do
---|#line 339 "et_type_parser.y"
+--|#line 355 "et_type_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_type_parser.y' at line 339")
+	std.error.put_line ("Executing parser user-code from file 'et_type_parser.y' at line 355")
 end
 
 			yyval19 := yyvs19.item (yyvsp19)
 			if yyval19 /= Void then
+				if attached yyvs8.item (yyvsp8) as l_label then
+					l_label.set_tuple_label (True)
+					l_label.set_seed (yyval19.capacity - yyval19.count)
+				end
 				if not yyval19.is_empty then
 					add_to_actual_parameter_list (ast_factory.new_labeled_comma_actual_parameter (ast_factory.new_label_comma (yyvs8.item (yyvsp8), yyvs14.item (yyvsp14)), yyval19.first.type, tokens.unknown_class), yyval19)
 				else
@@ -2760,18 +2780,22 @@ end
 		end
 
 	yy_do_action_73
-			--|#line 352 "et_type_parser.y"
+			--|#line 372 "et_type_parser.y"
 		local
 			yyval18: detachable ET_ACTUAL_PARAMETER_ITEM
 		do
---|#line 352 "et_type_parser.y"
+--|#line 372 "et_type_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_type_parser.y' at line 352")
+	std.error.put_line ("Executing parser user-code from file 'et_type_parser.y' at line 372")
 end
 
 			yyval18 := ast_factory.new_labeled_actual_parameter (yyvs8.item (yyvsp8), ast_factory.new_colon_type (yyvs14.item (yyvsp14), yyvs22.item (yyvsp22)), tokens.unknown_class)
 			if yyval18 /= Void then
 				increment_counter
+				if attached yyvs8.item (yyvsp8) as l_label then
+					l_label.set_tuple_label (True)
+					l_label.set_seed (counter_value)
+				end
 			end
 		
 if yy_parsing_status >= yyContinue then
@@ -2792,18 +2816,22 @@ end
 		end
 
 	yy_do_action_74
-			--|#line 361 "et_type_parser.y"
+			--|#line 385 "et_type_parser.y"
 		local
 			yyval18: detachable ET_ACTUAL_PARAMETER_ITEM
 		do
---|#line 361 "et_type_parser.y"
+--|#line 385 "et_type_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_type_parser.y' at line 361")
+	std.error.put_line ("Executing parser user-code from file 'et_type_parser.y' at line 385")
 end
 
 			yyval18 := ast_factory.new_labeled_actual_parameter_semicolon (ast_factory.new_labeled_actual_parameter (yyvs8.item (yyvsp8), ast_factory.new_colon_type (yyvs14.item (yyvsp14), yyvs22.item (yyvsp22)), tokens.unknown_class), yyvs15.item (yyvsp15))
 			if yyval18 /= Void then
 				increment_counter
+				if attached yyvs8.item (yyvsp8) as l_label then
+					l_label.set_tuple_label (True)
+					l_label.set_seed (counter_value)
+				end
 			end
 		
 if yy_parsing_status >= yyContinue then
@@ -2825,13 +2853,13 @@ end
 		end
 
 	yy_do_action_75
-			--|#line 370 "et_type_parser.y"
+			--|#line 398 "et_type_parser.y"
 		local
 			yyval20: detachable ET_LIKE_TYPE
 		do
---|#line 370 "et_type_parser.y"
+--|#line 398 "et_type_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_type_parser.y' at line 370")
+	std.error.put_line ("Executing parser user-code from file 'et_type_parser.y' at line 398")
 end
 
 yyval20 := new_like_feature (Void, yyvs2.item (yyvsp2), yyvs8.item (yyvsp8)) 
@@ -2852,13 +2880,13 @@ end
 		end
 
 	yy_do_action_76
-			--|#line 372 "et_type_parser.y"
+			--|#line 400 "et_type_parser.y"
 		local
 			yyval20: detachable ET_LIKE_TYPE
 		do
---|#line 372 "et_type_parser.y"
+--|#line 400 "et_type_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_type_parser.y' at line 372")
+	std.error.put_line ("Executing parser user-code from file 'et_type_parser.y' at line 400")
 end
 
 yyval20 := ast_factory.new_like_current (tokens.implicit_attached_type_mark, yyvs2.item (yyvsp2), yyvs7.item (yyvsp7)) 
@@ -2879,13 +2907,13 @@ end
 		end
 
 	yy_do_action_77
-			--|#line 374 "et_type_parser.y"
+			--|#line 402 "et_type_parser.y"
 		local
 			yyval20: detachable ET_LIKE_TYPE
 		do
---|#line 374 "et_type_parser.y"
+--|#line 402 "et_type_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_type_parser.y' at line 374")
+	std.error.put_line ("Executing parser user-code from file 'et_type_parser.y' at line 402")
 end
 
 yyval20 := yyvs21.item (yyvsp21) 
@@ -2905,13 +2933,13 @@ end
 		end
 
 	yy_do_action_78
-			--|#line 378 "et_type_parser.y"
+			--|#line 406 "et_type_parser.y"
 		local
 			yyval20: detachable ET_LIKE_TYPE
 		do
---|#line 378 "et_type_parser.y"
+--|#line 406 "et_type_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_type_parser.y' at line 378")
+	std.error.put_line ("Executing parser user-code from file 'et_type_parser.y' at line 406")
 end
 
 yyval20 := new_like_feature (Void, yyvs2.item (yyvsp2), yyvs8.item (yyvsp8)) 
@@ -2932,13 +2960,13 @@ end
 		end
 
 	yy_do_action_79
-			--|#line 380 "et_type_parser.y"
+			--|#line 408 "et_type_parser.y"
 		local
 			yyval20: detachable ET_LIKE_TYPE
 		do
---|#line 380 "et_type_parser.y"
+--|#line 408 "et_type_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_type_parser.y' at line 380")
+	std.error.put_line ("Executing parser user-code from file 'et_type_parser.y' at line 408")
 end
 
 yyval20 := new_like_feature (yyvs2.item (yyvsp2 - 1), yyvs2.item (yyvsp2), yyvs8.item (yyvsp8)) 
@@ -2959,13 +2987,13 @@ end
 		end
 
 	yy_do_action_80
-			--|#line 382 "et_type_parser.y"
+			--|#line 410 "et_type_parser.y"
 		local
 			yyval20: detachable ET_LIKE_TYPE
 		do
---|#line 382 "et_type_parser.y"
+--|#line 410 "et_type_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_type_parser.y' at line 382")
+	std.error.put_line ("Executing parser user-code from file 'et_type_parser.y' at line 410")
 end
 
 yyval20 := new_like_feature (yyvs2.item (yyvsp2 - 1), yyvs2.item (yyvsp2), yyvs8.item (yyvsp8)) 
@@ -2986,13 +3014,13 @@ end
 		end
 
 	yy_do_action_81
-			--|#line 384 "et_type_parser.y"
+			--|#line 412 "et_type_parser.y"
 		local
 			yyval20: detachable ET_LIKE_TYPE
 		do
---|#line 384 "et_type_parser.y"
+--|#line 412 "et_type_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_type_parser.y' at line 384")
+	std.error.put_line ("Executing parser user-code from file 'et_type_parser.y' at line 412")
 end
 
 yyval20 := new_like_feature (ast_factory.new_attachment_mark_separate_keyword (yyvs2.item (yyvsp2 - 2), yyvs2.item (yyvsp2 - 1)), yyvs2.item (yyvsp2), yyvs8.item (yyvsp8)) 
@@ -3013,13 +3041,13 @@ end
 		end
 
 	yy_do_action_82
-			--|#line 386 "et_type_parser.y"
+			--|#line 414 "et_type_parser.y"
 		local
 			yyval20: detachable ET_LIKE_TYPE
 		do
---|#line 386 "et_type_parser.y"
+--|#line 414 "et_type_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_type_parser.y' at line 386")
+	std.error.put_line ("Executing parser user-code from file 'et_type_parser.y' at line 414")
 end
 
 yyval20 := new_like_feature (yyvs2.item (yyvsp2 - 1), yyvs2.item (yyvsp2), yyvs8.item (yyvsp8)) 
@@ -3040,13 +3068,13 @@ end
 		end
 
 	yy_do_action_83
-			--|#line 388 "et_type_parser.y"
+			--|#line 416 "et_type_parser.y"
 		local
 			yyval20: detachable ET_LIKE_TYPE
 		do
---|#line 388 "et_type_parser.y"
+--|#line 416 "et_type_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_type_parser.y' at line 388")
+	std.error.put_line ("Executing parser user-code from file 'et_type_parser.y' at line 416")
 end
 
 yyval20 := new_like_feature (ast_factory.new_attachment_mark_separate_keyword (yyvs2.item (yyvsp2 - 2), yyvs2.item (yyvsp2 - 1)), yyvs2.item (yyvsp2), yyvs8.item (yyvsp8)) 
@@ -3067,13 +3095,13 @@ end
 		end
 
 	yy_do_action_84
-			--|#line 390 "et_type_parser.y"
+			--|#line 418 "et_type_parser.y"
 		local
 			yyval20: detachable ET_LIKE_TYPE
 		do
---|#line 390 "et_type_parser.y"
+--|#line 418 "et_type_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_type_parser.y' at line 390")
+	std.error.put_line ("Executing parser user-code from file 'et_type_parser.y' at line 418")
 end
 
 yyval20 := new_like_feature (yyvs14.item (yyvsp14), yyvs2.item (yyvsp2), yyvs8.item (yyvsp8)) 
@@ -3095,13 +3123,13 @@ end
 		end
 
 	yy_do_action_85
-			--|#line 392 "et_type_parser.y"
+			--|#line 420 "et_type_parser.y"
 		local
 			yyval20: detachable ET_LIKE_TYPE
 		do
---|#line 392 "et_type_parser.y"
+--|#line 420 "et_type_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_type_parser.y' at line 392")
+	std.error.put_line ("Executing parser user-code from file 'et_type_parser.y' at line 420")
 end
 
 yyval20 := new_like_feature (ast_factory.new_attachment_mark_separate_keyword (yyvs14.item (yyvsp14), yyvs2.item (yyvsp2 - 1)), yyvs2.item (yyvsp2), yyvs8.item (yyvsp8)) 
@@ -3123,13 +3151,13 @@ end
 		end
 
 	yy_do_action_86
-			--|#line 394 "et_type_parser.y"
+			--|#line 422 "et_type_parser.y"
 		local
 			yyval20: detachable ET_LIKE_TYPE
 		do
---|#line 394 "et_type_parser.y"
+--|#line 422 "et_type_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_type_parser.y' at line 394")
+	std.error.put_line ("Executing parser user-code from file 'et_type_parser.y' at line 422")
 end
 
 yyval20 := new_like_feature (yyvs17.item (yyvsp17), yyvs2.item (yyvsp2), yyvs8.item (yyvsp8)) 
@@ -3151,13 +3179,13 @@ end
 		end
 
 	yy_do_action_87
-			--|#line 396 "et_type_parser.y"
+			--|#line 424 "et_type_parser.y"
 		local
 			yyval20: detachable ET_LIKE_TYPE
 		do
---|#line 396 "et_type_parser.y"
+--|#line 424 "et_type_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_type_parser.y' at line 396")
+	std.error.put_line ("Executing parser user-code from file 'et_type_parser.y' at line 424")
 end
 
 yyval20 := new_like_feature (ast_factory.new_attachment_mark_separate_keyword (yyvs17.item (yyvsp17), yyvs2.item (yyvsp2 - 1)), yyvs2.item (yyvsp2), yyvs8.item (yyvsp8)) 
@@ -3179,13 +3207,13 @@ end
 		end
 
 	yy_do_action_88
-			--|#line 398 "et_type_parser.y"
+			--|#line 426 "et_type_parser.y"
 		local
 			yyval20: detachable ET_LIKE_TYPE
 		do
---|#line 398 "et_type_parser.y"
+--|#line 426 "et_type_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_type_parser.y' at line 398")
+	std.error.put_line ("Executing parser user-code from file 'et_type_parser.y' at line 426")
 end
 
 yyval20 := ast_factory.new_like_current (tokens.implicit_attached_type_mark, yyvs2.item (yyvsp2), yyvs7.item (yyvsp7)) 
@@ -3206,13 +3234,13 @@ end
 		end
 
 	yy_do_action_89
-			--|#line 400 "et_type_parser.y"
+			--|#line 428 "et_type_parser.y"
 		local
 			yyval20: detachable ET_LIKE_TYPE
 		do
---|#line 400 "et_type_parser.y"
+--|#line 428 "et_type_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_type_parser.y' at line 400")
+	std.error.put_line ("Executing parser user-code from file 'et_type_parser.y' at line 428")
 end
 
 yyval20 := ast_factory.new_like_current (ast_factory.new_attachment_mark_separate_keyword (tokens.implicit_attached_type_mark, yyvs2.item (yyvsp2 - 1)), yyvs2.item (yyvsp2), yyvs7.item (yyvsp7)) 
@@ -3233,13 +3261,13 @@ end
 		end
 
 	yy_do_action_90
-			--|#line 402 "et_type_parser.y"
+			--|#line 430 "et_type_parser.y"
 		local
 			yyval20: detachable ET_LIKE_TYPE
 		do
---|#line 402 "et_type_parser.y"
+--|#line 430 "et_type_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_type_parser.y' at line 402")
+	std.error.put_line ("Executing parser user-code from file 'et_type_parser.y' at line 430")
 end
 
 yyval20 := ast_factory.new_like_current (yyvs2.item (yyvsp2 - 1), yyvs2.item (yyvsp2), yyvs7.item (yyvsp7)) 
@@ -3260,13 +3288,13 @@ end
 		end
 
 	yy_do_action_91
-			--|#line 404 "et_type_parser.y"
+			--|#line 432 "et_type_parser.y"
 		local
 			yyval20: detachable ET_LIKE_TYPE
 		do
---|#line 404 "et_type_parser.y"
+--|#line 432 "et_type_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_type_parser.y' at line 404")
+	std.error.put_line ("Executing parser user-code from file 'et_type_parser.y' at line 432")
 end
 
 yyval20 := ast_factory.new_like_current (ast_factory.new_attachment_mark_separate_keyword (yyvs2.item (yyvsp2 - 2), yyvs2.item (yyvsp2 - 1)), yyvs2.item (yyvsp2), yyvs7.item (yyvsp7)) 
@@ -3287,13 +3315,13 @@ end
 		end
 
 	yy_do_action_92
-			--|#line 406 "et_type_parser.y"
+			--|#line 434 "et_type_parser.y"
 		local
 			yyval20: detachable ET_LIKE_TYPE
 		do
---|#line 406 "et_type_parser.y"
+--|#line 434 "et_type_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_type_parser.y' at line 406")
+	std.error.put_line ("Executing parser user-code from file 'et_type_parser.y' at line 434")
 end
 
 yyval20 := ast_factory.new_like_current (yyvs2.item (yyvsp2 - 1), yyvs2.item (yyvsp2), yyvs7.item (yyvsp7)) 
@@ -3314,13 +3342,13 @@ end
 		end
 
 	yy_do_action_93
-			--|#line 408 "et_type_parser.y"
+			--|#line 436 "et_type_parser.y"
 		local
 			yyval20: detachable ET_LIKE_TYPE
 		do
---|#line 408 "et_type_parser.y"
+--|#line 436 "et_type_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_type_parser.y' at line 408")
+	std.error.put_line ("Executing parser user-code from file 'et_type_parser.y' at line 436")
 end
 
 yyval20 := ast_factory.new_like_current (ast_factory.new_attachment_mark_separate_keyword (yyvs2.item (yyvsp2 - 2), yyvs2.item (yyvsp2 - 1)), yyvs2.item (yyvsp2), yyvs7.item (yyvsp7)) 
@@ -3341,13 +3369,13 @@ end
 		end
 
 	yy_do_action_94
-			--|#line 410 "et_type_parser.y"
+			--|#line 438 "et_type_parser.y"
 		local
 			yyval20: detachable ET_LIKE_TYPE
 		do
---|#line 410 "et_type_parser.y"
+--|#line 438 "et_type_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_type_parser.y' at line 410")
+	std.error.put_line ("Executing parser user-code from file 'et_type_parser.y' at line 438")
 end
 
 yyval20 := ast_factory.new_like_current (yyvs14.item (yyvsp14), yyvs2.item (yyvsp2), yyvs7.item (yyvsp7)) 
@@ -3369,13 +3397,13 @@ end
 		end
 
 	yy_do_action_95
-			--|#line 412 "et_type_parser.y"
+			--|#line 440 "et_type_parser.y"
 		local
 			yyval20: detachable ET_LIKE_TYPE
 		do
---|#line 412 "et_type_parser.y"
+--|#line 440 "et_type_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_type_parser.y' at line 412")
+	std.error.put_line ("Executing parser user-code from file 'et_type_parser.y' at line 440")
 end
 
 yyval20 := ast_factory.new_like_current (ast_factory.new_attachment_mark_separate_keyword (yyvs14.item (yyvsp14), yyvs2.item (yyvsp2 - 1)), yyvs2.item (yyvsp2), yyvs7.item (yyvsp7)) 
@@ -3397,13 +3425,13 @@ end
 		end
 
 	yy_do_action_96
-			--|#line 414 "et_type_parser.y"
+			--|#line 442 "et_type_parser.y"
 		local
 			yyval20: detachable ET_LIKE_TYPE
 		do
---|#line 414 "et_type_parser.y"
+--|#line 442 "et_type_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_type_parser.y' at line 414")
+	std.error.put_line ("Executing parser user-code from file 'et_type_parser.y' at line 442")
 end
 
 yyval20 := ast_factory.new_like_current (yyvs17.item (yyvsp17), yyvs2.item (yyvsp2), yyvs7.item (yyvsp7)) 
@@ -3425,13 +3453,13 @@ end
 		end
 
 	yy_do_action_97
-			--|#line 416 "et_type_parser.y"
+			--|#line 444 "et_type_parser.y"
 		local
 			yyval20: detachable ET_LIKE_TYPE
 		do
---|#line 416 "et_type_parser.y"
+--|#line 444 "et_type_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_type_parser.y' at line 416")
+	std.error.put_line ("Executing parser user-code from file 'et_type_parser.y' at line 444")
 end
 
 yyval20 := ast_factory.new_like_current (ast_factory.new_attachment_mark_separate_keyword (yyvs17.item (yyvsp17), yyvs2.item (yyvsp2 - 1)), yyvs2.item (yyvsp2), yyvs7.item (yyvsp7)) 
@@ -3453,13 +3481,13 @@ end
 		end
 
 	yy_do_action_98
-			--|#line 418 "et_type_parser.y"
+			--|#line 446 "et_type_parser.y"
 		local
 			yyval20: detachable ET_LIKE_TYPE
 		do
---|#line 418 "et_type_parser.y"
+--|#line 446 "et_type_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_type_parser.y' at line 418")
+	std.error.put_line ("Executing parser user-code from file 'et_type_parser.y' at line 446")
 end
 
 yyval20 := yyvs21.item (yyvsp21) 
@@ -3479,13 +3507,13 @@ end
 		end
 
 	yy_do_action_99
-			--|#line 422 "et_type_parser.y"
+			--|#line 450 "et_type_parser.y"
 		local
 			yyval21: detachable ET_QUALIFIED_LIKE_IDENTIFIER
 		do
---|#line 422 "et_type_parser.y"
+--|#line 450 "et_type_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_type_parser.y' at line 422")
+	std.error.put_line ("Executing parser user-code from file 'et_type_parser.y' at line 450")
 end
 
 yyval21 := ast_factory.new_qualified_like_braced_type (Void, yyvs2.item (yyvsp2), yyvs14.item (yyvsp14 - 2), yyvs22.item (yyvsp22), yyvs14.item (yyvsp14 - 1), new_dot_feature_name (yyvs14.item (yyvsp14), yyvs8.item (yyvsp8)), tokens.unknown_class)
@@ -3508,13 +3536,13 @@ end
 		end
 
 	yy_do_action_100
-			--|#line 424 "et_type_parser.y"
+			--|#line 452 "et_type_parser.y"
 		local
 			yyval21: detachable ET_QUALIFIED_LIKE_IDENTIFIER
 		do
---|#line 424 "et_type_parser.y"
+--|#line 452 "et_type_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_type_parser.y' at line 424")
+	std.error.put_line ("Executing parser user-code from file 'et_type_parser.y' at line 452")
 end
 
 yyval21 := ast_factory.new_qualified_like_type (Void, yyvs20.item (yyvsp20), new_dot_feature_name (yyvs14.item (yyvsp14), yyvs8.item (yyvsp8)), tokens.unknown_class)
@@ -3536,13 +3564,13 @@ end
 		end
 
 	yy_do_action_101
-			--|#line 428 "et_type_parser.y"
+			--|#line 456 "et_type_parser.y"
 		local
 			yyval21: detachable ET_QUALIFIED_LIKE_IDENTIFIER
 		do
---|#line 428 "et_type_parser.y"
+--|#line 456 "et_type_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_type_parser.y' at line 428")
+	std.error.put_line ("Executing parser user-code from file 'et_type_parser.y' at line 456")
 end
 
 yyval21 := yyvs21.item (yyvsp21) 
@@ -3553,13 +3581,13 @@ end
 		end
 
 	yy_do_action_102
-			--|#line 430 "et_type_parser.y"
+			--|#line 458 "et_type_parser.y"
 		local
 			yyval21: detachable ET_QUALIFIED_LIKE_IDENTIFIER
 		do
---|#line 430 "et_type_parser.y"
+--|#line 458 "et_type_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_type_parser.y' at line 430")
+	std.error.put_line ("Executing parser user-code from file 'et_type_parser.y' at line 458")
 end
 
 yyval21 := ast_factory.new_qualified_like_braced_type (yyvs2.item (yyvsp2 - 1), yyvs2.item (yyvsp2), yyvs14.item (yyvsp14 - 2), yyvs22.item (yyvsp22), yyvs14.item (yyvsp14 - 1), new_dot_feature_name (yyvs14.item (yyvsp14), yyvs8.item (yyvsp8)), tokens.unknown_class)
@@ -3582,13 +3610,13 @@ end
 		end
 
 	yy_do_action_103
-			--|#line 432 "et_type_parser.y"
+			--|#line 460 "et_type_parser.y"
 		local
 			yyval21: detachable ET_QUALIFIED_LIKE_IDENTIFIER
 		do
---|#line 432 "et_type_parser.y"
+--|#line 460 "et_type_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_type_parser.y' at line 432")
+	std.error.put_line ("Executing parser user-code from file 'et_type_parser.y' at line 460")
 end
 
 yyval21 := ast_factory.new_qualified_like_braced_type (yyvs2.item (yyvsp2 - 1), yyvs2.item (yyvsp2), yyvs14.item (yyvsp14 - 2), yyvs22.item (yyvsp22), yyvs14.item (yyvsp14 - 1), new_dot_feature_name (yyvs14.item (yyvsp14), yyvs8.item (yyvsp8)), tokens.unknown_class)
@@ -3611,13 +3639,13 @@ end
 		end
 
 	yy_do_action_104
-			--|#line 434 "et_type_parser.y"
+			--|#line 462 "et_type_parser.y"
 		local
 			yyval21: detachable ET_QUALIFIED_LIKE_IDENTIFIER
 		do
---|#line 434 "et_type_parser.y"
+--|#line 462 "et_type_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_type_parser.y' at line 434")
+	std.error.put_line ("Executing parser user-code from file 'et_type_parser.y' at line 462")
 end
 
 yyval21 := ast_factory.new_qualified_like_braced_type (ast_factory.new_attachment_mark_separate_keyword (yyvs2.item (yyvsp2 - 2), yyvs2.item (yyvsp2 - 1)), yyvs2.item (yyvsp2), yyvs14.item (yyvsp14 - 2), yyvs22.item (yyvsp22), yyvs14.item (yyvsp14 - 1), new_dot_feature_name (yyvs14.item (yyvsp14), yyvs8.item (yyvsp8)), tokens.unknown_class)
@@ -3640,13 +3668,13 @@ end
 		end
 
 	yy_do_action_105
-			--|#line 436 "et_type_parser.y"
+			--|#line 464 "et_type_parser.y"
 		local
 			yyval21: detachable ET_QUALIFIED_LIKE_IDENTIFIER
 		do
---|#line 436 "et_type_parser.y"
+--|#line 464 "et_type_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_type_parser.y' at line 436")
+	std.error.put_line ("Executing parser user-code from file 'et_type_parser.y' at line 464")
 end
 
 yyval21 := ast_factory.new_qualified_like_braced_type (yyvs2.item (yyvsp2 - 1), yyvs2.item (yyvsp2), yyvs14.item (yyvsp14 - 2), yyvs22.item (yyvsp22), yyvs14.item (yyvsp14 - 1), new_dot_feature_name (yyvs14.item (yyvsp14), yyvs8.item (yyvsp8)), tokens.unknown_class)
@@ -3669,13 +3697,13 @@ end
 		end
 
 	yy_do_action_106
-			--|#line 438 "et_type_parser.y"
+			--|#line 466 "et_type_parser.y"
 		local
 			yyval21: detachable ET_QUALIFIED_LIKE_IDENTIFIER
 		do
---|#line 438 "et_type_parser.y"
+--|#line 466 "et_type_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_type_parser.y' at line 438")
+	std.error.put_line ("Executing parser user-code from file 'et_type_parser.y' at line 466")
 end
 
 yyval21 := ast_factory.new_qualified_like_braced_type (ast_factory.new_attachment_mark_separate_keyword (yyvs2.item (yyvsp2 - 2), yyvs2.item (yyvsp2 - 1)), yyvs2.item (yyvsp2), yyvs14.item (yyvsp14 - 2), yyvs22.item (yyvsp22), yyvs14.item (yyvsp14 - 1), new_dot_feature_name (yyvs14.item (yyvsp14), yyvs8.item (yyvsp8)), tokens.unknown_class)
@@ -3698,13 +3726,13 @@ end
 		end
 
 	yy_do_action_107
-			--|#line 440 "et_type_parser.y"
+			--|#line 468 "et_type_parser.y"
 		local
 			yyval21: detachable ET_QUALIFIED_LIKE_IDENTIFIER
 		do
---|#line 440 "et_type_parser.y"
+--|#line 468 "et_type_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_type_parser.y' at line 440")
+	std.error.put_line ("Executing parser user-code from file 'et_type_parser.y' at line 468")
 end
 
 			if system_processor.older_ise_version (ise_6_1_0) then
@@ -3732,13 +3760,13 @@ end
 		end
 
 	yy_do_action_108
-			--|#line 448 "et_type_parser.y"
+			--|#line 476 "et_type_parser.y"
 		local
 			yyval21: detachable ET_QUALIFIED_LIKE_IDENTIFIER
 		do
---|#line 448 "et_type_parser.y"
+--|#line 476 "et_type_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_type_parser.y' at line 448")
+	std.error.put_line ("Executing parser user-code from file 'et_type_parser.y' at line 476")
 end
 
 			if system_processor.older_ise_version (ise_6_1_0) then
@@ -3766,13 +3794,13 @@ end
 		end
 
 	yy_do_action_109
-			--|#line 456 "et_type_parser.y"
+			--|#line 484 "et_type_parser.y"
 		local
 			yyval21: detachable ET_QUALIFIED_LIKE_IDENTIFIER
 		do
---|#line 456 "et_type_parser.y"
+--|#line 484 "et_type_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_type_parser.y' at line 456")
+	std.error.put_line ("Executing parser user-code from file 'et_type_parser.y' at line 484")
 end
 
 			if system_processor.older_ise_version (ise_6_1_0) then
@@ -3801,13 +3829,13 @@ end
 		end
 
 	yy_do_action_110
-			--|#line 464 "et_type_parser.y"
+			--|#line 492 "et_type_parser.y"
 		local
 			yyval21: detachable ET_QUALIFIED_LIKE_IDENTIFIER
 		do
---|#line 464 "et_type_parser.y"
+--|#line 492 "et_type_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_type_parser.y' at line 464")
+	std.error.put_line ("Executing parser user-code from file 'et_type_parser.y' at line 492")
 end
 
 			if system_processor.older_ise_version (ise_6_1_0) then
@@ -3836,13 +3864,13 @@ end
 		end
 
 	yy_do_action_111
-			--|#line 472 "et_type_parser.y"
+			--|#line 500 "et_type_parser.y"
 		local
 			yyval21: detachable ET_QUALIFIED_LIKE_IDENTIFIER
 		do
---|#line 472 "et_type_parser.y"
+--|#line 500 "et_type_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_type_parser.y' at line 472")
+	std.error.put_line ("Executing parser user-code from file 'et_type_parser.y' at line 500")
 end
 
 yyval21 := ast_factory.new_qualified_like_type (yyvs2.item (yyvsp2), yyvs20.item (yyvsp20), new_dot_feature_name (yyvs14.item (yyvsp14), yyvs8.item (yyvsp8)), tokens.unknown_class)
@@ -3865,13 +3893,13 @@ end
 		end
 
 	yy_do_action_112
-			--|#line 474 "et_type_parser.y"
+			--|#line 502 "et_type_parser.y"
 		local
 			yyval21: detachable ET_QUALIFIED_LIKE_IDENTIFIER
 		do
---|#line 474 "et_type_parser.y"
+--|#line 502 "et_type_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_type_parser.y' at line 474")
+	std.error.put_line ("Executing parser user-code from file 'et_type_parser.y' at line 502")
 end
 
 yyval21 := ast_factory.new_qualified_like_type (yyvs2.item (yyvsp2), yyvs20.item (yyvsp20), new_dot_feature_name (yyvs14.item (yyvsp14), yyvs8.item (yyvsp8)), tokens.unknown_class)
@@ -3894,13 +3922,13 @@ end
 		end
 
 	yy_do_action_113
-			--|#line 476 "et_type_parser.y"
+			--|#line 504 "et_type_parser.y"
 		local
 			yyval21: detachable ET_QUALIFIED_LIKE_IDENTIFIER
 		do
---|#line 476 "et_type_parser.y"
+--|#line 504 "et_type_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_type_parser.y' at line 476")
+	std.error.put_line ("Executing parser user-code from file 'et_type_parser.y' at line 504")
 end
 
 yyval21 := ast_factory.new_qualified_like_type (ast_factory.new_attachment_mark_separate_keyword (yyvs2.item (yyvsp2 - 1), yyvs2.item (yyvsp2)), yyvs20.item (yyvsp20), new_dot_feature_name (yyvs14.item (yyvsp14), yyvs8.item (yyvsp8)), tokens.unknown_class)
@@ -3923,13 +3951,13 @@ end
 		end
 
 	yy_do_action_114
-			--|#line 478 "et_type_parser.y"
+			--|#line 506 "et_type_parser.y"
 		local
 			yyval21: detachable ET_QUALIFIED_LIKE_IDENTIFIER
 		do
---|#line 478 "et_type_parser.y"
+--|#line 506 "et_type_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_type_parser.y' at line 478")
+	std.error.put_line ("Executing parser user-code from file 'et_type_parser.y' at line 506")
 end
 
 yyval21 := ast_factory.new_qualified_like_type (yyvs2.item (yyvsp2), yyvs20.item (yyvsp20), new_dot_feature_name (yyvs14.item (yyvsp14), yyvs8.item (yyvsp8)), tokens.unknown_class)
@@ -3952,13 +3980,13 @@ end
 		end
 
 	yy_do_action_115
-			--|#line 480 "et_type_parser.y"
+			--|#line 508 "et_type_parser.y"
 		local
 			yyval21: detachable ET_QUALIFIED_LIKE_IDENTIFIER
 		do
---|#line 480 "et_type_parser.y"
+--|#line 508 "et_type_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_type_parser.y' at line 480")
+	std.error.put_line ("Executing parser user-code from file 'et_type_parser.y' at line 508")
 end
 
 yyval21 := ast_factory.new_qualified_like_type (ast_factory.new_attachment_mark_separate_keyword (yyvs2.item (yyvsp2 - 1), yyvs2.item (yyvsp2)), yyvs20.item (yyvsp20), new_dot_feature_name (yyvs14.item (yyvsp14), yyvs8.item (yyvsp8)), tokens.unknown_class)
@@ -3981,13 +4009,13 @@ end
 		end
 
 	yy_do_action_116
-			--|#line 482 "et_type_parser.y"
+			--|#line 510 "et_type_parser.y"
 		local
 			yyval21: detachable ET_QUALIFIED_LIKE_IDENTIFIER
 		do
---|#line 482 "et_type_parser.y"
+--|#line 510 "et_type_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_type_parser.y' at line 482")
+	std.error.put_line ("Executing parser user-code from file 'et_type_parser.y' at line 510")
 end
 
 yyval21 := ast_factory.new_qualified_like_type (yyvs14.item (yyvsp14 - 1), yyvs20.item (yyvsp20), new_dot_feature_name (yyvs14.item (yyvsp14), yyvs8.item (yyvsp8)), tokens.unknown_class)
@@ -4009,13 +4037,13 @@ end
 		end
 
 	yy_do_action_117
-			--|#line 484 "et_type_parser.y"
+			--|#line 512 "et_type_parser.y"
 		local
 			yyval21: detachable ET_QUALIFIED_LIKE_IDENTIFIER
 		do
---|#line 484 "et_type_parser.y"
+--|#line 512 "et_type_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_type_parser.y' at line 484")
+	std.error.put_line ("Executing parser user-code from file 'et_type_parser.y' at line 512")
 end
 
 yyval21 := ast_factory.new_qualified_like_type (ast_factory.new_attachment_mark_separate_keyword (yyvs14.item (yyvsp14 - 1), yyvs2.item (yyvsp2)), yyvs20.item (yyvsp20), new_dot_feature_name (yyvs14.item (yyvsp14), yyvs8.item (yyvsp8)), tokens.unknown_class)
@@ -4038,13 +4066,13 @@ end
 		end
 
 	yy_do_action_118
-			--|#line 486 "et_type_parser.y"
+			--|#line 514 "et_type_parser.y"
 		local
 			yyval21: detachable ET_QUALIFIED_LIKE_IDENTIFIER
 		do
---|#line 486 "et_type_parser.y"
+--|#line 514 "et_type_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_type_parser.y' at line 486")
+	std.error.put_line ("Executing parser user-code from file 'et_type_parser.y' at line 514")
 end
 
 yyval21 := ast_factory.new_qualified_like_type (yyvs17.item (yyvsp17), yyvs20.item (yyvsp20), new_dot_feature_name (yyvs14.item (yyvsp14), yyvs8.item (yyvsp8)), tokens.unknown_class)
@@ -4067,13 +4095,13 @@ end
 		end
 
 	yy_do_action_119
-			--|#line 488 "et_type_parser.y"
+			--|#line 516 "et_type_parser.y"
 		local
 			yyval21: detachable ET_QUALIFIED_LIKE_IDENTIFIER
 		do
---|#line 488 "et_type_parser.y"
+--|#line 516 "et_type_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_type_parser.y' at line 488")
+	std.error.put_line ("Executing parser user-code from file 'et_type_parser.y' at line 516")
 end
 
 yyval21 := ast_factory.new_qualified_like_type (ast_factory.new_attachment_mark_separate_keyword (yyvs17.item (yyvsp17), yyvs2.item (yyvsp2)), yyvs20.item (yyvsp20), new_dot_feature_name (yyvs14.item (yyvsp14), yyvs8.item (yyvsp8)), tokens.unknown_class)
@@ -4097,13 +4125,13 @@ end
 		end
 
 	yy_do_action_120
-			--|#line 494 "et_type_parser.y"
+			--|#line 522 "et_type_parser.y"
 		local
 			yyval8: detachable ET_IDENTIFIER
 		do
---|#line 494 "et_type_parser.y"
+--|#line 522 "et_type_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_type_parser.y' at line 494")
+	std.error.put_line ("Executing parser user-code from file 'et_type_parser.y' at line 522")
 end
 
 yyval8 := yyvs8.item (yyvsp8) 
@@ -4114,13 +4142,13 @@ end
 		end
 
 	yy_do_action_121
-			--|#line 496 "et_type_parser.y"
+			--|#line 524 "et_type_parser.y"
 		local
 			yyval8: detachable ET_IDENTIFIER
 		do
---|#line 496 "et_type_parser.y"
+--|#line 524 "et_type_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_type_parser.y' at line 496")
+	std.error.put_line ("Executing parser user-code from file 'et_type_parser.y' at line 524")
 end
 
 yyval8 := yyvs8.item (yyvsp8) 
@@ -4131,13 +4159,13 @@ end
 		end
 
 	yy_do_action_122
-			--|#line 500 "et_type_parser.y"
+			--|#line 528 "et_type_parser.y"
 		local
 			yyval8: detachable ET_IDENTIFIER
 		do
---|#line 500 "et_type_parser.y"
+--|#line 528 "et_type_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_type_parser.y' at line 500")
+	std.error.put_line ("Executing parser user-code from file 'et_type_parser.y' at line 528")
 end
 
 yyval8 := yyvs8.item (yyvsp8) 
@@ -4148,13 +4176,13 @@ end
 		end
 
 	yy_do_action_123
-			--|#line 502 "et_type_parser.y"
+			--|#line 530 "et_type_parser.y"
 		local
 			yyval8: detachable ET_IDENTIFIER
 		do
---|#line 502 "et_type_parser.y"
+--|#line 530 "et_type_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_type_parser.y' at line 502")
+	std.error.put_line ("Executing parser user-code from file 'et_type_parser.y' at line 530")
 end
 
 yyval8 := yyvs8.item (yyvsp8) 
@@ -4165,13 +4193,13 @@ end
 		end
 
 	yy_do_action_124
-			--|#line 504 "et_type_parser.y"
+			--|#line 532 "et_type_parser.y"
 		local
 			yyval8: detachable ET_IDENTIFIER
 		do
---|#line 504 "et_type_parser.y"
+--|#line 532 "et_type_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_type_parser.y' at line 504")
+	std.error.put_line ("Executing parser user-code from file 'et_type_parser.y' at line 532")
 end
 
 yyval8 := yyvs8.item (yyvsp8) 
@@ -4182,13 +4210,13 @@ end
 		end
 
 	yy_do_action_125
-			--|#line 508 "et_type_parser.y"
+			--|#line 536 "et_type_parser.y"
 		local
 			yyval15: detachable ET_SEMICOLON_SYMBOL
 		do
---|#line 508 "et_type_parser.y"
+--|#line 536 "et_type_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_type_parser.y' at line 508")
+	std.error.put_line ("Executing parser user-code from file 'et_type_parser.y' at line 536")
 end
 
 yyval15 := yyvs15.item (yyvsp15) 
@@ -4199,13 +4227,13 @@ end
 		end
 
 	yy_do_action_126
-			--|#line 510 "et_type_parser.y"
+			--|#line 538 "et_type_parser.y"
 		local
 			yyval15: detachable ET_SEMICOLON_SYMBOL
 		do
---|#line 510 "et_type_parser.y"
+--|#line 538 "et_type_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_type_parser.y' at line 510")
+	std.error.put_line ("Executing parser user-code from file 'et_type_parser.y' at line 538")
 end
 
 			if attached yyvs15.item (yyvsp15 - 1) as l_semicolon then
@@ -4223,13 +4251,13 @@ end
 		end
 
 	yy_do_action_127
-			--|#line 523 "et_type_parser.y"
+			--|#line 551 "et_type_parser.y"
 		local
 			yyval1: detachable ANY
 		do
---|#line 523 "et_type_parser.y"
+--|#line 551 "et_type_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_type_parser.y' at line 523")
+	std.error.put_line ("Executing parser user-code from file 'et_type_parser.y' at line 551")
 end
 
 			increment_counter

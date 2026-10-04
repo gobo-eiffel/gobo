@@ -5,7 +5,7 @@
 		"Eiffel inline agents with a query (function or attribute) as associated feature"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2007, Eric Bezault and others"
+	copyright: "Copyright (c) 2007-2026, Eric Bezault and others"
 	license: "MIT License"
 
 deferred class ET_QUERY_INLINE_AGENT
@@ -13,23 +13,18 @@ deferred class ET_QUERY_INLINE_AGENT
 inherit
 
 	ET_INLINE_AGENT
+		undefine
+			type
 		redefine
-			type,
 			implicit_result
 		end
 
-feature -- Access
-
-	type: ET_TYPE
-			-- Return type
-		do
-			Result := declared_type.type
-		ensure then
-			type_not_void: Result /= Void
+	ET_QUERY_CLOSURE
+		rename
+			arguments as formal_arguments
 		end
 
-	declared_type: ET_DECLARED_TYPE
-			-- Declared type (type preceded by a colon)
+feature -- Access
 
 	implicit_result: ET_RESULT
 			-- Fictitious node corresponding to the result of the
@@ -37,7 +32,6 @@ feature -- Access
 
 invariant
 
-	declared_type_not_void: declared_type /= Void
 	implicit_result_not_void: implicit_result /= Void
 
 end

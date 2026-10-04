@@ -23,6 +23,7 @@ inherit
 			make_null as make_null_pretty_printer
 		redefine
 			reset,
+			process_argument_name,
 			process_attribute,
 			process_class,
 			process_constant_attribute,
@@ -39,6 +40,7 @@ inherit
 			process_external_function_inline_agent_declaration,
 			process_external_procedure,
 			process_external_procedure_inline_agent_declaration,
+			process_feature_name,
 			process_invariants,
 			process_once_function,
 			process_once_function_inline_agent_declaration,
@@ -48,6 +50,7 @@ inherit
 			set_target,
 			set_current_target,
 			set_target_type,
+			set_target_with_seeded_feature,
 			set_target_type_with_seeded_feature
 		end
 
@@ -86,6 +89,11 @@ feature {NONE} -- Initialization
 			file_set: file = a_file
 			bom_enabled: bom_enabled
 			system_processor_set: system_processor = a_system_processor
+			use_uppercase_class_names: use_uppercase_class_names
+			use_lowercase_feature_names: use_lowercase_feature_names
+			use_lowercase_keywords: use_lowercase_keywords
+			use_lowercase_local_names: use_lowercase_local_names
+			no_use_is_keyword: not use_is_keyword
 		end
 
 	make_null (a_system_processor: like system_processor)
@@ -97,6 +105,11 @@ feature {NONE} -- Initialization
 			file_set: file = null_output_stream
 			bom_enabled: bom_enabled
 			system_processor_set: system_processor = a_system_processor
+			use_uppercase_class_names: use_uppercase_class_names
+			use_lowercase_feature_names: use_lowercase_feature_names
+			use_lowercase_keywords: use_lowercase_keywords
+			use_lowercase_local_names: use_lowercase_local_names
+			no_use_is_keyword: not use_is_keyword
 		end
 
 feature -- Initialization
@@ -143,6 +156,31 @@ feature -- Setting
 
 feature {ET_AST_PROCESSOR} -- Processing
 
+	process_argument_name (a_identifier: ET_IDENTIFIER; a_is_declaration: BOOLEAN)
+			-- Process `a_identifier'.
+		local
+			l_seed: INTEGER
+			l_name: STRING
+		do
+			l_seed := a_identifier.seed
+			if
+				current_closure /= current_closure_impl and then
+				attached {ET_FEATURE} current_closure as l_current_feature and then
+				attached l_current_feature.arguments as l_arguments and then
+				(l_seed >= 1 and l_seed <= l_arguments.count)
+			then
+				l_name := l_arguments.formal_argument (l_seed).name.name
+			else
+				l_name := a_identifier.name
+			end
+			if use_lowercase_local_names then
+				print_lowercase_string (l_name)
+			else
+				print_string (l_name)
+			end
+			process_break (a_identifier.break)
+		end
+
 	process_attribute (a_feature: ET_ATTRIBUTE)
 			-- Process `a_feature'.
 		local
@@ -168,12 +206,16 @@ feature {ET_AST_PROCESSOR} -- Processing
 			l_old_current_class: like current_class
 			l_old_current_type: like current_type
 		do
-			l_old_current_class := current_class
-			l_old_current_type := current_type
-			set_current_class (a_class)
-			precursor (a_class)
-			current_class := l_old_current_class
-			current_type := l_old_current_type
+			if not use_as_type then
+				l_old_current_class := current_class
+				l_old_current_type := current_type
+				set_current_class (a_class)
+				precursor (a_class)
+				current_class := l_old_current_class
+				current_type := l_old_current_type
+			else
+				precursor (a_class)
+			end
 		end
 
 	process_constant_attribute (a_feature: ET_CONSTANT_ATTRIBUTE)
@@ -426,6 +468,22 @@ feature {ET_AST_PROCESSOR} -- Processing
 			current_closure_impl := l_old_closure_impl
 		end
 
+	process_feature_name (a_feature_name: ET_FEATURE_NAME)
+			-- Process `a_feature_name'.
+		local
+			l_feature_name: ET_FEATURE_NAME
+		do
+			l_feature_name := a_feature_name
+			if a_feature_name.is_feature_name then
+				if attached target_class as l_target_class then
+					if attached l_target_class.seeded_feature (a_feature_name.seed) as l_feature then
+						l_feature_name := l_feature.name
+					end
+				end
+			end
+			precursor (l_feature_name)
+		end
+
 	process_invariants (a_list: ET_INVARIANTS)
 			-- Process `a_list'.
 		local
@@ -602,9 +660,28 @@ feature {NONE} -- Call targets
 			end
 		end
 
+	set_target_with_seeded_feature (a_target: detachable ET_EXPRESSION; a_seed: INTEGER)
+			-- Set target to be used when processing a feature name.
+			-- In case the type of `a_target` is a formal parameter, choose
+			-- one of its constraints adapted base classes containing a
+			-- feature with seed `a_seed' (or any of the constraints if
+			-- none contains such feature).
+		local
+			l_context: ET_NESTED_TYPE_CONTEXT
+		do
+			if a_target = Void then
+				target_class := Void
+			else
+				l_context := internal_type_context
+				current_type.copy_to_type_context (l_context)
+				expression_type_finder.find_expression_type_in_closure (a_target, current_closure_impl, current_closure, current_class_impl, l_context, current_universe.any_type)
+				target_class := l_context.adapted_base_class_with_seeded_feature (a_seed).base_class
+			end
+		end
+
 	set_target_type_with_seeded_feature (a_type: detachable ET_TYPE; a_seed: INTEGER)
 			-- Set target type to be used when processing a feature name.
-			-- In case of a formal parameter, choose one of its constraint
+			-- In case of a formal parameter, choose one of its constraints
 			-- adapted base classes containing a feature with seed `a_seed'
 			-- (or any of the constraints if none contains such feature).
 		local

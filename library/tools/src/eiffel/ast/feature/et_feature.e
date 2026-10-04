@@ -36,7 +36,8 @@ inherit
 			is_feature,
 			as_feature,
 			first_note,
-			is_static
+			is_static,
+			hash_code
 		end
 
 feature -- Initialization

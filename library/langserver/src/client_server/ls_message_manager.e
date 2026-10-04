@@ -189,6 +189,14 @@ feature -- Handlers
 			custom_notification_handler_not_void: Result /= Void
 		end
 
+	custom_request_handler: LS_CUSTOM_REQUEST_HANDLER
+			-- Handler for custom requests
+		once ("OBJECT")
+			create Result.make
+		ensure
+			custom_request_handler_not_void: Result /= Void
+		end
+
 	declaration_request_handler: LS_DECLARATION_REQUEST_HANDLER
 			-- Handler for 'textDocument/declaration' requests
 		once ("OBJECT")

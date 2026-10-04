@@ -26,7 +26,7 @@ feature {ET_AST_NODE} -- Processing
 			an_expression.across_keyword.process (Current)
 			an_expression.iterable_expression.process (Current)
 			an_expression.as_keyword.process (Current)
-			process_iteration_item_name_declaration (an_expression.item_name)
+			process_iteration_item_name_declaration (an_expression.item_name, an_expression)
 			if attached an_expression.invariant_part as l_invariant_part then
 				l_invariant_part.process (Current)
 			end
@@ -46,7 +46,7 @@ feature {ET_AST_NODE} -- Processing
 			an_instruction.across_keyword.process (Current)
 			an_instruction.iterable_expression.process (Current)
 			an_instruction.as_keyword.process (Current)
-			process_iteration_item_name_declaration (an_instruction.item_name)
+			process_iteration_item_name_declaration (an_instruction.item_name, an_instruction)
 			if attached an_instruction.from_compound as l_from_compound then
 				l_from_compound.process (Current)
 			end
@@ -1878,11 +1878,13 @@ feature {ET_AST_NODE} -- Processing
 			a_iteration_cursor.item_name.process (Current)
 		end
 
-	process_iteration_item_name_declaration (a_identifier: ET_IDENTIFIER)
-			-- Process `a_identifier`.
+	process_iteration_item_name_declaration (a_identifier: ET_IDENTIFIER; a_iteration_component: ET_ITERATION_COMPONENT)
+			-- Process `a_identifier' when it appears in `a_argument`.
 		require
 			a_identifier_not_void: a_identifier /= Void
 			a_identifier_is_iteration_item: a_identifier.is_iteration_item
+			a_iteration_component_not_void: a_iteration_component /= Void
+			valid_identifier: a_identifier = a_iteration_component.item_name
 		do
 			a_identifier.process (Current)
 		end
@@ -2667,7 +2669,7 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `a_expression'.
 		do
 			a_expression.quantifier_symbol.process (Current)
-			process_iteration_item_name_declaration (a_expression.item_name)
+			process_iteration_item_name_declaration (a_expression.item_name, a_expression)
 			a_expression.colon_symbol.process (Current)
 			a_expression.iterable_expression.process (Current)
 			a_expression.bar_symbol.process (Current)
@@ -2744,7 +2746,7 @@ feature {ET_AST_NODE} -- Processing
 			i, nb: INTEGER
 		do
 			a_instruction.open_repeat_symbol.process (Current)
-			process_iteration_item_name_declaration (a_instruction.item_name)
+			process_iteration_item_name_declaration (a_instruction.item_name, a_instruction)
 			a_instruction.colon_symbol.process (Current)
 			a_instruction.iterable_expression.process (Current)
 			a_instruction.bar_symbol.process (Current)

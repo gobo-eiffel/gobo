@@ -49,7 +49,8 @@ inherit
 			arguments,
 			first_note,
 			is_static,
-			implementation_feature
+			implementation_feature,
+			hash_code
 		end
 
 create

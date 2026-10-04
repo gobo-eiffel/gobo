@@ -5,7 +5,7 @@
 		"Eiffel queries (functions or attributes)"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2024, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2026, Eric Bezault and others"
 	license: "MIT License"
 
 deferred class ET_QUERY
@@ -13,11 +13,21 @@ deferred class ET_QUERY
 inherit
 
 	ET_FEATURE
+		undefine
+			type
 		redefine
-			type,
 			reset_after_features_flattened
 		end
 
+	ET_QUERY_CLOSURE
+		rename
+			implementation_closure as implementation_feature
+		undefine
+			first_note,
+			is_static,
+			implementation_feature,
+			hash_code
+		end
 
 feature -- Initialization
 
@@ -31,17 +41,6 @@ feature -- Initialization
 		end
 
 feature -- Access
-
-	type: ET_TYPE
-			-- Return type
-		do
-			Result := declared_type.type
-		ensure then
-			type_not_void: Result /= Void
-		end
-
-	declared_type: ET_DECLARED_TYPE
-			-- Declared type (type preceded by a colon)
 
 	assigner: detachable ET_ASSIGNER
 			-- Assigner procedure
@@ -81,7 +80,6 @@ feature -- Conversion
 
 invariant
 
-	declared_type_not_void: declared_type /= Void
 	is_query: is_query
 
 end
