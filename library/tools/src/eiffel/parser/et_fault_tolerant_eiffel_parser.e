@@ -2971,6 +2971,8 @@ feature {NONE} -- Parsing
 					end
 					from until nb <= 0 loop
 						if l_formal_arguments /= Void and attached last_formal_argument_items.item as l_last_formal_argument_item then
+							l_last_formal_argument_item.name.set_argument (True)
+							l_last_formal_argument_item.name.set_seed (nb)
 							l_formal_arguments.put_first (l_last_formal_argument_item)
 						end
 						last_formal_argument_items.remove
@@ -3058,6 +3060,8 @@ feature {NONE} -- Parsing
 				end
 				from until nb <= 0 loop
 					if l_local_variables /= Void and attached last_local_variable_items.item as l_last_local_variable_item then
+						l_last_local_variable_item.name.set_local (True)
+						l_last_local_variable_item.name.set_seed (nb)
 						l_local_variables.put_first (l_last_local_variable_item)
 					end
 					last_local_variable_items.remove

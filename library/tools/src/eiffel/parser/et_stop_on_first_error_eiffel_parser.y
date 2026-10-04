@@ -2347,6 +2347,8 @@ Formal_argument_name_comma: Identifier ','
 			$$ := ast_factory.new_formal_comma_argument (ast_factory.new_argument_name_comma ($1, $2), dummy_type)
 			if $$ /= Void then
 				increment_counter
+				$$.name.set_argument (True)
+				$$.name.set_seed (counter_value)
 			end
 		}
 	;
@@ -2356,6 +2358,8 @@ Formal_argument_name: Identifier
 			$$ := ast_factory.new_formal_comma_argument ($1, dummy_type)
 			if $$ /= Void then
 				increment_counter
+				$$.name.set_argument (True)
+				$$.name.set_seed (counter_value)
 			end
 		}
 	;
@@ -2365,6 +2369,8 @@ Formal_argument: Identifier ':' Type
 			$$ := ast_factory.new_formal_argument ($1, ast_factory.new_colon_type ($2, $3))
 			if $$ /= Void then
 				increment_counter
+				$$.name.set_argument (True)
+				$$.name.set_seed (counter_value)
 			end
 		}
 	;
@@ -2374,6 +2380,8 @@ Formal_argument_semicolon: Identifier ':' Type  Semicolon
 			$$ := ast_factory.new_formal_argument_semicolon (ast_factory.new_formal_argument ($1, ast_factory.new_colon_type ($2, $3)), $4)
 			if $$ /= Void then
 				increment_counter
+				$$.name.set_argument (True)
+				$$.name.set_seed (counter_value)
 			end
 		}
 	;
@@ -2462,6 +2470,8 @@ Local_name_comma: Identifier ','
 			$$ := ast_factory.new_local_comma_variable (ast_factory.new_local_name_comma ($1, $2), dummy_type)
 			if $$ /= Void then
 				increment_counter
+				$$.name.set_local (True)
+				$$.name.set_seed (counter_value)
 			end
 		}
 	;
@@ -2471,6 +2481,8 @@ Local_name: Identifier
 			$$ := ast_factory.new_local_comma_variable ($1, dummy_type)
 			if $$ /= Void then
 				increment_counter
+				$$.name.set_local (True)
+				$$.name.set_seed (counter_value)
 			end
 		}
 	;
@@ -2480,6 +2492,8 @@ Local_variable: Identifier ':' Type
 			$$ := ast_factory.new_local_variable ($1, ast_factory.new_colon_type ($2, $3))
 			if $$ /= Void then
 				increment_counter
+				$$.name.set_local (True)
+				$$.name.set_seed (counter_value)
 			end
 		}
 	;
@@ -2489,6 +2503,8 @@ Local_variable_semicolon: Identifier ':' Type  Semicolon
 			$$ := ast_factory.new_local_variable_semicolon (ast_factory.new_local_variable ($1, ast_factory.new_colon_type ($2, $3)), $4)
 			if $$ /= Void then
 				increment_counter
+				$$.name.set_local (True)
+				$$.name.set_seed (counter_value)
 			end
 		}
 	;

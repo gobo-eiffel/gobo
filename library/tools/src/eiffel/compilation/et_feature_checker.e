@@ -1993,6 +1993,7 @@ feature {NONE} -- Locals/Formal arguments/query type validity
 			i, nb: INTEGER
 			l_type: ET_TYPE
 			l_formal: ET_FORMAL_ARGUMENT
+			l_name: ET_IDENTIFIER
 			l_formals_impl: detachable ET_FORMAL_ARGUMENT_LIST
 			had_error: BOOLEAN
 		do
@@ -2010,6 +2011,9 @@ feature {NONE} -- Locals/Formal arguments/query type validity
 				else
 					from i := 1 until i > nb loop
 						l_formal := an_arguments.formal_argument (i)
+						l_name := l_formal.name
+						l_name.set_argument (True)
+						l_name.set_seed (i)
 						l_type := l_formal.type
 						had_error := had_error or has_fatal_error
 						check_signature_type_validity (l_formals_impl.formal_argument (i).type)
