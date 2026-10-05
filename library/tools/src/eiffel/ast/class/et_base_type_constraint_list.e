@@ -5,11 +5,11 @@
 	"[
 		Eiffel constraints on formal generic parameters where the 
 		actual generic parameters need to conform to several types, which
-		are base types. An empty list is equivalent to '{detachable ANY}'.
+		are base types. An empty list is equivalent to '{detachable separate ANY}'.
 	]"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2019-2024, Eric Bezault and others"
+	copyright: "Copyright (c) 2019-2026, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_BASE_TYPE_CONSTRAINT_LIST

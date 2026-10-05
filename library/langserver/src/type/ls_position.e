@@ -11,7 +11,7 @@
 		are not supported.
 	]"
 	library: "Gobo Eiffel Language Server Protocol Library"
-	copyright: "Copyright (c) 2025, Eric Bezault and others"
+	copyright: "Copyright (c) 2025-2026, Eric Bezault and others"
 	license: "MIT License"
 
 class LS_POSITION
@@ -24,6 +24,11 @@ inherit
 		end
 
 	COMPARABLE
+
+	HASHABLE
+		undefine
+			is_equal
+		end
 
 create
 
@@ -55,6 +60,15 @@ feature -- Access
 			--
 			-- If the character value is greater than the line length it defaults back
 			-- to the line length.
+
+	hash_code: INTEGER
+			-- Hash code value
+		do
+			Result := line.value.as_integer_32
+			if Result < 0 then
+				Result := - (Result + 1)
+			end
+		end
 
 feature -- Comparison
 

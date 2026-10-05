@@ -778,6 +778,7 @@ feature {NONE} -- Parsing
 			l_done: BOOLEAN
 			l_regular_actual_parameters: BOOLEAN
 			i, nb: INTEGER
+			l_seed: INTEGER
 			l_identifier_expected: BOOLEAN
 			l_identifier_code: INTEGER
 			l_actual_parameters: detachable ET_ACTUAL_PARAMETER_LIST
@@ -801,6 +802,11 @@ feature {NONE} -- Parsing
 						l_identifier_code := last_token
 						read_token
 						if last_token = Comma_code then
+							if l_identifier /= Void then
+								l_identifier.set_tuple_label (True)
+								l_seed := l_seed + 1
+								l_identifier.set_seed (l_seed)
+							end
 							last_labels.force (ast_factory.new_label_comma (l_identifier, last_detachable_et_symbol_value))
 							l_identifier_expected := True
 							read_token
@@ -815,6 +821,11 @@ feature {NONE} -- Parsing
 								i := i + 1
 							end
 							last_labels.keep (l_old_last_labels_count)
+							if l_identifier /= Void then
+								l_identifier.set_tuple_label (True)
+								l_seed := l_seed + 1
+								l_identifier.set_seed (l_seed)
+							end
 							l_labeled_actual_parameter := ast_factory.new_labeled_actual_parameter (l_identifier, ast_factory.new_colon_type (l_colon_symbol, l_type), last_class)
 							if last_token = Semicolon_code then
 								parse_optional_semicolon
@@ -852,9 +863,13 @@ feature {NONE} -- Parsing
 						elseif attached {ET_IDENTIFIER_COMMA} l_last_label as l_identifier_comma then
 							unread_symbol_token (Comma_code, l_identifier_comma.comma)
 							l_identifier := l_identifier_comma.identifier
+							l_identifier.set_tuple_label (False)
+							l_identifier.set_seed (0)
 						else
 							unread_symbol_token (Comma_code, tokens.comma_symbol)
 							l_identifier := l_last_label.identifier
+							l_identifier.set_tuple_label (False)
+							l_identifier.set_seed (0)
 						end
 						if l_identifier = Void then
 							unread_identifier_token (E_IDENTIFIER, l_identifier)
@@ -1350,11 +1365,13 @@ feature {NONE} -- Parsing
 			l_type: detachable ET_CONSTRAINT_TYPE
 			l_first_parameter: BOOLEAN
 			l_identifier: detachable ET_IDENTIFIER
+			l_label_identifier: detachable ET_IDENTIFIER
 			l_comma_symbol: detachable ET_SYMBOL
 			l_labeled_actual_parameter: detachable ET_CONSTRAINT_LABELED_ACTUAL_PARAMETER
 			l_done: BOOLEAN
 			l_regular_actual_parameters: BOOLEAN
 			i, nb: INTEGER
+			l_seed: INTEGER
 			l_identifier_expected: BOOLEAN
 			l_identifier_code: INTEGER
 			l_constraint_actual_parameters: detachable ET_CONSTRAINT_ACTUAL_PARAMETER_LIST
@@ -1378,6 +1395,11 @@ feature {NONE} -- Parsing
 						l_identifier_code := last_token
 						read_token
 						if last_token = Comma_code then
+							if l_identifier /= Void then
+								l_identifier.set_tuple_label (True)
+								l_seed := l_seed + 1
+								l_identifier.set_seed (l_seed)
+							end
 							last_labels.force (ast_factory.new_label_comma (l_identifier, last_detachable_et_symbol_value))
 							l_identifier_expected := True
 							read_token
@@ -1390,18 +1412,23 @@ feature {NONE} -- Parsing
 							from i := l_old_last_labels_count + 1 until i > nb loop
 								if not attached last_labels.i_th (i) as l_last_label then
 									l_comma_symbol := tokens.comma_symbol
-									l_identifier := Void
+									l_label_identifier := Void
 								elseif attached {ET_IDENTIFIER_COMMA} l_last_label as l_identifier_comma then
 									l_comma_symbol := l_identifier_comma.comma
-									l_identifier := l_identifier_comma.identifier
+									l_label_identifier := l_identifier_comma.identifier
 								else
 									l_comma_symbol := tokens.comma_symbol
-									l_identifier := l_last_label.identifier
+									l_label_identifier := l_last_label.identifier
 								end
-								last_constraint_actual_parameter_items.force (ast_factory.new_constraint_labeled_comma_actual_parameter (l_identifier, l_comma_symbol, l_type, last_class))
+								last_constraint_actual_parameter_items.force (ast_factory.new_constraint_labeled_comma_actual_parameter (l_label_identifier, l_comma_symbol, l_type, last_class))
 								i := i + 1
 							end
 							last_labels.keep (l_old_last_labels_count)
+							if l_identifier /= Void then
+								l_identifier.set_tuple_label (True)
+								l_seed := l_seed + 1
+								l_identifier.set_seed (l_seed)
+							end
 							l_labeled_actual_parameter := ast_factory.new_constraint_labeled_actual_parameter (l_identifier, l_colon_symbol, l_type, last_class)
 							if last_token = Semicolon_code then
 								parse_optional_semicolon
@@ -1439,9 +1466,13 @@ feature {NONE} -- Parsing
 						elseif attached {ET_IDENTIFIER_COMMA} l_last_label as l_identifier_comma then
 							unread_symbol_token (Comma_code, l_identifier_comma.comma)
 							l_identifier := l_identifier_comma.identifier
+							l_identifier.set_tuple_label (False)
+							l_identifier.set_seed (0)
 						else
 							unread_symbol_token (Comma_code, tokens.comma_symbol)
 							l_identifier := l_last_label.identifier
+							l_identifier.set_tuple_label (False)
+							l_identifier.set_seed (0)
 						end
 						if l_identifier = Void then
 							unread_identifier_token (E_IDENTIFIER, l_identifier)
@@ -2940,6 +2971,8 @@ feature {NONE} -- Parsing
 					end
 					from until nb <= 0 loop
 						if l_formal_arguments /= Void and attached last_formal_argument_items.item as l_last_formal_argument_item then
+							l_last_formal_argument_item.name.set_argument (True)
+							l_last_formal_argument_item.name.set_seed (nb)
 							l_formal_arguments.put_first (l_last_formal_argument_item)
 						end
 						last_formal_argument_items.remove
@@ -3027,6 +3060,8 @@ feature {NONE} -- Parsing
 				end
 				from until nb <= 0 loop
 					if l_local_variables /= Void and attached last_local_variable_items.item as l_last_local_variable_item then
+						l_last_local_variable_item.name.set_local (True)
+						l_last_local_variable_item.name.set_seed (nb)
 						l_local_variables.put_first (l_last_local_variable_item)
 					end
 					last_local_variable_items.remove

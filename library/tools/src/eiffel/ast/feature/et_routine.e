@@ -5,7 +5,7 @@
 		"Eiffel routines"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2024, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2026, Eric Bezault and others"
 	license: "MIT License"
 
 deferred class ET_ROUTINE
@@ -30,7 +30,8 @@ inherit
 		undefine
 			first_note,
 			is_static,
-			implementation_feature
+			implementation_feature,
+			hash_code
 		end
 
 feature -- Status report

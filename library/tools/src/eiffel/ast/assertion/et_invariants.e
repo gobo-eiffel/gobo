@@ -109,12 +109,6 @@ feature -- Access
 			definition: Result = Current
 		end
 
-	hash_code: INTEGER
-			-- Hash code value
-		do
-			Result := 1
-		end
-
 	header_break: detachable ET_BREAK
 			-- Break which appears where the header comment is expected
 		do

@@ -6,7 +6,7 @@ note
 		"Eiffel type parsers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2025, Eric Bezault and others"
+	copyright: "Copyright (c) 2025-2026, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_TYPE_PARSER
@@ -297,11 +297,19 @@ Tuple_actual_parameters: '[' ']'
 Tuple_labeled_actual_parameter_list: Identifier ':' Type ']'
 		{
 			$$ := ast_factory.new_actual_parameters (last_symbol, $4, counter_value + 1)
+			if attached $1 as l_label then
+				l_label.set_tuple_label (True)
+				l_label.set_seed (counter_value + 1)
+			end
 			add_to_actual_parameter_list (ast_factory.new_labeled_actual_parameter ($1, ast_factory.new_colon_type ($2, $3), tokens.unknown_class), $$)
 		}
 	|  Identifier ':' Type Semicolon ']'
 		{
 			$$ := ast_factory.new_actual_parameters (last_symbol, $5, counter_value + 1)
+			if attached $1 as l_label then
+				l_label.set_tuple_label (True)
+				l_label.set_seed (counter_value + 1)
+			end
 			add_to_actual_parameter_list (ast_factory.new_labeled_actual_parameter_semicolon (ast_factory.new_labeled_actual_parameter ($1, ast_factory.new_colon_type ($2, $3), tokens.unknown_class), $4), $$)
 		}
 	| Tuple_labeled_actual_parameter_semicolon Tuple_labeled_actual_parameter_list
@@ -318,6 +326,10 @@ Tuple_labeled_actual_parameter_list: Identifier ':' Type ']'
 		{
 			$$ := $4
 			if $$ /= Void then
+				if attached $1 as l_label then
+					l_label.set_tuple_label (True)
+					l_label.set_seed ($$.capacity - $$.count)
+				end
 				if not $$.is_empty then
 					add_to_actual_parameter_list (ast_factory.new_labeled_comma_actual_parameter (ast_factory.new_label_comma ($1, $2), $$.first.type, tokens.unknown_class), $$)
 				else
@@ -329,6 +341,10 @@ Tuple_labeled_actual_parameter_list: Identifier ':' Type ']'
 		{
 			$$ := $4
 			if $$ /= Void then
+				if attached $1 as l_label then
+					l_label.set_tuple_label (True)
+					l_label.set_seed ($$.capacity - $$.count)
+				end
 				if not $$.is_empty then
 					add_to_actual_parameter_list (ast_factory.new_labeled_comma_actual_parameter (ast_factory.new_label_comma ($1, $2), $$.first.type, tokens.unknown_class), $$)
 				else
@@ -340,6 +356,10 @@ Tuple_labeled_actual_parameter_list: Identifier ':' Type ']'
 		{
 			$$ := $4
 			if $$ /= Void then
+				if attached $1 as l_label then
+					l_label.set_tuple_label (True)
+					l_label.set_seed ($$.capacity - $$.count)
+				end
 				if not $$.is_empty then
 					add_to_actual_parameter_list (ast_factory.new_labeled_comma_actual_parameter (ast_factory.new_label_comma ($1, $2), $$.first.type, tokens.unknown_class), $$)
 				else
@@ -354,6 +374,10 @@ Tuple_labeled_actual_parameter: Identifier ':' Type
 			$$ := ast_factory.new_labeled_actual_parameter ($1, ast_factory.new_colon_type ($2, $3), tokens.unknown_class)
 			if $$ /= Void then
 				increment_counter
+				if attached $1 as l_label then
+					l_label.set_tuple_label (True)
+					l_label.set_seed (counter_value)
+				end
 			end
 		}
 	;
@@ -363,6 +387,10 @@ Tuple_labeled_actual_parameter_semicolon: Identifier ':' Type Semicolon
 			$$ := ast_factory.new_labeled_actual_parameter_semicolon (ast_factory.new_labeled_actual_parameter ($1, ast_factory.new_colon_type ($2, $3), tokens.unknown_class), $4)
 			if $$ /= Void then
 				increment_counter
+				if attached $1 as l_label then
+					l_label.set_tuple_label (True)
+					l_label.set_seed (counter_value)
+				end
 			end
 		}
 	;

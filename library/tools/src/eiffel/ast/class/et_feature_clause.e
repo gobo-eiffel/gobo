@@ -49,6 +49,25 @@ feature -- Access
 			end
 		end
 
+	name: STRING_8
+			-- Name of current feature clause
+		do
+			if attached header_break as l_header_break then
+				create Result.make (l_header_break.text.count)
+				append_first_line_comment_to_string (once "", Result)
+				Result.left_adjust
+				Result.right_adjust
+				if Result.starts_with (empty_comment) then
+					Result.remove_head (2)
+					Result.left_adjust
+				end
+			else
+				Result := once ""
+			end
+		ensure
+			name_not_void: Result /= Void
+		end
+
 	first_semicolon: detachable ET_SEMICOLON_SYMBOL
 			-- Semicolon before the first feature declaration, if any
 
@@ -172,6 +191,11 @@ feature -- Processing
 		do
 			a_processor.process_feature_clause (Current)
 		end
+
+feature {NONE} -- Constants
+
+	empty_comment: STRING = "--"
+			-- Empty comment
 
 invariant
 

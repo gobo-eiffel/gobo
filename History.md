@@ -22,6 +22,10 @@
 
 * Added pre- and postconditions to the feature signature in
   the tooltip shown when mouse hovering over a feature name.
+* Added support for contract-view (or short form) and
+  flat-contract-view (or flat short form) of a class, where
+  internal implementation details are hidden, keeping only
+  an interface representation.
 
 ## Version 26.09.03 - 3 September 2026
 
