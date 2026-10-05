@@ -12,6 +12,10 @@
   ensures that the already locked regions are ready to execute
   upcoming separate calls on their processors before synchronizing.
 * Improved the way SCOOP passive regions are handled at run time.
+* Fixed bug (infinite loop) during Degree 3 when incrementally
+  recompiling a class declaring two features with the same name,
+  even though this validity error was previously reported during
+  Degree 4.
 
 ### gedoc
 

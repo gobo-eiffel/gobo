@@ -263,7 +263,9 @@ feature {NONE} -- Feature flattening
 			l_parent_feature: ET_PARENT_FEATURE
 			l_other_parent_feature: ET_PARENT_FEATURE
 			l_queries: ET_QUERY_LIST
+			l_declared_queries: ET_QUERY_LIST
 			l_procedures: ET_PROCEDURE_LIST
+			l_declared_procedures: ET_PROCEDURE_LIST
 			l_declared_query_count: INTEGER
 			l_declared_procedure_count: INTEGER
 			l_query: ET_QUERY
@@ -297,8 +299,22 @@ feature {NONE} -- Feature flattening
 					named_features.back
 				end
 				nb := queries.count
-				l_declared_query_count := current_class.queries.declared_count
-				l_declared_attribute_count := current_class.queries.declared_attribute_count
+				l_declared_queries := current_class.queries
+				l_declared_query_count := l_declared_queries.declared_count
+				j := nb
+				from i := 1 until i > l_declared_query_count loop
+					l_query := l_declared_queries.item (i)
+					if l_query /= queries.item (j) then
+							-- Include back query which had been discarded
+							-- because it was declared twice in `current_class`.
+						queries.put (l_query, j + 1)
+						nb := nb + 1
+					else
+						j := j - 1
+					end
+					i := i + 1
+				end
+				l_declared_attribute_count := l_declared_queries.declared_attribute_count
 				if l_declared_query_count > nb then
 						-- Internal error: the number of queries declared in
 						-- `current_class' should be less than or equal to the
@@ -342,7 +358,21 @@ feature {NONE} -- Feature flattening
 				current_class.set_queries (l_queries)
 				queries.wipe_out
 				nb := procedures.count
-				l_declared_procedure_count := current_class.procedures.declared_count
+				l_declared_procedures := current_class.procedures
+				l_declared_procedure_count := l_declared_procedures.declared_count
+				j := nb
+				from i := 1 until i > l_declared_procedure_count loop
+					l_procedure := l_declared_procedures.item (i)
+					if l_procedure /= procedures.item (j) then
+							-- Include back procedure which had been discarded
+							-- because it was declared twice in `current_class`.
+						procedures.put (l_procedure, j + 1)
+						nb := nb + 1
+					else
+						j := j - 1
+					end
+					i := i + 1
+				end
 				if l_declared_procedure_count > nb then
 						-- Internal error: the number of procedures declared in
 						-- `current_class' should be less than or equal to the
