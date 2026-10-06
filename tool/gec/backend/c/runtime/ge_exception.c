@@ -83,7 +83,7 @@ static char* GE_exception_tags[] = {
 	"Runtime check violated.",			/* GE_EX_RT_CHECK */
 	"Old expression evaluation failed.",/* GE_EX_OLD */
 	"Serialization failed.",			/* GE_EX_SEL */
-	"SCOOP processor dirty."			/* GE_EX_DIRTY */
+	"SCOOP processor dirty.",			/* GE_EX_DIRTY */
 	"SCOOP region id overflow."			/* GE_EX_REGION_ID */
 };
 
