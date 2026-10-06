@@ -1977,7 +1977,8 @@ feature {NONE} -- C code Generation
 					type_info_generator_used or
 					type_info_name_used or
 					type_info_generic_parameters_used or
-					type_info_object_size_used
+					type_info_object_size_used or
+					scoop_region_id_used
 				then
 					file_system.rename_file (l_header_filename, l_header_filename + "ge")
 					l_header_file.open_write
@@ -2070,6 +2071,11 @@ feature {NONE} -- C code Generation
 							header_file.put_character (' ')
 							header_file.put_line (c_ge_use_type_object_size)
 						end
+						if scoop_region_id_used then
+							header_file.put_string (c_define)
+							header_file.put_character (' ')
+							header_file.put_line (c_ge_use_scoop_region_id)
+						end
 						if not l_newline_needed_in_header_file then
 								-- A newline has not been written to the header file yet
 								-- for the "#define USE_...". Write a newline now.
@@ -2091,6 +2097,7 @@ feature {NONE} -- C code Generation
 					type_info_name_used := False
 					type_info_generic_parameters_used := False
 					type_info_object_size_used := False
+					scoop_region_id_used := False
 				end
 				close_c_file
 				close_cpp_file
@@ -2613,6 +2620,11 @@ feature {NONE} -- Feature generation
 				type_info_attribute_size_used := True
 				type_info_attribute_type_id_used := True
 				type_info_attribute_storable_type_id_used := True
+			elseif
+				a_feature.implementation_class.name.same_class_name (tokens.ise_scoop_runtime_class_name) and then
+				a_feature.implementation_feature.name.same_feature_name (tokens.c_region_id_feature_name)
+			then
+				scoop_region_id_used := True
 			end
 				--
 				-- Print signature to `header_file' and `current_file'.
@@ -21145,7 +21157,7 @@ feature {NONE} -- Polymorphic call functions generation
 	same_declared_signature (a_call1, a_call2: ET_DYNAMIC_QUALIFIED_CALL): BOOLEAN
 			-- Do `a_call1' and `a_call2' have the same declared signature?
 			-- Note1: Reference types are considered the same declared type.
-			-- Note2: If the calls are idenfied to be to ROUTINE.call or FUNCTION.item
+			-- Note2: If the calls are identified to be to ROUTINE.call or FUNCTION.item
 			-- and one of the calls has a manifest tuple as argument, then the other
 			-- should also have a manifest tuple of the exact same type (note1 does not
 			-- apply for the types of the manifest tuples here).
@@ -49509,6 +49521,9 @@ feature {NONE} -- Implementation
 	type_info_object_size_used: BOOLEAN
 			-- Is the object size of types used in the system?
 
+	scoop_region_id_used: BOOLEAN
+			-- Is 'ISE_SCOOP_RUNTIME.region_id' being used?
+
 	dummy_feature: ET_DYNAMIC_FEATURE
 			-- Dummy feature
 		local
@@ -50078,6 +50093,7 @@ feature {NONE} -- Constants
 	c_ge_use_boehm_gc: STRING = "GE_USE_BOEHM_GC"
 	c_ge_use_posix_threads: STRING = "GE_USE_POSIX_THREADS"
 	c_ge_use_scoop: STRING = "GE_USE_SCOOP"
+	c_ge_use_scoop_region_id: STRING = "GE_USE_SCOOP_REGION_ID"
 	c_ge_use_threads: STRING = "GE_USE_THREADS"
 	c_ge_use_type_generator: STRING = "GE_USE_TYPE_GENERATOR"
 	c_ge_use_type_generic_parameters: STRING = "GE_USE_TYPE_GENERIC_PARAMETERS"

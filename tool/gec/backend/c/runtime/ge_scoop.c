@@ -266,6 +266,23 @@ static void GE_scoop_region_dispose(void* a_region, void* data)
 }
 #endif
 
+#ifdef GE_USE_SCOOP_REGION_ID
+/* 
+ * Id of the last SCOOP region created.
+ *
+ * Not thread-safe.
+ * Need to be protected by:
+ * - `GE_scoop_last_region_id_mutex`
+ */
+static EIF_SCP_PID GE_unprotected_scoop_last_region_id;
+
+
+/* 
+ * Mutex to set and access `GE_unprotected_scoop_last_region_id'.
+ */
+static EIF_MUTEX_TYPE* GE_scoop_last_region_id_mutex;
+#endif
+
 /*
  * New of SCOOP region.
  */
@@ -274,6 +291,16 @@ GE_scoop_region* GE_new_scoop_region(GE_context* a_context, char a_is_passive)
 	GE_scoop_region* l_region;
 
 	l_region = (GE_scoop_region*)GE_calloc(1, sizeof(GE_scoop_region));
+#ifdef GE_USE_SCOOP_REGION_ID
+	GE_mutex_lock((EIF_POINTER)GE_scoop_last_region_id_mutex);
+
+	if (GE_unprotected_scoop_last_region_id >= GE_EIF_SCP_PID_MAX) {
+		GE_raise(GE_EX_REGION_ID);
+	}
+	GE_unprotected_scoop_last_region_id++;
+	l_region->id = GE_unprotected_scoop_last_region_id;
+	GE_mutex_unlock((EIF_POINTER)GE_scoop_last_region_id_mutex);
+#endif
 	/* Allocate `keep_alive' with `_uncollectable' so that we can keep alive the 
 	current region if there are still some submitted sessions to be executed. */
 	l_region->keep_alive = (GE_scoop_region**)GE_calloc_uncollectable(1, sizeof(GE_scoop_region*));
@@ -1506,6 +1533,10 @@ void GE_init_scoop()
 	GE_unprotected_scoop_sessions_count = 0;
 	GE_scoop_sessions_count_mutex = (EIF_MUTEX_TYPE*)GE_mutex_create();
 	GE_scoop_multisessions_mutex = (EIF_MUTEX_TYPE*)GE_mutex_create();
+#ifdef GE_USE_SCOOP_REGION_ID
+	GE_unprotected_scoop_last_region_id = 0;
+	GE_scoop_last_region_id_mutex = (EIF_MUTEX_TYPE*)GE_mutex_create();
+#endif
 }
 
 #ifdef __cplusplus

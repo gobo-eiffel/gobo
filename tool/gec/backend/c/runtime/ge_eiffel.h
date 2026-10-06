@@ -302,10 +302,13 @@ typedef volatile struct {
 
 /* SCOOP */
 typedef uint16_t EIF_SCP_PID; /* Processor ID */
+#ifdef GE_USE_SCOOP_REGION_ID
+#define GE_EIF_SCP_PID_MAX (EIF_SCP_PID)65535
 #ifdef GE_USE_SCOOP
-#define RTS_PID(o) (EIF_SCP_PID)(uintptr_t)(((EIF_REFERENCE)(o))->region)
+#define RTS_PID(o) ((EIF_REFERENCE)(o))->region->id
 #else
 #define RTS_PID(o) (EIF_SCP_PID)0
+#endif
 #endif
 
 #ifdef EIF_WINDOWS
