@@ -108407,7 +108407,9 @@ extern void GE_init_const(void);
 #define GE_timebtime(p) ((struct timeval*)(p))->tv_sec
 #else
 #include <sys/timeb.h>
+#ifdef __LCC__
 extern void ftime(struct timeb *); /* Needed for lcc-win32 */
+#endif
 #define GE_ftime(p) ftime((struct timeb*)(p))
 #define GE_timebsz sizeof(struct timeb)
 #define GE_timebmillitm(p) ((struct timeb*)(p))->millitm

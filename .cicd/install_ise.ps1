@@ -13,7 +13,7 @@
 
 .EXAMPLE
 	# Install ISE Eiffel tools from the GitHub Actions pipeline:
-	install_ise.ps1 github zig
+	install_ise.ps1 github msc
 
 .NOTES
 	Copyright: "Copyright (c) 2021-2026, Eric Bezault and others"
