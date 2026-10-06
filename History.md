@@ -32,6 +32,14 @@
   internal implementation details are hidden, keeping only
   an interface representation.
 
+### Gobo Eiffel FreeELKS Library
+
+* Made implementation of `ISE_SCOOP_RUNTIME.region_id` more
+  robust: it does not return a `uint16`-truncated address 
+  anymore but a real `uint16` id. As a consequence an exception
+  is raised when the number of SCOOP regions is greater than
+  65535.
+
 ## Version 26.09.03 - 3 September 2026
 
 ### gec

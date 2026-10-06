@@ -171,6 +171,8 @@ struct GE_scoop_session_struct {
 /*
  * Struct for a SCOOP region and its processor if any.
  *
+ * - `id` is the region id, used in 'ISE_SCOOP_RUNTIME.region_id'.
+ * 
  * - `context` contains information about the thread associated with current 
  *   region. May be null in case of a passive region not currently handled by
  *   the caller's processor.
@@ -226,6 +228,9 @@ struct GE_scoop_session_struct {
  */
 typedef volatile struct GE_scoop_precondition_struct GE_scoop_precondition;
 struct GE_scoop_region_struct {
+#ifdef GE_USE_SCOOP_REGION_ID
+	EIF_SCP_PID volatile id;
+#endif
 	GE_context* volatile context;
 	char volatile is_passive;
 	EIF_REFERENCE volatile exception_manager;

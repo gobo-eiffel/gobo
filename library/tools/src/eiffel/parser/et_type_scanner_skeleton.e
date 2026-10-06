@@ -362,6 +362,7 @@ feature {NONE} -- String handler
 			Result.force_new (-1, tokens.capitalized_internal_name)
 			Result.force_new (-1, tokens.capitalized_ise_exception_manager_name)
 			Result.force_new (-1, tokens.capitalized_ise_runtime_name)
+			Result.force_new (-1, tokens.capitalized_ise_scoop_runtime_name)
 			Result.force_new (-1, tokens.capitalized_iterable_name)
 			Result.force_new (-1, tokens.capitalized_iteration_cursor_name)
 			Result.force_new (-1, tokens.capitalized_memory_name)

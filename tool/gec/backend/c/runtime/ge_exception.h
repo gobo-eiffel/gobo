@@ -4,7 +4,7 @@
 		"C functions used to implement class EXCEPTION"
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2007-2024, Eric Bezault and others"
+	copyright: "Copyright (c) 2007-2026, Eric Bezault and others"
 	license: "MIT License"
 */
 
@@ -84,7 +84,8 @@ extern "C" {
 #define GE_EX_OLD		30			/* Old violation */
 #define GE_EX_SEL		31			/* Serialization failure */
 #define GE_EX_DIRTY		32			/* SCOOP processor dirty exception. */
-#define GE_EX_NEX		32			/* Number of internal exceptions */
+#define GE_EX_REGION_ID	33			/* SCOOP region id overflow. */
+#define GE_EX_NEX		33			/* Number of internal exceptions */
 
 /*
  * String buffer used to build the exception trace.

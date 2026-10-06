@@ -4,7 +4,7 @@
 		"C functions used to implement class EXCEPTION"
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2007-2024, Eric Bezault and others"
+	copyright: "Copyright (c) 2007-2026, Eric Bezault and others"
 	license: "MIT License"
 */
 
@@ -84,6 +84,7 @@ static char* GE_exception_tags[] = {
 	"Old expression evaluation failed.",/* GE_EX_OLD */
 	"Serialization failed.",			/* GE_EX_SEL */
 	"SCOOP processor dirty."			/* GE_EX_DIRTY */
+	"SCOOP region id overflow."			/* GE_EX_REGION_ID */
 };
 
 /*
