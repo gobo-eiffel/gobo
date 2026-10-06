@@ -16,6 +16,7 @@
   recompiling a class declaring two features with the same name,
   even though this validity error was previously reported during
   Degree 4.
+* Upgraded Zig toolchain to version 0.17.0.
 
 ### gedoc
 
