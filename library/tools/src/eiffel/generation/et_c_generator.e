@@ -2144,8 +2144,8 @@ feature {NONE} -- C code Generation
 							l_first_precursor.set_id (1)
 							if attached l_feature.other_precursors as l_other_precursors then
 								nb3 := l_other_precursors.count
-								from k := 2 until k > nb3 loop
-									l_other_precursors.item (k).set_id (k)
+								from k := 1 until k > nb3 loop
+									l_other_precursors.item (k).set_id (k + 1)
 									k := k + 1
 								end
 							end
@@ -2163,8 +2163,8 @@ feature {NONE} -- C code Generation
 							l_first_precursor.set_id (1)
 							if attached l_feature.other_precursors as l_other_precursors then
 								nb3 := l_other_precursors.count
-								from k := 2 until k > nb3 loop
-									l_other_precursors.item (k).set_id (k)
+								from k := 1 until k > nb3 loop
+									l_other_precursors.item (k).set_id (k + 1)
 									k := k + 1
 								end
 							end
@@ -38999,7 +38999,9 @@ feature {NONE} -- Memory allocation
 			l_query: ET_DYNAMIC_FEATURE
 			l_procedures: ET_DYNAMIC_FEATURE_LIST
 			l_procedure: ET_DYNAMIC_FEATURE
+			l_precursor: ET_DYNAMIC_PRECURSOR
 			i, nb: INTEGER
+			j, nb2: INTEGER
 		do
 				-- Print signature to `header_file' and `current_file'.
 			header_file.put_string ("/* New once-per-object data for type ")
@@ -39062,50 +39064,50 @@ feature {NONE} -- Memory allocation
 				-- Initialize mutexes.
 			if use_threads then
 				l_queries := a_type.queries
-				i := a_type.attribute_count + 1
 				nb := l_queries.count
-				from
-				until
-					i > nb
-				loop
+				from i := 1 until i > nb loop
 					l_query := l_queries.item (i)
 					if l_query.is_once_per_object then
-						print_indentation
-						print_result_name (current_file)
-						current_file.put_string (c_arrow)
-						print_once_per_object_mutex_name (l_query, a_type, current_file)
-						current_file.put_character (' ')
-						current_file.put_character ('=')
-						current_file.put_character (' ')
-						current_file.put_string (c_ge_mutex_create)
-						current_file.put_character ('(')
-						current_file.put_character (')')
-						current_file.put_character (';')
-						current_file.put_new_line
+						print_once_per_object_mutex_create (l_query, a_type)
+					end
+					if attached l_query.first_precursor as l_first_precursor then 
+						if l_first_precursor.is_once_per_object then
+							print_once_per_object_mutex_create (l_first_precursor, a_type)
+						end
+						if attached l_query.other_precursors as l_other_precursors then
+							nb2 := l_other_precursors.count
+							from j := 1 until j > nb2 loop
+								l_precursor := l_other_precursors.item (j)
+								if l_precursor.is_once_per_object then
+									print_once_per_object_mutex_create (l_precursor, a_type)
+								end
+								j := j + 1
+							end
+						end
 					end
 					i := i + 1
 				end
 				l_procedures := a_type.procedures
 				nb := l_procedures.count
-				from
-					i := 1
-				until
-					i > nb
-				loop
+				from i := 1 until i > nb loop
 					l_procedure := l_procedures.item (i)
 					if l_procedure.is_once_per_object then
-						print_indentation
-						print_result_name (current_file)
-						current_file.put_string (c_arrow)
-						print_once_per_object_mutex_name (l_procedure, a_type, current_file)
-						current_file.put_character (' ')
-						current_file.put_character ('=')
-						current_file.put_character (' ')
-						current_file.put_string (c_ge_mutex_create)
-						current_file.put_character ('(')
-						current_file.put_character (')')
-						current_file.put_character (';')
-						current_file.put_new_line
+						print_once_per_object_mutex_create (l_procedure, a_type)
+					end
+					if attached l_procedure.first_precursor as l_first_precursor then
+						if l_first_precursor.is_once_per_object then
+							print_once_per_object_mutex_create (l_first_precursor, a_type)
+						end
+						if attached l_procedure.other_precursors as l_other_precursors then
+							nb2 := l_other_precursors.count
+							from j := 1 until j > nb2 loop
+								l_precursor := l_other_precursors.item (j)
+								if l_precursor.is_once_per_object then
+									print_once_per_object_mutex_create (l_precursor, a_type)
+								end
+								j := j + 1
+							end
+						end
 					end
 					i := i + 1
 				end
@@ -39135,6 +39137,24 @@ feature {NONE} -- Memory allocation
 			current_file.put_new_line
 				-- Flush to file.
 			flush_to_c_file
+		end
+
+	print_once_per_object_mutex_create (a_routine: ET_DYNAMIC_FEATURE; a_type: ET_DYNAMIC_PRIMARY_TYPE)
+			-- Print to `current_file` the creation of the mutex associated with the once-per-object routine `a_routine`.
+		require
+			a_routine_not_void: a_routine /= Void
+			a_routine_is_once_per_object: a_routine.is_once_per_object
+			a_type_not_void: a_type /= Void
+		do
+			print_indentation
+			print_result_name (current_file)
+			current_file.put_string (c_arrow)
+			print_once_per_object_mutex_name (a_routine, a_type, current_file)
+			print_assign_to
+			current_file.put_string (c_ge_mutex_create)
+			current_file.put_character ('(')
+			current_file.put_character (')')
+			print_semicolon_newline
 		end
 
 	print_once_per_object_data_dispose_functions
@@ -39168,7 +39188,9 @@ feature {NONE} -- Memory allocation
 			l_query: ET_DYNAMIC_FEATURE
 			l_procedures: ET_DYNAMIC_FEATURE_LIST
 			l_procedure: ET_DYNAMIC_FEATURE
+			l_precursor: ET_DYNAMIC_PRECURSOR
 			i, nb: INTEGER
+			j, nb2: INTEGER
 		do
 			if use_threads then
 					-- Print signature to `header_file' and `current_file'.
@@ -39210,46 +39232,50 @@ feature {NONE} -- Memory allocation
 				current_file.put_new_line
 				indent
 				l_queries := a_type.queries
-				i := a_type.attribute_count + 1
 				nb := l_queries.count
-				from
-				until
-					i > nb
-				loop
+				from i := 1 until i > nb loop
 					l_query := l_queries.item (i)
 					if l_query.is_once_per_object then
-						print_indentation
-						current_file.put_string (c_ge_mutex_destroy)
-						current_file.put_character ('(')
-						current_file.put_character ('a')
-						current_file.put_character ('1')
-						current_file.put_string (c_arrow)
-						print_once_per_object_mutex_name (l_query, a_type, current_file)
-						current_file.put_character (')')
-						current_file.put_character (';')
-						current_file.put_new_line
+						print_once_per_object_mutex_destroy (l_query, a_type)
+					end
+					if attached l_query.first_precursor as l_first_precursor then 
+						if l_first_precursor.is_once_per_object then
+							print_once_per_object_mutex_destroy (l_first_precursor, a_type)
+						end
+						if attached l_query.other_precursors as l_other_precursors then
+							nb2 := l_other_precursors.count
+							from j := 1 until j > nb2 loop
+								l_precursor := l_other_precursors.item (j)
+								if l_precursor.is_once_per_object then
+									print_once_per_object_mutex_destroy (l_precursor, a_type)
+								end
+								j := j + 1
+							end
+						end
 					end
 					i := i + 1
 				end
 				l_procedures := a_type.procedures
 				nb := l_procedures.count
-				from
-					i := 1
-				until
-					i > nb
-				loop
+				from i := 1 until i > nb loop
 					l_procedure := l_procedures.item (i)
 					if l_procedure.is_once_per_object then
-						print_indentation
-						current_file.put_string (c_ge_mutex_destroy)
-						current_file.put_character ('(')
-						current_file.put_character ('a')
-						current_file.put_character ('1')
-						current_file.put_string (c_arrow)
-						print_once_per_object_mutex_name (l_procedure, a_type, current_file)
-						current_file.put_character (')')
-						current_file.put_character (';')
-						current_file.put_new_line
+						print_once_per_object_mutex_destroy (l_procedure, a_type)
+					end
+					if attached l_procedure.first_precursor as l_first_precursor then 
+						if l_first_precursor.is_once_per_object then
+							print_once_per_object_mutex_destroy (l_first_precursor, a_type)
+						end
+						if attached l_procedure.other_precursors as l_other_precursors then
+							nb2 := l_other_precursors.count
+							from j := 1 until j > nb2 loop
+								l_precursor := l_other_precursors.item (j)
+								if l_precursor.is_once_per_object then
+									print_once_per_object_mutex_destroy (l_precursor, a_type)
+								end
+								j := j + 1
+							end
+						end
 					end
 					i := i + 1
 				end
@@ -39260,6 +39286,24 @@ feature {NONE} -- Memory allocation
 			end
 				-- Flush to file.
 			flush_to_c_file
+		end
+
+	print_once_per_object_mutex_destroy (a_routine: ET_DYNAMIC_FEATURE; a_type: ET_DYNAMIC_PRIMARY_TYPE)
+			-- Print to `current_file` the destruction of the mutex associated with the once-per-object routine `a_routine`.
+		require
+			a_routine_not_void: a_routine /= Void
+			a_routine_is_once_per_object: a_routine.is_once_per_object
+			a_type_not_void: a_type /= Void
+		do
+			print_indentation
+			current_file.put_string (c_ge_mutex_destroy)
+			current_file.put_character ('(')
+			current_file.put_character ('a')
+			current_file.put_character ('1')
+			current_file.put_string (c_arrow)
+			print_once_per_object_mutex_name (a_routine, a_type, current_file)
+			current_file.put_character (')')
+			print_semicolon_newline
 		end
 
 	print_dispose_registration (an_object: ET_EXPRESSION; a_type: ET_DYNAMIC_PRIMARY_TYPE)
@@ -39562,7 +39606,7 @@ feature {NONE} -- Once feature generation
 			a_feature_is_once_per_object: a_feature.is_once_per_object
 		do
 			print_attribute_onces_access (tokens.current_keyword, current_type, False)
-			current_file.put_string (C_arrow)
+			current_file.put_string (c_arrow)
 			print_once_per_object_status_name (a_feature, current_type, current_file)
 		end
 
@@ -39678,7 +39722,7 @@ feature {NONE} -- Once feature generation
 			a_feature_is_once_per_object: a_feature.is_once_per_object
 		do
 			print_attribute_onces_access (tokens.current_keyword, current_type, False)
-			current_file.put_string (C_arrow)
+			current_file.put_string (c_arrow)
 			print_once_per_object_value_name (a_feature, current_type, current_file)
 		end
 
@@ -39791,7 +39835,7 @@ feature {NONE} -- Once feature generation
 			a_feature_is_once_per_object: a_feature.is_once_per_object
 		do
 			print_attribute_onces_access (tokens.current_keyword, current_type, False)
-			current_file.put_string (C_arrow)
+			current_file.put_string (c_arrow)
 			print_once_per_object_exception_name (a_feature, current_type, current_file)
 		end
 
@@ -40222,7 +40266,7 @@ feature {NONE} -- Once feature generation
 			use_threads: use_threads
 		do
 			print_attribute_onces_access (tokens.current_keyword, current_type, False)
-			current_file.put_string (C_arrow)
+			current_file.put_string (c_arrow)
 			print_once_per_object_mutex_name (a_feature, current_type, current_file)
 		end
 
@@ -42649,10 +42693,11 @@ feature {NONE} -- Type generation
 		local
 			l_queries: ET_DYNAMIC_FEATURE_LIST
 			l_query: ET_DYNAMIC_FEATURE
-			l_query_type: ET_DYNAMIC_PRIMARY_TYPE
+			l_precursor: ET_DYNAMIC_PRECURSOR
 			l_procedures: ET_DYNAMIC_FEATURE_LIST
 			l_procedure: ET_DYNAMIC_FEATURE
 			i, nb: INTEGER
+			j, nb2: INTEGER
 		do
 			a_file.put_character ('/')
 			a_file.put_character ('*')
@@ -42674,60 +42719,22 @@ feature {NONE} -- Type generation
 			nb := l_queries.count
 			from until i > nb loop
 				l_query := l_queries.item (i)
-				if not l_query.is_once_per_object then
-					-- Nothing to be done.
-				elseif not attached l_query.result_type_set as l_result_type_set then
-						-- Internal error: queries should have a result type.
-					set_fatal_error
-					error_handler.report_giaac_error (generator, "print_once_per_object_data_struct", 1, "query with no type.")
-				else
-					a_file.put_character ('%T')
-					a_file.put_string (c_unsigned)
-					a_file.put_character (' ')
-					a_file.put_string (c_char)
-					a_file.put_character (' ')
-					a_file.put_string (c_volatile)
-					a_file.put_character (' ')
-					print_once_per_object_status_name (l_query, a_type, a_file)
-					a_file.put_character (';')
-					a_file.put_character (' ')
-					a_file.put_character ('/')
-					a_file.put_character ('*')
-					a_file.put_character (' ')
-					a_file.put_string (l_query.static_feature.name.name)
-					a_file.put_character (' ')
-					a_file.put_character ('*')
-					a_file.put_character ('/')
-					a_file.put_new_line
-					a_file.put_character ('%T')
-					l_query_type := l_result_type_set.static_type.primary_type
-					print_type_declaration (l_query_type, a_file)
-					if not l_query_type.is_expanded or else l_query_type.is_basic then
-							-- Note that non-basic expanded types are already declared as volatile.
-						a_file.put_character (' ')
-						a_file.put_string (c_volatile)
+				if l_query.is_once_per_object then
+					print_once_per_object_data_struct_fields (l_query, a_type, a_file)
+				end
+				if attached l_query.first_precursor as l_first_precursor then
+					if l_first_precursor.is_once_per_object then
+						print_once_per_object_data_struct_fields (l_first_precursor, a_type, a_file)
 					end
-					a_file.put_character (' ')
-					print_once_per_object_value_name (l_query, a_type, a_file)
-					a_file.put_character (';')
-					a_file.put_new_line
-					a_file.put_character ('%T')
-					a_file.put_string (c_eif_reference)
-					a_file.put_character (' ')
-					a_file.put_string (c_volatile)
-					a_file.put_character (' ')
-					print_once_per_object_exception_name (l_query, a_type, a_file)
-					a_file.put_character (';')
-					a_file.put_new_line
-					if use_threads then
-						a_file.put_character ('%T')
-						a_file.put_string (c_eif_pointer)
-						a_file.put_character (' ')
-						a_file.put_string (c_volatile)
-						a_file.put_character (' ')
-						print_once_per_object_mutex_name (l_query, a_type, a_file)
-						a_file.put_character (';')
-						a_file.put_new_line
+					if attached l_query.other_precursors as l_other_precursors then
+						nb2 := l_other_precursors.count
+						from j := 1 until j > nb2 loop
+							l_precursor := l_other_precursors.item (j)
+							if l_precursor.is_once_per_object then
+								print_once_per_object_data_struct_fields (l_precursor, a_type, a_file)
+							end
+							j := j + 1
+						end
 					end
 				end
 				i := i + 1
@@ -42737,41 +42744,21 @@ feature {NONE} -- Type generation
 			from i := 1 until i > nb loop
 				l_procedure := l_procedures.item (i)
 				if l_procedure.is_once_per_object then
-					a_file.put_character ('%T')
-					a_file.put_string (c_unsigned)
-					a_file.put_character (' ')
-					a_file.put_string (c_char)
-					a_file.put_character (' ')
-					a_file.put_string (c_volatile)
-					a_file.put_character (' ')
-					print_once_per_object_status_name (l_procedure, a_type, a_file)
-					a_file.put_character (';')
-					a_file.put_character (' ')
-					a_file.put_character ('/')
-					a_file.put_character ('*')
-					a_file.put_character (' ')
-					a_file.put_string (l_procedure.static_feature.name.name)
-					a_file.put_character (' ')
-					a_file.put_character ('*')
-					a_file.put_character ('/')
-					a_file.put_new_line
-					a_file.put_character ('%T')
-					a_file.put_string (c_eif_reference)
-					a_file.put_character (' ')
-					a_file.put_string (c_volatile)
-					a_file.put_character (' ')
-					print_once_per_object_exception_name (l_procedure, a_type, a_file)
-					a_file.put_character (';')
-					a_file.put_new_line
-					if use_threads then
-						a_file.put_character ('%T')
-						a_file.put_string (c_eif_pointer)
-						a_file.put_character (' ')
-						a_file.put_string (c_volatile)
-						a_file.put_character (' ')
-						print_once_per_object_mutex_name (l_procedure, a_type, a_file)
-						a_file.put_character (';')
-						a_file.put_new_line
+					print_once_per_object_data_struct_fields (l_procedure, a_type, a_file)
+				end
+				if attached l_procedure.first_precursor as l_first_precursor then
+					if l_first_precursor.is_once_per_object then
+						print_once_per_object_data_struct_fields (l_first_precursor, a_type, a_file)
+					end
+					if attached l_procedure.other_precursors as l_other_precursors then
+						nb2 := l_other_precursors.count
+						from j := 1 until j > nb2 loop
+							l_precursor := l_other_precursors.item (j)
+							if l_precursor.is_once_per_object then
+								print_once_per_object_data_struct_fields (l_precursor, a_type, a_file)
+							end
+							j := j + 1
+						end
 					end
 				end
 				i := i + 1
@@ -42780,6 +42767,69 @@ feature {NONE} -- Type generation
 			a_file.put_character (';')
 			a_file.put_new_line
 			a_file.put_new_line
+		end
+
+	print_once_per_object_data_struct_fields (a_routine: ET_DYNAMIC_FEATURE; a_type: ET_DYNAMIC_PRIMARY_TYPE; a_file: KI_TEXT_OUTPUT_STREAM)
+			-- Print to `a_file' C struct fields corresponding to once-per-object data of `a_routine' in `a_type`.
+		require
+			a_routine_not_void: a_routine /= Void
+			a_routine_is_once_per_object: a_routine.is_once_per_object
+			a_type_not_void: a_type /= Void
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		local
+			l_query_type: ET_DYNAMIC_PRIMARY_TYPE
+		do
+			a_file.put_character ('%T')
+			a_file.put_string (c_unsigned)
+			a_file.put_character (' ')
+			a_file.put_string (c_char)
+			a_file.put_character (' ')
+			a_file.put_string (c_volatile)
+			a_file.put_character (' ')
+			print_once_per_object_status_name (a_routine, a_type, a_file)
+			a_file.put_character (';')
+			a_file.put_character (' ')
+			a_file.put_character ('/')
+			a_file.put_character ('*')
+			a_file.put_character (' ')
+			a_file.put_string (a_routine.static_feature.name.name)
+			a_file.put_character (' ')
+			a_file.put_character ('*')
+			a_file.put_character ('/')
+			a_file.put_new_line
+			a_file.put_character ('%T')
+			if attached a_routine.result_type_set as l_result_type_set then
+				l_query_type := l_result_type_set.static_type.primary_type
+				print_type_declaration (l_query_type, a_file)
+				if not l_query_type.is_expanded or else l_query_type.is_basic then
+						-- Note that non-basic expanded types are already declared as volatile.
+					a_file.put_character (' ')
+					a_file.put_string (c_volatile)
+				end
+				a_file.put_character (' ')
+				print_once_per_object_value_name (a_routine, a_type, a_file)
+				a_file.put_character (';')
+				a_file.put_new_line
+			end
+			a_file.put_character ('%T')
+			a_file.put_string (c_eif_reference)
+			a_file.put_character (' ')
+			a_file.put_string (c_volatile)
+			a_file.put_character (' ')
+			print_once_per_object_exception_name (a_routine, a_type, a_file)
+			a_file.put_character (';')
+			a_file.put_new_line
+			if use_threads then
+				a_file.put_character ('%T')
+				a_file.put_string (c_eif_pointer)
+				a_file.put_character (' ')
+				a_file.put_string (c_volatile)
+				a_file.put_character (' ')
+				print_once_per_object_mutex_name (a_routine, a_type, a_file)
+				a_file.put_character (';')
+				a_file.put_new_line
+			end
 		end
 
 	print_types_array
@@ -44868,6 +44918,10 @@ feature {NONE} -- Feature name generation
 		do
 			if short_names then
 				a_file.put_character ('v')
+				if attached {ET_DYNAMIC_PRECURSOR} a_once_routine as l_precursor then
+					a_file.put_integer (l_precursor.current_feature.id)
+					a_file.put_character ('p')
+				end
 				a_file.put_integer (a_once_routine.id)
 			else
 -- TODO: long names
@@ -44888,6 +44942,10 @@ feature {NONE} -- Feature name generation
 		do
 			if short_names then
 				a_file.put_character ('s')
+				if attached {ET_DYNAMIC_PRECURSOR} a_once_routine as l_precursor then
+					a_file.put_integer (l_precursor.current_feature.id)
+					a_file.put_character ('p')
+				end
 				a_file.put_integer (a_once_routine.id)
 			else
 -- TODO: long names
@@ -44908,6 +44966,10 @@ feature {NONE} -- Feature name generation
 		do
 			if short_names then
 				a_file.put_character ('e')
+				if attached {ET_DYNAMIC_PRECURSOR} a_once_routine as l_precursor then
+					a_file.put_integer (l_precursor.current_feature.id)
+					a_file.put_character ('p')
+				end
 				a_file.put_integer (a_once_routine.id)
 			else
 -- TODO: long names
@@ -44928,6 +44990,10 @@ feature {NONE} -- Feature name generation
 		do
 			if short_names then
 				a_file.put_character ('m')
+				if attached {ET_DYNAMIC_PRECURSOR} a_once_routine as l_precursor then
+					a_file.put_integer (l_precursor.current_feature.id)
+					a_file.put_character ('p')
+				end
 				a_file.put_integer (a_once_routine.id)
 			else
 -- TODO: long names

@@ -308,6 +308,9 @@ feature -- Access
 					end
 				end
 			end
+			if a_feature.is_once_per_object then
+				target_type.set_has_once_per_object_routines (True)
+			end
 		ensure
 			dynamic_precursor_not_void: Result /= Void
 		end
