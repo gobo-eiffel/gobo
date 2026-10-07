@@ -134,10 +134,6 @@ jobs:
         system_under_test: [library, tool]
         os: [xcode-27, macos-26, macos-15, macos-26-intel, macos-15-intel]
         exclude:
-          - os: macos-14
-            eiffel_compiler: ise
-          - os: macos-14
-            eiffel_compiler: debug_ise
           - os: macos-15
             eiffel_compiler: ise
           - os: macos-15
@@ -145,6 +141,10 @@ jobs:
           - os: macos-26
             eiffel_compiler: ise
           - os: macos-26
+            eiffel_compiler: debug_ise
+          - os: xcode-27
+            eiffel_compiler: ise
+          - os: xcode-27
             eiffel_compiler: debug_ise
     runs-on: ${{ matrix.os }}
     steps:
