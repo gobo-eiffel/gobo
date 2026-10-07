@@ -16,6 +16,7 @@
   recompiling a class declaring two features with the same name,
   even though this validity error was previously reported during
   Degree 4.
+* Fixed runtime C code when compiling with gcc 15.2.0 on Ubuntu 26.04.
 * Upgraded Zig toolchain to version 0.17.0.
 
 ### gedoc

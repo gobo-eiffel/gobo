@@ -789,7 +789,7 @@ static void GE_storable_in_read_tuple_subobject(GE_storable_in_buffer* a_buffer,
 	uint32_t l_count;
 	uint32_t l_capacity;
 	EIF_REFERENCE l_object;
-	EIF_REFERENCE (*l_new)();
+	EIF_REFERENCE (*l_new)(GE_context*, EIF_BOOLEAN);
 	uint32_t i;
 	uint8_t l_code;
 	EIF_BOOLEAN l_bool;
@@ -826,7 +826,7 @@ static void GE_storable_in_read_tuple_subobject(GE_storable_in_buffer* a_buffer,
 	if (!(l_type_info->flags & GE_TYPE_FLAG_TUPLE)) {
 		GE_raise_with_message(GE_EX_RETR, "Independent retrieve: object type should be TUPLE");
 	}
-	l_new = l_type_info->new_instance;
+	l_new = (EIF_REFERENCE (*)(GE_context*, EIF_BOOLEAN))l_type_info->new_instance;
 	if (!l_new) {
 		GE_raise_with_message(GE_EX_RETR, "Independent retrieve: cannot create retrieved object");
 	}
@@ -1044,7 +1044,7 @@ static void GE_storable_in_read_special_subobject(GE_storable_in_buffer* a_buffe
 	uint32_t l_count;
 	uint32_t l_capacity;
 	EIF_REFERENCE l_object;
-	EIF_REFERENCE (*l_new)();
+	EIF_REFERENCE (*l_new)(GE_context*, EIF_INTEGER, EIF_BOOLEAN);
 	uint32_t i;
 	uint64_t l_pointer;
 	uint16_t l_item_flags;
@@ -1066,7 +1066,7 @@ static void GE_storable_in_read_special_subobject(GE_storable_in_buffer* a_buffe
 	if (!(l_type_info->flags & GE_TYPE_FLAG_SPECIAL)) {
 		GE_raise_with_message(GE_EX_RETR, "Independent retrieve: object type should be SPECIAL");
 	}
-	l_new = l_type_info->new_instance;
+	l_new = (EIF_REFERENCE (*)(GE_context*, EIF_INTEGER, EIF_BOOLEAN))l_type_info->new_instance;
 	if (!l_new) {
 		GE_raise_with_message(GE_EX_RETR, "Independent retrieve: cannot create retrieved object");
 	}
@@ -1169,7 +1169,7 @@ static void GE_storable_in_read_regular_subobject(GE_storable_in_buffer* a_buffe
 	EIF_TYPE_INDEX l_type_id;
 	GE_type_info* l_type_info;
 	EIF_REFERENCE l_object;
-	EIF_REFERENCE (*l_new)();
+	EIF_REFERENCE (*l_new)(GE_context*, EIF_BOOLEAN);
 	uint32_t l_index;
 	GE_storable_in_class* l_class;
 	int16_t l_attribute_count;
@@ -1209,7 +1209,7 @@ static void GE_storable_in_read_regular_subobject(GE_storable_in_buffer* a_buffe
 	if (l_object) {
 		/* This is an expanded object within another object. */
 	} else {
-		l_new = l_type_info->new_instance;
+		l_new = (EIF_REFERENCE (*)(GE_context*, EIF_BOOLEAN))l_type_info->new_instance;
 		if (!l_new) {
 			snprintf(l_error_message, 200, "Independent retrieve: cannot create retrieved object with type id %d", l_type_id);
 			GE_raise_with_message(GE_EX_RETR, l_error_message);
