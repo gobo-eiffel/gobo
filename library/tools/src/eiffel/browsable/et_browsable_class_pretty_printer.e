@@ -565,7 +565,11 @@ feature {ET_AST_NODE} -- Processing
 				create l_range.make_start_position (line, column)
 				precursor (a_feature_name, a_type)
 				l_range.set_end_position (line, column)
-				create {ET_BROWSABLE_UNQUALIFIED_CALL_NAME} l_browsable_name.make (a_feature_name, current_closure, current_class)
+				if attached {ET_IDENTIFIER} a_feature_name as l_identifier and then l_identifier.is_argument then
+					create {ET_BROWSABLE_ARGUMENT_NAME} l_browsable_name.make (l_identifier, current_closure, current_class)
+				else
+					create {ET_BROWSABLE_UNQUALIFIED_CALL_NAME} l_browsable_name.make (a_feature_name, current_closure, current_class)
+				end
 				l_browsable_name.set_only_feature_name_expected (True)
 				l_browsable_name.set_only_query_expected (True)
 				l_last_browsable_class.browsable_names.force_last (l_browsable_name, l_range)

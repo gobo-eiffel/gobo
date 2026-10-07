@@ -34,6 +34,9 @@
   flat-contract-view (or flat short form) of a class, where
   internal implementation details are hidden, keeping only
   an interface representation.
+* Correctly point to the formal argument `a` when hoverring
+  the mouse over the anchor of a type of the form `like a`
+  (it was trying to find a feature `a`).
 
 ### Gobo Eiffel FreeELKS Library
 
