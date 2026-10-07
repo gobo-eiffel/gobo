@@ -16,6 +16,8 @@
   recompiling a class declaring two features with the same name,
   even though this validity error was previously reported during
   Degree 4.
+* Fixed C code generation when calling a `precursor` which is a
+  once-per-object routine.
 * Upgraded Zig toolchain to version 0.17.0.
 
 ### gedoc

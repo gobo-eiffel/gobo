@@ -781,6 +781,16 @@ feature -- Features
 			is_query: Result implies a_feature.is_query
 		end
 
+feature {ET_DYNAMIC_FEATURE} -- Features
+
+	set_has_once_per_object_routines (b: BOOLEAN)
+			-- Set `has_once_per_object_routines` to `b`.
+		do
+			has_once_per_object_routines := b
+		ensure
+			has_once_per_object_routines_set: has_once_per_object_routines = b
+		end
+		
 feature {NONE} -- Features
 
 	put_attribute (an_attribute: ET_DYNAMIC_FEATURE; a_system: ET_DYNAMIC_SYSTEM)
