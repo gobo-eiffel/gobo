@@ -1691,6 +1691,17 @@ feature {NONE} -- Genericity
 
 feature -- Ancestors
 
+	has_ancestor_cycle: BOOLEAN
+			-- Is current class involved in an inheritance cycle?
+
+	set_has_ancestor_cycle (b: BOOLEAN)
+			-- Set `has_ancestor_cycle` to `b`.
+		do
+			has_ancestor_cycle := b
+		ensure
+			has_ancestor_cycle_set: has_ancestor_cycle = b
+		end
+
 	has_ancestor (a_class: ET_CLASS): BOOLEAN
 			-- Is `a_class' an ancestor of current class?
 			-- (Note: you have to make sure that the ancestors have correctly
@@ -2371,6 +2382,7 @@ feature -- Ancestor building status
 			status_mutex.lock
 			unprotected_has_ancestors_error := False
 			unprotected_ancestors_built := False
+			has_ancestor_cycle := False
 			ancestors := tokens.empty_ancestors
 			conforming_ancestors := tokens.empty_ancestors
 			status_mutex.unlock

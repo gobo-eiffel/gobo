@@ -16,6 +16,9 @@
   recompiling a class declaring two features with the same name,
   even though this validity error was previously reported during
   Degree 4.
+* Avoid possible infinite loops when inheritance cycles or type
+  anchor cycles have been detected during a previous Degree but
+  the compiler proceeds further in fault tolerant mode.
 * Upgraded Zig toolchain to version 0.17.0.
 
 ### gedoc

@@ -200,283 +200,287 @@ feature {NONE} -- Feature recording
 			l_feature_name: ET_FEATURE_NAME
 			l_declared_count: INTEGER
 		do
-			if a_parent.renames /= Void then
-				fill_rename_table (a_parent)
-				has_rename := not rename_table.is_empty
-			end
-			if a_parent.exports /= Void then
-				fill_export_table (a_parent)
-				has_export := not export_table.is_empty
-			end
-			if a_parent.undefines /= Void then
-				fill_undefine_table (a_parent)
-				nb_undefine := undefine_table.count
-				has_undefine := nb_undefine > 0
-			end
-			if a_parent.redefines /= Void then
-				fill_redefine_table (a_parent)
-				nb_redefine := redefine_table.count
-				has_redefine := nb_redefine > 0
-			end
-			if a_parent.selects /= Void then
-				fill_select_table (a_parent)
-				nb_select := select_table.count
-				has_select := nb_select > 0
-			end
 			a_class := a_parent.type.base_class
-			l_queries := a_class.queries
-			l_procedures := a_class.procedures
-			nb := l_queries.count
-			nb2 := l_procedures.count
-			nb3 := nb + nb2 + a_features.count
-			if a_features.capacity < nb3 then
-				a_features.resize (nb3)
-			end
-			feature_names.wipe_out
-			l_declared_count := l_queries.declared_count
-			from i := 1 until i > nb loop
-				l_query := l_queries.item (i)
-				a_name := l_query.name
-				if i <= l_declared_count and feature_names.has (a_name) then
-					-- There are two features declared in this parent with
-					-- the same name. This has already been reported when
-					-- processing this parent (validity error VMFN), so we
-					-- make sure not to report it again in the descendant
-					-- class.
-				else
-					a_parent_feature := new_parent_feature (l_query, a_parent)
-					if has_rename then
-						rename_table.search (a_name)
-						if rename_table.found then
-							a_rename := rename_table.found_item
-							rename_table.remove_found_item
-							has_rename := not rename_table.is_empty
-							a_parent_feature.set_new_name (a_rename)
-							a_rename.old_name.set_seed (l_query.first_seed)
-							a_name := a_rename.new_name.feature_name
-							a_name.set_seed (l_query.first_seed)
-							l_alias_names := a_rename.new_name.alias_names
-							if l_alias_names /= Void then
-								l_alias_names_count := l_alias_names.count
-								from j := 1 until j > l_alias_names_count loop
-									l_alias_name := l_alias_names.item (j)
-									if l_query.is_infixable then
-										if l_alias_name.is_infixable then
-											l_alias_name.set_infix
+			if not (current_class.has_ancestor_cycle and a_class.has_ancestor_cycle) then
+					-- Do not add inherited features if the classes are
+					-- involved in an inheritance cycle.
+				if a_parent.renames /= Void then
+					fill_rename_table (a_parent)
+					has_rename := not rename_table.is_empty
+				end
+				if a_parent.exports /= Void then
+					fill_export_table (a_parent)
+					has_export := not export_table.is_empty
+				end
+				if a_parent.undefines /= Void then
+					fill_undefine_table (a_parent)
+					nb_undefine := undefine_table.count
+					has_undefine := nb_undefine > 0
+				end
+				if a_parent.redefines /= Void then
+					fill_redefine_table (a_parent)
+					nb_redefine := redefine_table.count
+					has_redefine := nb_redefine > 0
+				end
+				if a_parent.selects /= Void then
+					fill_select_table (a_parent)
+					nb_select := select_table.count
+					has_select := nb_select > 0
+				end
+				l_queries := a_class.queries
+				l_procedures := a_class.procedures
+				nb := l_queries.count
+				nb2 := l_procedures.count
+				nb3 := nb + nb2 + a_features.count
+				if a_features.capacity < nb3 then
+					a_features.resize (nb3)
+				end
+				feature_names.wipe_out
+				l_declared_count := l_queries.declared_count
+				from i := 1 until i > nb loop
+					l_query := l_queries.item (i)
+					a_name := l_query.name
+					if i <= l_declared_count and feature_names.has (a_name) then
+						-- There are two features declared in this parent with
+						-- the same name. This has already been reported when
+						-- processing this parent (validity error VMFN), so we
+						-- make sure not to report it again in the descendant
+						-- class.
+					else
+						a_parent_feature := new_parent_feature (l_query, a_parent)
+						if has_rename then
+							rename_table.search (a_name)
+							if rename_table.found then
+								a_rename := rename_table.found_item
+								rename_table.remove_found_item
+								has_rename := not rename_table.is_empty
+								a_parent_feature.set_new_name (a_rename)
+								a_rename.old_name.set_seed (l_query.first_seed)
+								a_name := a_rename.new_name.feature_name
+								a_name.set_seed (l_query.first_seed)
+								l_alias_names := a_rename.new_name.alias_names
+								if l_alias_names /= Void then
+									l_alias_names_count := l_alias_names.count
+									from j := 1 until j > l_alias_names_count loop
+										l_alias_name := l_alias_names.item (j)
+										if l_query.is_infixable then
+											if l_alias_name.is_infixable then
+												l_alias_name.set_infix
+											end
+										elseif l_query.is_prefixable then
+											if l_alias_name.is_prefixable then
+												l_alias_name.set_prefix
+											end
 										end
-									elseif l_query.is_prefixable then
-										if l_alias_name.is_prefixable then
-											l_alias_name.set_prefix
-										end
+										j := j + 1
 									end
-									j := j + 1
 								end
 							end
 						end
-					end
-					if has_export then
-						export_table.search (a_name)
-						if export_table.found then
-							l_feature_name := export_table.found_item.feature_name
-							l_feature_name.set_seed (l_query.first_seed)
-							export_table.remove_found_item
-							has_export := not export_table.is_empty
-						end
-					end
-					if has_undefine then
-						undefine_table.search (a_name)
-						if undefine_table.found then
-							l_feature_name := undefine_table.found_key.feature_name
-							l_feature_name.set_seed (l_query.first_seed)
-							a_parent_feature.set_undefine_name (l_feature_name)
-							if not undefine_table.found_item then
-								undefine_table.replace_found_item (True)
-								nb_undefine := nb_undefine - 1
+						if has_export then
+							export_table.search (a_name)
+							if export_table.found then
+								l_feature_name := export_table.found_item.feature_name
+								l_feature_name.set_seed (l_query.first_seed)
+								export_table.remove_found_item
+								has_export := not export_table.is_empty
 							end
 						end
-					end
-					if has_redefine then
-						redefine_table.search (a_name)
-						if redefine_table.found then
-							l_feature_name := redefine_table.found_key.feature_name
-							l_feature_name.set_seed (l_query.first_seed)
-							a_parent_feature.set_redefine_name (l_feature_name)
-							if not redefine_table.found_item then
-								redefine_table.replace_found_item (True)
-								nb_redefine := nb_redefine - 1
+						if has_undefine then
+							undefine_table.search (a_name)
+							if undefine_table.found then
+								l_feature_name := undefine_table.found_key.feature_name
+								l_feature_name.set_seed (l_query.first_seed)
+								a_parent_feature.set_undefine_name (l_feature_name)
+								if not undefine_table.found_item then
+									undefine_table.replace_found_item (True)
+									nb_undefine := nb_undefine - 1
+								end
 							end
 						end
-					end
-					if has_select then
-						select_table.search (a_name)
-						if select_table.found then
-							l_feature_name := select_table.found_key.feature_name
-							l_feature_name.set_seed (l_query.first_seed)
-							a_parent_feature.set_select_name (l_feature_name)
-							if not select_table.found_item then
-								select_table.replace_found_item (True)
-								nb_select := nb_select - 1
+						if has_redefine then
+							redefine_table.search (a_name)
+							if redefine_table.found then
+								l_feature_name := redefine_table.found_key.feature_name
+								l_feature_name.set_seed (l_query.first_seed)
+								a_parent_feature.set_redefine_name (l_feature_name)
+								if not redefine_table.found_item then
+									redefine_table.replace_found_item (True)
+									nb_redefine := nb_redefine - 1
+								end
 							end
 						end
-					end
-					a_features.search (a_name)
-					if a_features.found then
-						a_named_feature := a_features.found_item
-						if a_named_feature.is_immediate then
-							a_redeclared_feature := new_redeclared_feature (a_named_feature.immediate_feature, a_parent_feature)
-							a_features.replace_found_item (a_redeclared_feature)
+						if has_select then
+							select_table.search (a_name)
+							if select_table.found then
+								l_feature_name := select_table.found_key.feature_name
+								l_feature_name.set_seed (l_query.first_seed)
+								a_parent_feature.set_select_name (l_feature_name)
+								if not select_table.found_item then
+									select_table.replace_found_item (True)
+									nb_select := nb_select - 1
+								end
+							end
+						end
+						a_features.search (a_name)
+						if a_features.found then
+							a_named_feature := a_features.found_item
+							if a_named_feature.is_immediate then
+								a_redeclared_feature := new_redeclared_feature (a_named_feature.immediate_feature, a_parent_feature)
+								a_features.replace_found_item (a_redeclared_feature)
+							else
+								a_named_feature.adapted_feature.put_parent_feature (a_parent_feature)
+							end
 						else
-							a_named_feature.adapted_feature.put_parent_feature (a_parent_feature)
+							an_inherited_feature := new_inherited_feature (a_parent_feature)
+							a_features.put_last_new (an_inherited_feature, a_name)
 						end
-					else
-						an_inherited_feature := new_inherited_feature (a_parent_feature)
-						a_features.put_last_new (an_inherited_feature, a_name)
 					end
+					i := i + 1
 				end
-				i := i + 1
-			end
-			l_declared_count := l_procedures.declared_count
-			from i := 1 until i > nb2 loop
-				l_procedure := l_procedures.item (i)
-				a_name := l_procedure.name
-				if i <= l_declared_count and feature_names.has (a_name) then
-					-- There are two features declared in this parent with
-					-- the same name. This has already been reported when
-					-- processing this parent (validity error VMFN), so we
-					-- make sure not to report it again in the descendant
-					-- class.
-				else
-					a_parent_feature := new_parent_feature (l_procedure, a_parent)
-					if has_rename then
-						rename_table.search (a_name)
-						if rename_table.found then
-							a_rename := rename_table.found_item
-							rename_table.remove_found_item
-							has_rename := not rename_table.is_empty
-							a_parent_feature.set_new_name (a_rename)
-							a_rename.old_name.set_seed (l_procedure.first_seed)
-							a_name := a_rename.new_name.feature_name
-							a_name.set_seed (l_procedure.first_seed)
-						end
-					end
-					if has_export then
-						export_table.search (a_name)
-						if export_table.found then
-							l_feature_name := export_table.found_item.feature_name
-							l_feature_name.set_seed (l_procedure.first_seed)
-							export_table.remove_found_item
-							has_export := not export_table.is_empty
-						end
-					end
-					if has_undefine then
-						undefine_table.search (a_name)
-						if undefine_table.found then
-							l_feature_name := undefine_table.found_key.feature_name
-							l_feature_name.set_seed (l_procedure.first_seed)
-							a_parent_feature.set_undefine_name (l_feature_name)
-							if not undefine_table.found_item then
-								undefine_table.replace_found_item (True)
-								nb_undefine := nb_undefine - 1
+				l_declared_count := l_procedures.declared_count
+				from i := 1 until i > nb2 loop
+					l_procedure := l_procedures.item (i)
+					a_name := l_procedure.name
+					if i <= l_declared_count and feature_names.has (a_name) then
+						-- There are two features declared in this parent with
+						-- the same name. This has already been reported when
+						-- processing this parent (validity error VMFN), so we
+						-- make sure not to report it again in the descendant
+						-- class.
+					else
+						a_parent_feature := new_parent_feature (l_procedure, a_parent)
+						if has_rename then
+							rename_table.search (a_name)
+							if rename_table.found then
+								a_rename := rename_table.found_item
+								rename_table.remove_found_item
+								has_rename := not rename_table.is_empty
+								a_parent_feature.set_new_name (a_rename)
+								a_rename.old_name.set_seed (l_procedure.first_seed)
+								a_name := a_rename.new_name.feature_name
+								a_name.set_seed (l_procedure.first_seed)
 							end
 						end
-					end
-					if has_redefine then
-						redefine_table.search (a_name)
-						if redefine_table.found then
-							l_feature_name := redefine_table.found_key.feature_name
-							l_feature_name.set_seed (l_procedure.first_seed)
-							a_parent_feature.set_redefine_name (l_feature_name)
-							if not redefine_table.found_item then
-								redefine_table.replace_found_item (True)
-								nb_redefine := nb_redefine - 1
+						if has_export then
+							export_table.search (a_name)
+							if export_table.found then
+								l_feature_name := export_table.found_item.feature_name
+								l_feature_name.set_seed (l_procedure.first_seed)
+								export_table.remove_found_item
+								has_export := not export_table.is_empty
 							end
 						end
-					end
-					if has_select then
-						select_table.search (a_name)
-						if select_table.found then
-							l_feature_name := select_table.found_key.feature_name
-							l_feature_name.set_seed (l_procedure.first_seed)
-							a_parent_feature.set_select_name (l_feature_name)
-							if not select_table.found_item then
-								select_table.replace_found_item (True)
-								nb_select := nb_select - 1
+						if has_undefine then
+							undefine_table.search (a_name)
+							if undefine_table.found then
+								l_feature_name := undefine_table.found_key.feature_name
+								l_feature_name.set_seed (l_procedure.first_seed)
+								a_parent_feature.set_undefine_name (l_feature_name)
+								if not undefine_table.found_item then
+									undefine_table.replace_found_item (True)
+									nb_undefine := nb_undefine - 1
+								end
 							end
 						end
-					end
-					a_features.search (a_name)
-					if a_features.found then
-						a_named_feature := a_features.found_item
-						if a_named_feature.is_immediate then
-							a_redeclared_feature := new_redeclared_feature (a_named_feature.immediate_feature, a_parent_feature)
-							a_features.replace_found_item (a_redeclared_feature)
+						if has_redefine then
+							redefine_table.search (a_name)
+							if redefine_table.found then
+								l_feature_name := redefine_table.found_key.feature_name
+								l_feature_name.set_seed (l_procedure.first_seed)
+								a_parent_feature.set_redefine_name (l_feature_name)
+								if not redefine_table.found_item then
+									redefine_table.replace_found_item (True)
+									nb_redefine := nb_redefine - 1
+								end
+							end
+						end
+						if has_select then
+							select_table.search (a_name)
+							if select_table.found then
+								l_feature_name := select_table.found_key.feature_name
+								l_feature_name.set_seed (l_procedure.first_seed)
+								a_parent_feature.set_select_name (l_feature_name)
+								if not select_table.found_item then
+									select_table.replace_found_item (True)
+									nb_select := nb_select - 1
+								end
+							end
+						end
+						a_features.search (a_name)
+						if a_features.found then
+							a_named_feature := a_features.found_item
+							if a_named_feature.is_immediate then
+								a_redeclared_feature := new_redeclared_feature (a_named_feature.immediate_feature, a_parent_feature)
+								a_features.replace_found_item (a_redeclared_feature)
+							else
+								a_named_feature.adapted_feature.put_parent_feature (a_parent_feature)
+							end
 						else
-							a_named_feature.adapted_feature.put_parent_feature (a_parent_feature)
+							an_inherited_feature := new_inherited_feature (a_parent_feature)
+							a_features.put_last_new (an_inherited_feature, a_name)
 						end
-					else
-						an_inherited_feature := new_inherited_feature (a_parent_feature)
-						a_features.put_last_new (an_inherited_feature, a_name)
 					end
+					i := i + 1
 				end
-				i := i + 1
-			end
-			feature_names.wipe_out
-			if has_rename then
-				from rename_table.start until rename_table.after loop
-					set_fatal_error
-					a_rename := rename_table.item_for_iteration
-					error_handler.report_vhrc1a_error (current_class, a_parent, a_rename)
-					rename_table.forth
+				feature_names.wipe_out
+				if has_rename then
+					from rename_table.start until rename_table.after loop
+						set_fatal_error
+						a_rename := rename_table.item_for_iteration
+						error_handler.report_vhrc1a_error (current_class, a_parent, a_rename)
+						rename_table.forth
+					end
+					rename_table.wipe_out
 				end
-				rename_table.wipe_out
-			end
-			if has_export then
-				from export_table.start until export_table.after loop
-					set_fatal_error
-					a_name := export_table.item_for_iteration.feature_name
-					error_handler.report_vlel2a_error (current_class, a_parent, a_name)
-					export_table.forth
+				if has_export then
+					from export_table.start until export_table.after loop
+						set_fatal_error
+						a_name := export_table.item_for_iteration.feature_name
+						error_handler.report_vlel2a_error (current_class, a_parent, a_name)
+						export_table.forth
+					end
+					export_table.wipe_out
 				end
-				export_table.wipe_out
-			end
-			if has_undefine then
-				if nb_undefine > 0 then
-					from undefine_table.start until undefine_table.after loop
-						if not undefine_table.item_for_iteration then
-							set_fatal_error
-							a_name := undefine_table.key_for_iteration.feature_name
-							error_handler.report_vdus1a_error (current_class, a_parent, a_name)
+				if has_undefine then
+					if nb_undefine > 0 then
+						from undefine_table.start until undefine_table.after loop
+							if not undefine_table.item_for_iteration then
+								set_fatal_error
+								a_name := undefine_table.key_for_iteration.feature_name
+								error_handler.report_vdus1a_error (current_class, a_parent, a_name)
+							end
+							undefine_table.forth
 						end
-						undefine_table.forth
 					end
+					undefine_table.wipe_out
 				end
-				undefine_table.wipe_out
-			end
-			if has_redefine then
-				if nb_redefine > 0 then
-					from redefine_table.start until redefine_table.after loop
-						if not redefine_table.item_for_iteration then
-							set_fatal_error
-							a_name := redefine_table.key_for_iteration.feature_name
-							error_handler.report_vdrs1a_error (current_class, a_parent, a_name)
+				if has_redefine then
+					if nb_redefine > 0 then
+						from redefine_table.start until redefine_table.after loop
+							if not redefine_table.item_for_iteration then
+								set_fatal_error
+								a_name := redefine_table.key_for_iteration.feature_name
+								error_handler.report_vdrs1a_error (current_class, a_parent, a_name)
+							end
+							redefine_table.forth
 						end
-						redefine_table.forth
 					end
+					redefine_table.wipe_out
 				end
-				redefine_table.wipe_out
-			end
-			if has_select then
-				if nb_select > 0 then
-					from select_table.start until select_table.after loop
-						if not select_table.item_for_iteration then
-							set_fatal_error
-							a_name := select_table.key_for_iteration.feature_name
-							error_handler.report_vmss1a_error (current_class, a_parent, a_name)
+				if has_select then
+					if nb_select > 0 then
+						from select_table.start until select_table.after loop
+							if not select_table.item_for_iteration then
+								set_fatal_error
+								a_name := select_table.key_for_iteration.feature_name
+								error_handler.report_vmss1a_error (current_class, a_parent, a_name)
+							end
+							select_table.forth
 						end
-						select_table.forth
 					end
+					select_table.wipe_out
 				end
-				select_table.wipe_out
 			end
 		ensure
 			no_void_feature: not a_features.has_void_item

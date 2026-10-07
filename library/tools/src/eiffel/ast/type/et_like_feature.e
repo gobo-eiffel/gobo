@@ -574,6 +574,14 @@ feature -- Setting
 			like_keyword_set: like_keyword = a_like
 		end
 
+	set_seed (a_seed: like seed)
+			-- Set `seed` to `a_seed`.
+		do
+			seed := a_seed
+		ensure
+			seed_set: seed = a_seed
+		end
+
 feature -- Status report
 
 	is_like_argument: BOOLEAN

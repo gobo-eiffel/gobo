@@ -110,6 +110,9 @@ feature -- Type checking
 				check has_cycle: anchored_type_sorter.has_cycle end
 				set_fatal_error
 				error_handler.report_vtat2a_error (current_class, l_cycle)
+					-- Make sure that we will not enter an infinite loop
+					-- when traversing the anchors involved in this cycle.
+				l_cycle.first.set_seed (0)
 			end
 			anchored_type_sorter.wipe_out
 			current_class := old_class
