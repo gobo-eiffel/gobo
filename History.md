@@ -18,6 +18,7 @@
   Degree 4.
 * Fixed C code generation when calling a `precursor` which is a
   once-per-object routine.
+* Fixed runtime C code when compiling with gcc 15.2.0 on Ubuntu 26.04.
 * Upgraded Zig toolchain to version 0.17.0.
 
 ### gedoc
