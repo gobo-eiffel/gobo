@@ -162,6 +162,7 @@ feature {NONE} -- Processing
 								set_parents_inheritance_error (current_class.parents (i2))
 								i2 := i2 + 1
 							end
+							a_cycle.do_all (agent {ET_CLASS}.set_has_ancestor_cycle (True))
 								-- Report the validity error VHPR-1.
 							current_class := a_cycle.first
 							error_handler.report_compilation_status (Current, current_class, system_processor)

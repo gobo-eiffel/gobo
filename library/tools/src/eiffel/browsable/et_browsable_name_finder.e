@@ -1074,7 +1074,11 @@ feature {ET_AST_NODE} -- Processing
 		do
 			l_name := a_type.name
 			if l_name.contains_position (current_position) then
-				create {ET_BROWSABLE_UNQUALIFIED_CALL_NAME} l_browsable_name.make (l_name, current_closure, current_class)
+				if attached {ET_IDENTIFIER} l_name as l_identifier and then l_identifier.is_argument then
+					create {ET_BROWSABLE_ARGUMENT_NAME} l_browsable_name.make (l_identifier, current_closure, current_class)
+				else
+					create {ET_BROWSABLE_UNQUALIFIED_CALL_NAME} l_browsable_name.make (l_name, current_closure, current_class)
+				end
 				l_browsable_name.set_only_feature_name_expected (True)
 				l_browsable_name.set_only_query_expected (True)
 				last_browsable_name := l_browsable_name

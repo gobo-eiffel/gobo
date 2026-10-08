@@ -19,6 +19,9 @@
 * Fixed C code generation when calling a `precursor` which is a
   once-per-object routine.
 * Fixed runtime C code when compiling with gcc 15.2.0 on Ubuntu 26.04.
+* Avoid possible infinite loops when inheritance cycles or type
+  anchor cycles have been detected during a previous Degree but
+  the compiler proceeds further in fault tolerant mode.
 * Upgraded Zig toolchain to version 0.17.0.
 
 ### gedoc
@@ -34,6 +37,9 @@
   flat-contract-view (or flat short form) of a class, where
   internal implementation details are hidden, keeping only
   an interface representation.
+* Correctly point to the formal argument `a` when hoverring
+  the mouse over the anchor of a type of the form `like a`
+  (it was trying to find a feature `a`).
 
 ### Gobo Eiffel FreeELKS Library
 
