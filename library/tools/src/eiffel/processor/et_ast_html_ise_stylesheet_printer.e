@@ -17,7 +17,7 @@
 	]"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2017-2025, Eric Bezault and others"
+	copyright: "Copyright (c) 2017-2026, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_AST_HTML_ISE_STYLESHEET_PRINTER
@@ -26,31 +26,41 @@ inherit
 
 	ET_AST_TYPED_PRETTY_PRINTER
 		export
-			{ANY} print_new_line, print_indentation
+			{ANY} print_character, print_lowercase_string, print_uppercase_string, print_new_line, print_indentation
 		redefine
 			make,
+			process_argument_name,
 			process_c1_character_constant_without_cast_type,
 			process_c2_character_constant_without_cast_type,
 			process_c3_character_constant_without_cast_type,
+			process_class_name_in_creation_region,
+			process_current,
 			process_extended_feature_name_of_feature,
+			process_false_constant,
 			process_feature_name,
 			process_formal_parameter_type,
-			process_identifier,
-			process_note_tag,
+			process_inline_separate_argument_name,
 			process_integer_constant_without_cast_type,
+			process_iteration_item_name,
 			process_keyword,
-			process_name_of_formal_parameter,
+			process_local_name,
+			process_name_of_formal_parameter_type,
 			process_name_of_named_class,
 			process_new_name_of_rename,
+			process_note_tag,
+			process_object_test_local_name,
 			process_precursor_keyword,
 			process_real_constant_without_cast_type,
 			process_regular_manifest_string_without_cast_type,
+			process_result,
 			process_special_manifest_string_without_cast_type,
 			process_symbol,
 			process_tag,
+			process_true_constant,
+			process_tuple_label,
 			process_verbatim_string_without_cast_type,
-			process_writable,
-			print_character,
+			process_void,
+			put_character,
 			print_string,
 			print_comment_text
 		end
@@ -75,12 +85,23 @@ feature -- Mapping
 	class_mapping: detachable DS_HASH_TABLE [STRING, ET_CLASS]
 			-- Mapping between classes and the href for these classes
 
-	feature_mapping: detachable DS_HASH_TABLE [STRING, ET_FEATURE]
+	feature_mapping: detachable DS_HASH_TABLE [DS_HASH_TABLE [STRING, ET_FEATURE], ET_CLASS]
 			-- Mapping between features and the href for these features
+
+	feature_href (a_feature: ET_FEATURE; a_class: ET_CLASS; a_mapping: attached like feature_mapping): detachable STRING
+			-- Href of `a_feature` from `a_class`, using `a_mapping`
+		local
+			l_feature_impl: ET_FEATURE
+		do
+			l_feature_impl := a_feature.implementation_feature
+			if attached a_mapping.value (l_feature_impl.implementation_class) as l_features then
+				Result := l_features.value (l_feature_impl)
+			end
+		end
 
 	root_path: detachable STRING
 			-- Path from which href in `class_mapping' and `fetaure_mapping'
-			-- are retalive
+			-- are relative
 
 	set_class_mapping (a_class_mapping: like class_mapping)
 			-- Set `class_mapping' to `a_class_mapping'.
@@ -117,11 +138,13 @@ feature -- Printing
 			a_class_not_void: a_class /= Void
 		local
 			l_old_comments_ignored: BOOLEAN
-			l_old_class: like current_class
+			l_old_current_class: like current_class
+			l_old_current_type: like current_type
 		do
 			l_old_comments_ignored := comments_ignored
 			set_comments_ignored (True)
-			l_old_class := current_class
+			l_old_current_class := current_class
+			l_old_current_type := current_type
 			set_current_class (a_class)
 			process_name_of_named_class (a_class.name, a_class)
 			if a_with_deferred_info and then a_class.is_deferred then
@@ -133,7 +156,8 @@ feature -- Printing
 				print_space
 				l_formal_parameters.process (Current)
 			end
-			set_current_class (l_old_class)
+			current_class := l_old_current_class
+			current_type := l_old_current_type
 			set_comments_ignored (l_old_comments_ignored)
 		end
 
@@ -161,20 +185,26 @@ feature -- Printing
 			a_feature_not_void: a_feature /= Void
 		local
 			l_old_comments_ignored: BOOLEAN
-			l_old_feature: like current_feature
+			l_old_closure: like current_closure
+			l_old_closure_impl: like current_closure_impl
+			l_old_class_impl: like current_class_impl
 		do
-			l_old_feature := current_feature
-			current_feature := a_feature
+			l_old_closure := current_closure
+			current_closure := a_feature
+			l_old_closure_impl := current_closure_impl
+			current_closure_impl := a_feature.implementation_feature
+			l_old_class_impl := current_class_impl
+			current_class_impl := a_feature.implementation_class
 			l_old_comments_ignored := comments_ignored
 			set_comments_ignored (True)
 			print_unescaped_string (html_start_span_title)
 			print_unescaped_character ('%"')
 			print_unescaped_character ('`')
-			print_string_lower_case (a_feature.name.name)
+			print_lowercase_string (a_feature.name.name)
 			print_unescaped_character ('%'')
 			if a_feature.implementation_class /= current_class then
 				print_string (string_was_declared_in)
-				print_string_upper_case (a_feature.implementation_class.name.name)
+				print_uppercase_string (a_feature.implementation_class.name.name)
 			else
 				print_string (string_is_declared_in_current)
 			end
@@ -188,11 +218,13 @@ feature -- Printing
 			if attached a_feature.type as l_type then
 				tokens.colon_symbol.process (Current)
 				print_space
-				l_type.process (Current)
+				process_type (l_type)
 			end
 			print_end_span
 			set_comments_ignored (l_old_comments_ignored)
-			current_feature := l_old_feature
+			current_closure := l_old_closure
+			current_closure_impl := l_old_closure_impl
+			current_class_impl := l_old_class_impl
 		end
 
 	print_cluster_names_recursive (a_clusters: ET_CLUSTERS)
@@ -212,7 +244,7 @@ feature -- Printing
 			from i := 1 until i > nb loop
 				l_cluster := a_clusters.cluster (i)
 				print_start_span_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_necluster)
-				print_string_lower_case (l_cluster.name)
+				print_lowercase_string (l_cluster.name)
 				print_end_span
 				print_new_line
 				if attached l_cluster.subclusters as l_subclusters then
@@ -432,17 +464,6 @@ feature -- Printing
 			comment_printed := True
 		end
 
-	print_character (c: CHARACTER)
-			-- Print character `c', or its escaped version if it's a special HTML character.
-			-- Print indentation first if not done yet.
-		do
-			if not indentation_printed then
-				print_indentation
-			end
-			put_character (c)
-			comment_printed := False
-		end
-
 	print_string (s: STRING)
 			-- Print string `s', or its escaped version if it contains special HTML characters.
 			-- Print indentation first if not done yet.
@@ -455,40 +476,6 @@ feature -- Printing
 			nb := s.count
 			from i := 1 until i > nb loop
 				put_character (s.item (i))
-				i := i + 1
-			end
-			comment_printed := False
-		end
-
-	print_string_lower_case (s: STRING)
-			-- Print lower-case version of string `s', or its escaped version if it contains special HTML characters.
-			-- Print indentation first if not done yet.
-		local
-			i, nb: INTEGER
-		do
-			if not indentation_printed then
-				print_indentation
-			end
-			nb := s.count
-			from i := 1 until i > nb loop
-				put_character (s.item (i).as_lower)
-				i := i + 1
-			end
-			comment_printed := False
-		end
-
-	print_string_upper_case (s: STRING)
-			-- Print upper-case version of string `s', or its escaped version if it contains special HTML characters.
-			-- Print indentation first if not done yet.
-		local
-			i, nb: INTEGER
-		do
-			if not indentation_printed then
-				print_indentation
-			end
-			nb := s.count
-			from i := 1 until i > nb loop
-				put_character (s.item (i).as_upper)
 				i := i + 1
 			end
 			comment_printed := False
@@ -576,23 +563,35 @@ feature {ET_AST_PROCESSOR} -- Processing
 			a_alias_name.alias_keyword.process (Current)
 			print_space
 			print_start_span_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_esymbol)
-			print_character ('"')
+			print_character ('%"')
 			print_end_span
 			if a_alias_name.is_keyword then
 				print_start_a_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_ekeyword, a_href)
 			else
 				print_start_a_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_esymbol, a_href)
 			end
-			print_string_lower_case (a_alias_name.operator_name)
+			if use_lowercase_feature_names then
+				print_lowercase_string (a_alias_name.operator_name)
+			else
+				print_string (a_alias_name.operator_name)
+			end
 			print_end_a
 			print_start_span_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_esymbol)
-			print_character ('"')
+			print_character ('%"')
 			print_end_span
 			if attached a_alias_name.convert_keyword as l_convert_keyword then
 				print_space
 				l_convert_keyword.process (Current)
 			end
 			comment_finder.find_comments (a_alias_name, comment_list)
+		end
+
+	process_argument_name (a_identifier: ET_IDENTIFIER; a_is_declaration: BOOLEAN)
+			-- Process `a_identifier'.
+		do
+			print_start_span_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_elocal)
+			precursor (a_identifier, a_is_declaration)
+			print_end_span
 		end
 
 	process_c1_character_constant_without_cast_type (a_constant: ET_C1_CHARACTER_CONSTANT)
@@ -619,6 +618,23 @@ feature {ET_AST_PROCESSOR} -- Processing
 			print_end_span
 		end
 
+	process_class_name_in_creation_region (a_class_name: ET_CLASS_NAME; a_region: ET_CREATION_REGION)
+			-- Process `a_class_name` when it appears in `a_region`.
+		local
+			l_named_class: ET_NAMED_CLASS
+		do
+			l_named_class := current_class.universe.master_class (a_class_name)
+			process_name_of_named_class (a_class_name, l_named_class)
+		end
+
+	process_current (a_current: ET_CURRENT)
+			-- Process `a_current'.
+		do
+			print_start_span_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_ekeyword)
+			precursor (a_current)
+			print_end_span
+		end
+
 	process_extended_feature_name_of_feature (a_feature: ET_FEATURE)
 			-- Process extended feature name of `a_feature'.
 		local
@@ -633,12 +649,12 @@ feature {ET_AST_PROCESSOR} -- Processing
 			print_unescaped_character ('%"')
 			print_character ('f')
 			print_character ('_')
-			print_string_lower_case (l_feature_name.name)
+			print_lowercase_string (l_feature_name.name)
 			print_unescaped_character ('%"')
 			print_unescaped_character ('>')
 			print_end_a
 			if attached feature_mapping as l_feature_mapping then
-				l_href := l_feature_mapping.value (a_feature.implementation_feature)
+				l_href := feature_href (a_feature, current_class, l_feature_mapping)
 			end
 			if l_href /= Void then
 				process_feature_name_with_href (l_feature_name, l_href)
@@ -655,6 +671,14 @@ feature {ET_AST_PROCESSOR} -- Processing
 			end
 		end
 
+	process_false_constant (a_constant: ET_FALSE_CONSTANT)
+			-- Process `a_constant'.
+		do
+			print_start_span_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_ekeyword)
+			precursor (a_constant)
+			print_end_span
+		end
+
 	process_feature_name (a_feature_name: ET_FEATURE_NAME)
 			-- Process `a_feature_name'.
 		local
@@ -668,7 +692,7 @@ feature {ET_AST_PROCESSOR} -- Processing
 					if attached l_target_class.seeded_feature (a_feature_name.seed) as l_feature then
 						l_feature_name := l_feature.name
 						if attached feature_mapping as l_feature_mapping then
-							l_href := l_feature_mapping.value (l_feature.implementation_feature)
+							l_href := feature_href (l_feature, l_target_class, l_feature_mapping)
 						end
 					end
 				end
@@ -692,8 +716,7 @@ feature {ET_AST_PROCESSOR} -- Processing
 		do
 			if attached {ET_IDENTIFIER} a_feature_name as l_identifier then
 				print_start_a_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_efeature, a_href)
-				print_string_lower_case (l_identifier.name)
-				process_break (l_identifier.break)
+				a_feature_name.process (Current)
 				print_end_a
 			else
 				a_feature_name.process (Current)
@@ -703,45 +726,19 @@ feature {ET_AST_PROCESSOR} -- Processing
 	process_formal_parameter_type (a_type: ET_FORMAL_PARAMETER_TYPE)
 			-- Process `a_type'.
 		do
-			if a_type.implementation_class /= current_class then
-				a_type.named_type (current_class).process (Current)
+			if a_type.implementation_class /= current_class or current_class /= current_type then
+				a_type.named_type (current_type).process (Current)
 			else
 				precursor (a_type)
 			end
 		end
 
-	process_identifier (an_identifier: ET_IDENTIFIER)
-			-- Process `an_identifier'.
+	process_inline_separate_argument_name (a_identifier: ET_IDENTIFIER; a_is_declaration: BOOLEAN)
+			-- Process `a_identifier'.
 		do
-			if
-				an_identifier.is_argument or
-				an_identifier.is_local or
-				an_identifier.is_object_test_local or
-				an_identifier.is_iteration_item or
-				an_identifier.is_inline_separate_argument
-			then
-				print_start_span_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_elocal)
-				print_string (an_identifier.name)
-				print_end_span
-				process_break (an_identifier.break)
-			else
-				precursor (an_identifier)
-			end
-		end
-
-	process_note_tag (a_tag: ET_TAG)
-			-- Process `a_tag' when appearing in a note clause.
-		local
-			l_identifier: ET_IDENTIFIER
-		do
-			l_identifier := a_tag.identifier
-			print_start_span_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_eitag)
-			print_string_lower_case (l_identifier.name)
+			print_start_span_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_elocal)
+			precursor (a_identifier, a_is_declaration)
 			print_end_span
-				-- The AST may or may not contain the colon.
-				-- So we have to print it explicitly here.
-			tokens.colon_symbol.process (Current)
-			comment_finder.find_comments (a_tag, comment_list)
 		end
 
 	process_integer_constant_without_cast_type (a_constant: ET_INTEGER_CONSTANT)
@@ -752,25 +749,36 @@ feature {ET_AST_PROCESSOR} -- Processing
 			print_end_span
 		end
 
+	process_iteration_item_name (a_identifier: ET_IDENTIFIER; a_is_declaration: BOOLEAN)
+			-- Process `a_identifier'.
+		do
+			print_start_span_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_elocal)
+			precursor (a_identifier, a_is_declaration)
+			print_end_span
+		end
+
 	process_keyword (a_keyword: ET_KEYWORD)
 			-- Process `a_keyword'.
 		do
 			print_start_span_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_ekeyword)
-			print_string (a_keyword.text)
+			precursor (a_keyword)
 			print_end_span
-			process_break (a_keyword.break)
 		end
 
-	process_name_of_formal_parameter (a_parameter: ET_FORMAL_PARAMETER_TYPE)
-			-- Process name of formal parameter `a_parameter'.
-		local
-			l_name: ET_IDENTIFIER
+	process_local_name (a_identifier: ET_IDENTIFIER; a_is_declaration: BOOLEAN)
+			-- Process `a_identifier'.
 		do
-			l_name := a_parameter.name
-			print_start_span_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_egeneric)
-			print_string_upper_case (l_name.name)
+			print_start_span_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_elocal)
+			precursor (a_identifier, a_is_declaration)
 			print_end_span
-			process_break (l_name.break)
+		end
+
+	process_name_of_formal_parameter_type (a_parameter: ET_FORMAL_PARAMETER_TYPE)
+			-- Process name of formal parameter `a_parameter'.
+		do
+			print_start_span_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_egeneric)
+			precursor (a_parameter)
+			print_end_span
 		end
 
 	process_name_of_named_class (a_class_name: ET_CLASS_NAME; a_named_class: ET_NAMED_CLASS)
@@ -787,11 +795,10 @@ feature {ET_AST_PROCESSOR} -- Processing
 			end
 			if l_href /= Void then
 				print_start_a_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_eclass, l_href)
-				print_string_upper_case (a_class_name.name)
-				process_break (a_class_name.break)
+			end
+			precursor (a_class_name, a_named_class)
+			if l_href /= Void then
 				print_end_a
-			else
-				a_class_name.process (Current)
 			end
 		end
 
@@ -807,7 +814,7 @@ feature {ET_AST_PROCESSOR} -- Processing
 			l_feature_name := l_extended_feature_name.feature_name
 			if attached feature_mapping as l_feature_mapping then
 				if attached current_class.seeded_feature (l_feature_name.seed) as l_feature then
-					l_href := l_feature_mapping.value (l_feature.implementation_feature)
+					l_href := feature_href (l_feature, current_class, l_feature_mapping)
 				end
 			end
 			if l_href /= Void then
@@ -825,6 +832,31 @@ feature {ET_AST_PROCESSOR} -- Processing
 			end
 		end
 
+	process_note_tag (a_tag: ET_TAG)
+			-- Process `a_tag' when appearing in a note clause.
+		local
+			l_identifier: ET_IDENTIFIER
+		do
+			l_identifier := a_tag.identifier
+			print_start_span_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_eitag)
+			print_local_name (l_identifier)
+			print_end_span
+				-- The AST may or may not contain the colon.
+				-- So we have to print it explicitly here.
+			tokens.colon_symbol.process (Current)
+			comment_finder.add_excluded_node (l_identifier)
+			comment_finder.find_comments (a_tag, comment_list)
+			comment_finder.reset_excluded_nodes
+		end
+
+	process_object_test_local_name (a_identifier: ET_IDENTIFIER; a_is_declaration: BOOLEAN)
+			-- Process `a_identifier'.
+		do
+			print_start_span_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_elocal)
+			precursor (a_identifier, a_is_declaration)
+			print_end_span
+		end
+
 	process_precursor_keyword (a_keyword: ET_PRECURSOR_KEYWORD)
 			-- Process `a_keyword'.
 		local
@@ -833,14 +865,13 @@ feature {ET_AST_PROCESSOR} -- Processing
 			if attached feature_mapping as l_feature_mapping then
 				if attached target_class as l_target_class then
 					if attached l_target_class.seeded_feature (a_keyword.seed) as l_feature then
-						l_href := l_feature_mapping.value (l_feature.implementation_feature)
+						l_href := feature_href (l_feature, l_target_class, l_feature_mapping)
 					end
 				end
 			end
 			if l_href /= Void then
 				print_start_a_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_ekeyword, l_href)
-				print_string (a_keyword.name)
-				process_break (a_keyword.break)
+				precursor (a_keyword)
 				print_end_a
 			else
 				precursor (a_keyword)
@@ -863,6 +894,14 @@ feature {ET_AST_PROCESSOR} -- Processing
 			print_end_span
 		end
 
+	process_result (an_expression: ET_RESULT)
+			-- Process `an_expression'.
+		do
+			print_start_span_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_ekeyword)
+			precursor (an_expression)
+			print_end_span
+		end
+
 	process_special_manifest_string_without_cast_type (a_string: ET_SPECIAL_MANIFEST_STRING)
 			-- Process `a_string' without cast type.
 		do
@@ -879,9 +918,8 @@ feature {ET_AST_PROCESSOR} -- Processing
 			else
 				print_start_span_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_esymbol)
 			end
-			print_string (a_symbol.text)
+			precursor (a_symbol)
 			print_end_span
-			process_break (a_symbol.break)
 		end
 
 	process_tag (a_tag: ET_TAG)
@@ -891,12 +929,30 @@ feature {ET_AST_PROCESSOR} -- Processing
 		do
 			l_identifier := a_tag.identifier
 			print_start_span_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_etag)
-			print_string_lower_case (l_identifier.name)
+			print_local_name (l_identifier)
 			print_end_span
 				-- The AST may or may not contain the colon.
 				-- So we have to print it explicitly here.
 			tokens.colon_symbol.process (Current)
+			comment_finder.add_excluded_node (l_identifier)
 			comment_finder.find_comments (a_tag, comment_list)
+			comment_finder.reset_excluded_nodes
+		end
+
+	process_true_constant (a_constant: ET_TRUE_CONSTANT)
+			-- Process `a_constant'.
+		do
+			print_start_span_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_ekeyword)
+			precursor (a_constant)
+			print_end_span
+		end
+
+	process_tuple_label (a_label: ET_IDENTIFIER)
+			-- Process `a_label`.
+		do
+			print_start_span_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_elocal)
+			precursor (a_label)
+			print_end_span
 		end
 
 	process_verbatim_string_without_cast_type (a_string: ET_VERBATIM_STRING)
@@ -907,25 +963,12 @@ feature {ET_AST_PROCESSOR} -- Processing
 			print_end_span
 		end
 
-	process_writable (a_writable: ET_WRITABLE)
-			-- Process `a_writable'.
-		local
-			l_href: detachable STRING
+	process_void (an_expression: ET_VOID)
+			-- Process `an_expression'.
 		do
-			if attached {ET_IDENTIFIER} a_writable as l_identifier and then l_identifier.is_feature_name then
-				if attached feature_mapping as l_feature_mapping then
-					if attached current_class.seeded_feature (l_identifier.seed) as l_feature then
-						l_href := l_feature_mapping.value (l_feature.implementation_feature)
-					end
-				end
-				if l_href /= Void then
-					process_feature_name_with_href (l_identifier, l_href)
-				else
-					l_identifier.process (Current)
-				end
-			else
-				a_writable.process (Current)
-			end
+			print_start_span_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_ekeyword)
+			precursor (an_expression)
+			print_end_span
 		end
 
 feature {NONE} -- Printing
@@ -956,6 +999,7 @@ feature {NONE} -- Printing
 		local
 			l_href: detachable STRING
 			l_feature_name: ET_IDENTIFIER
+			l_is_feature: BOOLEAN
 		do
 			if not a_quoted_name.is_empty then
 				print_start_span_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_esymbol)
@@ -965,16 +1009,29 @@ feature {NONE} -- Printing
 					l_feature_name := internal_feature_name
 					l_feature_name.set_name (a_quoted_name)
 					if attached current_class.named_feature (l_feature_name) as l_named_feature then
-						l_href := l_feature_mapping.value (l_named_feature.implementation_feature)
+						l_href := feature_href (l_named_feature, current_class, l_feature_mapping)
+						l_is_feature := True
 					end
 				end
 				if l_href /= Void then
 					print_start_a_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_efeature, l_href)
-					print_string (a_quoted_name)
+					if l_is_feature and use_lowercase_feature_names then
+						print_lowercase_string (a_quoted_name)
+					elseif not l_is_feature and use_lowercase_local_names then
+						print_lowercase_string (a_quoted_name)
+					else
+						print_string (a_quoted_name)
+					end
 					print_end_a
 				else
 					print_start_span_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_equoted)
-					print_string (a_quoted_name)
+					if l_is_feature and use_lowercase_feature_names then
+						print_lowercase_string (a_quoted_name)
+					elseif not l_is_feature and use_lowercase_local_names then
+						print_lowercase_string (a_quoted_name)
+					else
+						print_string (a_quoted_name)
+					end
 					print_end_span
 				end
 				print_start_span_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_esymbol)
@@ -1013,7 +1070,11 @@ feature {NONE} -- Printing
 				print_character ('{')
 				print_end_span
 				print_start_a_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_eclass, l_href)
-				print_string (a_quoted_class_name)
+				if use_uppercase_class_names then
+					print_uppercase_string (a_quoted_class_name)
+				else
+					print_string (a_quoted_class_name)
+				end
 				print_end_a
 				print_start_span_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_esymbol)
 				print_character ('}')
@@ -1021,7 +1082,11 @@ feature {NONE} -- Printing
 			else
 				print_start_span_class (a_css_class)
 				print_character ('{')
-				print_string (a_quoted_class_name)
+				if use_uppercase_class_names then
+					print_uppercase_string (a_quoted_class_name)
+				else
+					print_string (a_quoted_class_name)
+				end
 				print_character ('}')
 				print_end_span
 			end
@@ -1032,7 +1097,7 @@ feature {NONE} -- Printing
 						l_feature_name := internal_feature_name
 						l_feature_name.set_name (a_feature_name)
 						if attached l_class.named_feature (l_feature_name) as l_named_feature then
-							l_href := l_feature_mapping.value (l_named_feature.implementation_feature)
+							l_href := feature_href (l_named_feature, l_class, l_feature_mapping)
 						end
 					end
 					if l_href /= Void then
@@ -1040,12 +1105,20 @@ feature {NONE} -- Printing
 						print_character ('.')
 						print_end_span
 						print_start_a_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_efeature, l_href)
-						print_string (a_feature_name)
+						if use_lowercase_feature_names then
+							print_lowercase_string (a_feature_name)
+						else
+							print_string (a_feature_name)
+						end
 						print_end_a
 					else
 						print_start_span_class (a_css_class)
 						print_character ('.')
-						print_string (a_feature_name)
+						if use_lowercase_feature_names then
+							print_lowercase_string (a_feature_name)
+						else
+							print_string (a_feature_name)
+						end
 						print_end_span
 					end
 				else
@@ -1107,9 +1180,6 @@ feature {NONE} -- Constants
 
 	string_is_declared_in_current: STRING = " is declared in `Current'"
 			-- String constant
-
-	empty_comment: STRING = "--"
-			-- Empty comment
 
 invariant
 

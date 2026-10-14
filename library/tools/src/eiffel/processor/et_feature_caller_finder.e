@@ -81,6 +81,9 @@ inherit
 	ET_SHARED_FEATURE_COMPARATOR_BY_NAME
 		export {NONE} all end
 
+	ET_SHARED_CLASS_COMPARATOR_BY_NAME
+		export {NONE} all end
+
 create
 
 	make
@@ -114,6 +117,7 @@ feature -- Basic operations
 			l_old_callee_feature: like callee_feature
 			l_old_callee_class: like callee_class
 		do
+			has_caller := False
 			l_old_callee_feature := callee_feature
 			callee_feature := a_callee_feature
 			l_old_callee_class := callee_class
@@ -140,7 +144,10 @@ feature -- Basic operations
 		local
 			l_old_callee_feature: like callee_feature
 			l_old_callee_class: like callee_class
+			l_classes: DS_ARRAYED_LIST [ET_CLASS]
+			l_sorter: DS_QUICK_SORTER [ET_CLASS]
 		do
+			has_caller := False
 			l_old_callee_feature := callee_feature
 			callee_feature := a_callee_feature
 			l_old_callee_class := callee_class
@@ -151,7 +158,15 @@ feature -- Basic operations
 			callee_classes.force (a_callee_class)
 			callee_classes.append (a_callee_class.ancestor_classes)
 			callee_classes.append (a_callee_class.descendants)
-			a_system.classes_do_recursive (agent {ET_CLASS}.process (Current))
+			if system_classes_sorted then
+				create l_classes.make (3000)
+				a_system.classes_do_recursive (agent l_classes.force_last)
+				create l_sorter.make (class_comparator_by_name)
+				l_classes.sort (l_sorter)
+				l_classes.do_all (agent {ET_CLASS}.process (Current))
+			else
+				a_system.classes_do_recursive (agent {ET_CLASS}.process (Current))
+			end
 			callee_seeds.wipe_out
 			callee_classes.wipe_out
 			callee_feature := l_old_callee_feature
@@ -165,6 +180,48 @@ feature -- Basic operations
 			a_call_name_not_void: a_call_name /= Void
 			a_caller_not_void: a_caller /= Void
 		do
+			has_caller := True
+		end
+
+feature -- Status
+
+	has_caller: BOOLEAN
+			-- Has `report_caller` been called?
+
+	anchored_types_ignored: BOOLEAN
+			-- Should anchored types be ignored?
+
+	creation_calls_ignored: BOOLEAN
+			-- Should creation calls be ignored?
+
+	system_classes_sorted: BOOLEAN
+			-- Should classes in system be traversed in alphabetical
+			-- order when calling `find_callers_in_system`?
+
+feature -- Status setting
+
+	set_anchored_types_ignored (b: BOOLEAN)
+			-- Set `anchored_types_ignored` to `b`.
+		do
+			anchored_types_ignored := b
+		ensure
+			anchored_types_ignored_set: anchored_types_ignored = b
+		end
+
+	set_creation_calls_ignored (b: BOOLEAN)
+			-- Set `creation_calls_ignored` to `b`.
+		do
+			creation_calls_ignored := b
+		ensure
+			creation_calls_ignored_set: creation_calls_ignored = b
+		end
+		
+	set_system_classes_sorted (b: BOOLEAN)
+			-- Set `system_classes_sorted` to `b`.
+		do
+			system_classes_sorted := b
+		ensure
+			system_classes_sorted_set: system_classes_sorted = b
 		end
 
 feature {ET_AST_NODE} -- Processing
@@ -357,14 +414,16 @@ feature {ET_AST_NODE} -- Processing
 			l_class: ET_CLASS
 			l_seed: INTEGER
 		do
-			l_name := a_expression.name
-			l_seed := l_name.seed
-			if l_seed /= 0 and then callee_seeds.has (l_seed) then
-				internal_type_context.reset (current_class)
-				internal_type_context.put_last (a_expression.type)
-				l_class := internal_type_context.adapted_base_class_with_seeded_feature (l_seed).base_class
-				if callee_classes.has (l_class) then
-					report_caller (l_name, current_standalone_closure)
+			if not creation_calls_ignored then
+				l_name := a_expression.name
+				l_seed := l_name.seed
+				if l_seed /= 0 and then callee_seeds.has (l_seed) then
+					internal_type_context.reset (current_class)
+					internal_type_context.put_last (a_expression.type)
+					l_class := internal_type_context.adapted_base_class_with_seeded_feature (l_seed).base_class
+					if callee_classes.has (l_class) then
+						report_caller (l_name, current_standalone_closure)
+					end
 				end
 			end
 		end
@@ -379,19 +438,21 @@ feature {ET_AST_NODE} -- Processing
 			l_target: ET_WRITABLE
 			l_seed: INTEGER
 		do
-			l_name := a_instruction.name
 			l_target := a_instruction.target
-			l_seed := l_name.seed
-			if l_seed /= 0 and then callee_seeds.has (l_seed) then
-				internal_type_context.reset (current_class)
-				if attached a_instruction.type as l_type then
-					internal_type_context.put_last (l_type)
-				else
-					expression_type_finder.find_expression_type_in_closure (l_target, current_closure, current_closure, current_class, internal_type_context, current_universe.detachable_separate_any_type)
-				end
-				l_class := internal_type_context.adapted_base_class_with_seeded_feature (l_seed).base_class
-				if callee_classes.has (l_class) then
-					report_caller (l_name, current_standalone_closure)
+			if not creation_calls_ignored then
+				l_name := a_instruction.name
+				l_seed := l_name.seed
+				if l_seed /= 0 and then callee_seeds.has (l_seed) then
+					internal_type_context.reset (current_class)
+					if attached a_instruction.type as l_type then
+						internal_type_context.put_last (l_type)
+					else
+						expression_type_finder.find_expression_type_in_closure (l_target, current_closure, current_closure, current_class, internal_type_context, current_universe.detachable_separate_any_type)
+					end
+					l_class := internal_type_context.adapted_base_class_with_seeded_feature (l_seed).base_class
+					if callee_classes.has (l_class) then
+						report_caller (l_name, current_standalone_closure)
+					end
 				end
 			end
 			if attached {ET_IDENTIFIER} l_target as l_identifier and then l_identifier.is_feature_name then
@@ -921,7 +982,9 @@ feature {ET_AST_NODE} -- Processing
 	process_static_call_expression (a_expression: ET_STATIC_CALL_EXPRESSION)
 			-- Process `a_expression'.
 		do
-			if attached a_expression.parenthesis_call as l_parenthesis_call then
+			if a_expression.is_once_creation_call then
+				process_creation_expression (a_expression)
+			elseif attached a_expression.parenthesis_call as l_parenthesis_call then
 				process_qualified_feature_call (l_parenthesis_call)
 			else
 				process_static_feature_call (a_expression)

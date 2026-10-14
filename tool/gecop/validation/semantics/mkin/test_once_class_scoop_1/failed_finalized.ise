@@ -1,0 +1,3 @@
+b = a.b: False
+b is {BB}.f: False
+a.b is {BB}.f: False

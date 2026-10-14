@@ -85,6 +85,7 @@ inherit
 			reportable_vgcp1_error,
 			reportable_vgcp2_error,
 			reportable_vgcp3_error,
+			reportable_vgfg3g_error,
 			reportable_vggc1_error,
 			reportable_vggc2_error,
 			reportable_vggc3_error,
@@ -98,10 +99,15 @@ inherit
 			reportable_vjar_error,
 			reportable_vjaw_error,
 			reportable_vjrv_error,
+			reportable_vkcc4_error,
+			reportable_vkcc6g_error,
+			reportable_vkcc7g_error,
 			reportable_vkcn1_error,
 			reportable_vkcn2_error,
 			reportable_vkex4g_error,
+			reportable_vkex5g_error,
 			reportable_vkin5g_error,
+			reportable_vkin6g_error,
 			reportable_vlel1_error,
 			reportable_vlel2_error,
 			reportable_vlel3_error,
@@ -111,11 +117,18 @@ inherit
 			reportable_vmss1_error,
 			reportable_vmss2_error,
 			reportable_vmss3_error,
+			reportable_voin_error,
 			reportable_voit1_error,
 			reportable_voit2_error,
 			reportable_voit3_error,
 			reportable_vomb1_error,
 			reportable_vomb2_error,
+			reportable_vomb3_error,
+			reportable_vomb4_error,
+			reportable_vomb6g_error,
+			reportable_vomb7g_error,
+			reportable_vomb8g_error,
+			reportable_vomb9g_error,
 			reportable_vpca1_error,
 			reportable_vpca2_error,
 			reportable_vpca3_error,
@@ -149,6 +162,7 @@ inherit
 			reportable_vtcg3_error,
 			reportable_vtcg4_error,
 			reportable_vtct_error,
+			reportable_vtec2_error,
 			reportable_vtug1_error,
 			reportable_vtug2_error,
 			reportable_vuar1_error,
@@ -778,6 +792,13 @@ feature -- Validity error status
 			Result := False
 		end
 
+	reportable_vgfg3g_error (a_class: ET_CLASS): BOOLEAN
+			-- Can a VGFG-3G error be reported when it
+			-- appears in `a_class'?
+		do
+			Result := False
+		end
+
 	reportable_vggc1_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VGGC-1 error be reported when it
 			-- appears in `a_class'?
@@ -869,6 +890,27 @@ feature -- Validity error status
 			Result := False
 		end
 
+	reportable_vkcc4_error (a_class: ET_CLASS): BOOLEAN
+			-- Can a VKCC-4 error be reported when it
+			-- appears in `a_class'?
+		do
+			Result := False
+		end
+
+	reportable_vkcc6g_error (a_class: ET_CLASS): BOOLEAN
+			-- Can a VKCC-6G error be reported when it
+			-- appears in `a_class'?
+		do
+			Result := False
+		end
+
+	reportable_vkcc7g_error (a_class: ET_CLASS): BOOLEAN
+			-- Can a VKCC-7G error be reported when it
+			-- appears in `a_class'?
+		do
+			Result := False
+		end
+
 	reportable_vkcn1_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VKCN-1 error be reported when it
 			-- appears in `a_class'?
@@ -890,8 +932,22 @@ feature -- Validity error status
 			Result := False
 		end
 
+	reportable_vkex5g_error (a_class: ET_CLASS): BOOLEAN
+			-- Can a VKEX-5G error be reported when it
+			-- appears in `a_class'?
+		do
+			Result := False
+		end
+
 	reportable_vkin5g_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VKIN-5G error be reported when it
+			-- appears in `a_class'?
+		do
+			Result := False
+		end
+
+	reportable_vkin6g_error (a_class: ET_CLASS): BOOLEAN
+			-- Can a VKIN-6G error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False
@@ -960,6 +1016,13 @@ feature -- Validity error status
 			Result := False
 		end
 
+	reportable_voin_error (a_class: ET_CLASS): BOOLEAN
+			-- Can a VOIN error be reported when it
+			-- appears in `a_class'?
+		do
+			Result := False
+		end
+
 	reportable_voit1_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VOIT-1 error be reported when it
 			-- appears in `a_class'?
@@ -995,6 +1058,48 @@ feature -- Validity error status
 			Result := False
 		end
 
+	reportable_vomb3_error (a_class: ET_CLASS): BOOLEAN
+			-- Can a VOMB-3 error be reported when it
+			-- appears in `a_class'?
+		do
+			Result := False
+		end
+
+	reportable_vomb4_error (a_class: ET_CLASS): BOOLEAN
+			-- Can a VOMB-4 error be reported when it
+			-- appears in `a_class'?
+		do
+			Result := False
+		end
+
+	reportable_vomb6g_error (a_class: ET_CLASS): BOOLEAN
+			-- Can a VOMB-6G error be reported when it
+			-- appears in `a_class'?
+		do
+			Result := False
+		end
+
+	reportable_vomb7g_error (a_class: ET_CLASS): BOOLEAN
+			-- Can a VOMB-7G error be reported when it
+			-- appears in `a_class'?
+		do
+			Result := False
+		end
+
+	reportable_vomb8g_error (a_class: ET_CLASS): BOOLEAN
+			-- Can a VOMB-8G error be reported when it
+			-- appears in `a_class'?
+		do
+			Result := False
+		end
+
+	reportable_vomb9g_error (a_class: ET_CLASS): BOOLEAN
+			-- Can a VOMB-9G error be reported when it
+			-- appears in `a_class'?
+		do
+			Result := False
+		end
+		
 	reportable_vpca1_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VPCA-1 error be reported when it
 			-- appears in `a_class'?
@@ -1165,6 +1270,13 @@ feature -- Validity error status
 
 	reportable_vtct_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VTCT error be reported when it
+			-- appears in `a_class'?
+		do
+			Result := False
+		end
+
+	reportable_vtec2_error (a_class: ET_CLASS): BOOLEAN
+			-- Can a VTEC-2 error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False

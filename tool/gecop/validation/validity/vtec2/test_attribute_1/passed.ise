@@ -1,0 +1,13 @@
+-------------------------------------------------------------------------------
+
+Error code: VTEC(2)
+
+Error: expanded type is based on class with improper creation procedure. 
+What to do: make type non-expanded, or base it on class with the version
+  of the procedure `default_create' (inherited from `ANY') as one of its
+  creation procedures.
+
+Class: AA
+Feature: b
+
+-------------------------------------------------------------------------------

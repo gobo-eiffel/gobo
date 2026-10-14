@@ -1,0 +1,17 @@
+-------------------------------------------------------------------------------
+
+Error code: VKCN(1)
+
+Type error: function call used as instruction.
+What to do: call a procedure rather than a function, or keep the
+  function but use the call as expression rather than instruction.
+
+Class: AA
+Feature: make
+Expression used as instruction: {BB}.f
+Line: 13
+      do
+->      {BB}.f
+        create b.f
+
+-------------------------------------------------------------------------------

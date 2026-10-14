@@ -5,7 +5,7 @@
 		"Eiffel standalone closures, e.g. features or invariants"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2006-2024, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2026, Eric Bezault and others"
 	license: "MIT License"
 
 deferred class ET_STANDALONE_CLOSURE
@@ -20,8 +20,6 @@ inherit
 		redefine
 			implementation_feature
 		end
-
-	HASHABLE
 
 	DEBUG_OUTPUT
 

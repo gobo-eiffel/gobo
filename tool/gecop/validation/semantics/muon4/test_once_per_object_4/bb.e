@@ -21,7 +21,7 @@ feature
 				create l_other_thread.make (Current)
 				other_thread := l_other_thread
 				l_other_thread.launch
-				if not l_other_thread.join_with_timeout (1000) then
+				if not l_other_thread.join_with_timeout (2000) then
 					print ("Second call was block by first call%N")
 				end
 			end

@@ -5,7 +5,7 @@
 		"Eiffel 'elseif' parts of 'if' expressions"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2017-2024, Eric Bezault and others"
+	copyright: "Copyright (c) 2017-2026, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_ELSEIF_EXPRESSION
@@ -134,6 +134,20 @@ feature -- Setting
 			then_keyword := a_then
 		ensure
 			then_keyword_set: then_keyword = a_then
+		end
+
+feature -- Formal arguments
+
+	add_formal_arguments (a_list: DS_ARRAYED_LIST_2 [detachable ET_IDENTIFIER, BOOLEAN])
+			-- Add to `a_list' all formal arguments appearing in current elseif part
+			-- and (recursively) in its subexpressions: set the boolean to true
+			-- if the formal argument name at the index corresponding to its seed
+			-- is not Void.
+		require
+			a_list_not_void: a_list /= Void
+		do
+			conditional_expression.add_formal_arguments (a_list)
+			then_expression.add_formal_arguments (a_list)
 		end
 
 feature -- Assertions

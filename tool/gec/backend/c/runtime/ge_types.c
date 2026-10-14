@@ -4,7 +4,7 @@
 		"C functions used to implement type information"
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2016-2024, Eric Bezault and others"
+	copyright: "Copyright (c) 2016-2026, Eric Bezault and others"
 	license: "MIT License"
 */
 
@@ -720,6 +720,14 @@ GE_attribute* GE_attribute_with_name(EIF_TYPE_INDEX a_type, char* a_name)
 	return (GE_attribute*)0;
 }
 #endif
+
+/*
+ * Does `a_type_1' conform to `a_type' and `a_type' conform to `a_type_2'?
+ */
+int GE_encoded_type_is_inbetween(EIF_ENCODED_TYPE a_type, EIF_ENCODED_TYPE a_type_1, EIF_ENCODED_TYPE a_type_2)
+{
+	return (GE_encoded_type_conforms_to(a_type_1, a_type) && GE_encoded_type_conforms_to(a_type, a_type_2));
+}
 
 #ifdef __cplusplus
 }

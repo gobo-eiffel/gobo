@@ -5,7 +5,7 @@
 		"Eiffel formal parameter validity checkers, first pass"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2023, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2026, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_FORMAL_PARAMETER_CHECKER1
@@ -75,7 +75,13 @@ feature -- Validity checking
 			has_fatal_error := False
 			old_class := current_class
 			current_class := a_class
-			if attached current_class.formal_parameters as a_parameters then
+			if current_class.is_once then
+				if attached current_class.formal_parameters as l_formal_parameters and then not l_formal_parameters.is_empty then
+						-- Once classes cannot be generic.
+					set_fatal_error
+					error_handler.report_vgfg3ga_error (current_class, l_formal_parameters)
+				end
+			elseif attached current_class.formal_parameters as a_parameters then
 				nb := a_parameters.count
 				initalize_formal_dependencies (nb)
 				initalize_base_type_dependencies (nb)

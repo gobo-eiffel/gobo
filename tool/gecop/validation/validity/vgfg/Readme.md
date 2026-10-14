@@ -23,4 +23,13 @@ A *Formal\_generics* part of a *Class\_declaration* is valid if and only if ever
 ### Notes
 
 * The code of this validity rule was `VCFG` in ECMA 367-2 and before.
+
 * There was a third condition `VCFG-3` in ETR (between ETL2 and ECMA 367-1). It is now covered by [VGGC](../vggc\Readme.md)-1.
+
+* Another condition is needed in the context of once classes:
+
+  3. `G.` [\[tests\]](../vgfg3g) The current class is not a once class.
+  
+  ISE Eiffel (as of 25.12.9.8922 and after) reports a syntax error instead.
+
+  Once classes are not described in the ECMA Eiffel standard, therefore this condition is not part of the standard.

@@ -1386,9 +1386,17 @@ feature -- Class header
 	is_frozen: BOOLEAN
 			-- Is current class frozen?
 		do
-			Result := has_frozen_mark
+			Result := has_frozen_mark or has_once_mark
 		ensure
-			definition: Result = has_frozen_mark
+			definition: Result = (has_frozen_mark or has_once_mark)
+		end
+
+	is_once: BOOLEAN
+			-- Is current class once?
+		do
+			Result := has_once_mark
+		ensure
+			definition: Result = has_once_mark
 		end
 
 	is_external: BOOLEAN
@@ -1468,6 +1476,14 @@ feature -- Class header
 			definition: Result = (frozen_keyword /= Void)
 		end
 
+	has_once_mark: BOOLEAN
+			-- Has class been declared as once?
+		do
+			Result := once_keyword /= Void
+		ensure
+			definition: Result = (once_keyword /= Void)
+		end
+
 	has_external_mark: BOOLEAN
 			-- Has class been declared as external?
 		do
@@ -1497,6 +1513,17 @@ feature -- Class header
 			frozen_keyword := a_frozen
 		ensure
 			frozen_keyword_set: frozen_keyword = a_frozen
+		end
+
+	once_keyword: detachable ET_KEYWORD
+			-- 'once' keyword
+
+	set_once_keyword (a_once: like once_keyword)
+			-- Set `once_keyword' to `a_once'.
+		do
+			once_keyword := a_once
+		ensure
+			once_keyword_set: once_keyword = a_once
 		end
 
 	external_keyword: detachable ET_KEYWORD
@@ -1664,6 +1691,17 @@ feature {NONE} -- Genericity
 
 feature -- Ancestors
 
+	has_ancestor_cycle: BOOLEAN
+			-- Is current class involved in an inheritance cycle?
+
+	set_has_ancestor_cycle (b: BOOLEAN)
+			-- Set `has_ancestor_cycle` to `b`.
+		do
+			has_ancestor_cycle := b
+		ensure
+			has_ancestor_cycle_set: has_ancestor_cycle = b
+		end
+
 	has_ancestor (a_class: ET_CLASS): BOOLEAN
 			-- Is `a_class' an ancestor of current class?
 			-- (Note: you have to make sure that the ancestors have correctly
@@ -1754,11 +1792,15 @@ feature -- Ancestors
 
 	ancestors: ET_BASE_TYPE_LIST
 			-- Proper ancestors in reverse topological order
-			-- (parents, then grand-parents, etc.)
+			-- (parents, then grand-parents, etc. Note some grand-parents
+			-- may appear before some parents while still preserving
+			-- the reverse topological order.)
 
 	ancestor_classes: DS_ARRAYED_LIST [ET_CLASS]
 			-- Proper ancestor classes in reverse topological order
-			-- (parents, then grand-parents, etc.)
+			-- (parents, then grand-parents, etc. Note some grand-parents
+			-- may appear before some parents while still preserving
+			-- the reverse topological order.)
 			-- Do not repeat the class in case of repeated inheritance.
 		local
 			i, nb: INTEGER
@@ -1787,11 +1829,15 @@ feature -- Ancestors
 
 	conforming_ancestors: ET_BASE_TYPE_LIST
 			-- Proper conforming ancestors in reverse topological order
-			-- (parents, then grand-parents, etc.)
+			-- (parents, then grand-parents, etc. Note some grand-parents
+			-- may appear before some parents while still preserving
+			-- the reverse topological order.)
 
 	conforming_ancestor_classes: DS_ARRAYED_LIST [ET_CLASS]
 			-- Proper conforming ancestor classes in reverse topological order
-			-- (parents, then grand-parents, etc.)
+			-- (parents, then grand-parents, etc. Note some grand-parents
+			-- may appear before some parents while still preserving
+			-- the reverse topological order.)
 			-- Do not repeat the class in case of repeated inheritance.
 		local
 			i, nb: INTEGER
@@ -2336,6 +2382,7 @@ feature -- Ancestor building status
 			status_mutex.lock
 			unprotected_has_ancestors_error := False
 			unprotected_ancestors_built := False
+			has_ancestor_cycle := False
 			ancestors := tokens.empty_ancestors
 			conforming_ancestors := tokens.empty_ancestors
 			status_mutex.unlock

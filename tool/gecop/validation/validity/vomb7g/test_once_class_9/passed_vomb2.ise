@@ -1,0 +1,33 @@
+-------------------------------------------------------------------------------
+
+Error code: VOMB(2)
+
+Error: invalid inspect constant: non-constant, or wrong type.
+What to do: make sure that each inspect constant is manifest constant or
+  constant attribute of the same type as the inspect expression.
+
+Class: AA
+Feature: make
+Type: BB
+Line: 15
+        inspect b
+->      when 1 .. 2 then
+        else
+
+-------------------------------------------------------------------------------
+
+Error code: VOMB(2)
+
+Error: invalid inspect constant: non-constant, or wrong type.
+What to do: make sure that each inspect constant is manifest constant or
+  constant attribute of the same type as the inspect expression.
+
+Class: AA
+Feature: make
+Type: BB
+Line: 15
+        inspect b
+->      when 1 .. 2 then
+        else
+
+-------------------------------------------------------------------------------

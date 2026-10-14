@@ -5,7 +5,7 @@
 		"Eiffel AST comment finders"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2007-2024, Eric Bezault and others"
+	copyright: "Copyright (c) 2007-2026, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_COMMENT_FINDER
@@ -222,8 +222,8 @@ inherit
 			process_verbatim_string,
 			process_when_expression,
 			process_when_expression_list,
-			process_when_part,
-			process_when_part_list
+			process_when_compound,
+			process_when_compound_list
 		end
 
 create
@@ -1980,7 +1980,7 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_when_part (a_when_part: ET_WHEN_PART)
+	process_when_compound (a_when_part: ET_WHEN_COMPOUND)
 			-- Process `a_when_part'.
 		do
 			if not excluded_nodes.has (a_when_part) then
@@ -1988,7 +1988,7 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_when_part_list (a_list: ET_WHEN_PART_LIST)
+	process_when_compound_list (a_list: ET_WHEN_COMPOUND_LIST)
 			-- Process `a_list'.
 		do
 			if not excluded_nodes.has (a_list) then

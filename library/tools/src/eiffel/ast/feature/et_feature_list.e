@@ -5,7 +5,7 @@
 		"Eiffel lists of features"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2026, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_FEATURE_LIST
@@ -24,14 +24,21 @@ feature -- Initialization
 			-- Reset features at index 1 to `declared_count' as they were just after they were last parsed.
 		local
 			i, nb: INTEGER
+			l_feature: like item
+			l_inherited_count: INTEGER
 		do
 				-- The code below takes advantage of the fact that the features
 				-- are stored in `storage' from 'count - 1' to '0'.
-			nb := count - declared_count
-			from i := count - 1 until i < nb loop
-				storage.item (i).reset
-				i := i - 1
+			nb := count - 1
+			l_inherited_count := count - declared_count
+			from i := l_inherited_count until i > nb loop
+				l_feature := storage.item (i)
+				l_feature.reset
+				storage.put (l_feature, i - l_inherited_count)
+				i := i + 1
 			end
+			count := declared_count
+			storage.keep_head (declared_count)
 		end
 
 	reset_after_features_flattened

@@ -5,7 +5,7 @@
 		"Eiffel once routines"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2011-2024, Eric Bezault and others"
+	copyright: "Copyright (c) 2011-2026, Eric Bezault and others"
 	license: "MIT License"
 
 deferred class ET_ONCE_ROUTINE
@@ -26,7 +26,8 @@ inherit
 		undefine
 			first_note,
 			is_static,
-			implementation_feature
+			implementation_feature,
+			hash_code
 		end
 
 end

@@ -123,6 +123,7 @@ feature {NONE} -- Initialization
 			create internal_type_context.make_with_capacity (tokens.unknown_class, 100)
 			create attribute_sorter.make (attribute_comparator_by_name)
 			create qualified_call_finder.make (a_system_processor)
+			create feature_caller_finder.make (a_system_processor)
 			precursor (a_system_processor)
 			make_ast_processor
 		end
@@ -252,7 +253,7 @@ feature {NONE} -- Processing
 			l_old_creation_procedure := current_creation_procedure
 			current_creation_procedure := a_procedure
 			l_old_class_impl := current_class_impl
-				current_class_impl := a_procedure.implementation_class
+			current_class_impl := a_procedure.implementation_class
 			a_procedure.process (Current)
 			if not are_all_attached_attributes_initialized then
 				l_list := attribute_list
@@ -1262,7 +1263,7 @@ feature {ET_AST_NODE} -- Processing
 	process_inspect_instruction (a_instruction: ET_INSPECT_INSTRUCTION)
 			-- Process `a_instruction'.
 		local
-			l_when_part: ET_WHEN_PART
+			l_when_part: ET_WHEN_COMPOUND
 			i, nb: INTEGER
 			l_old_initialization_scope: like current_initialization_scope
 			l_inspect_initialization_scope: detachable like current_initialization_scope
@@ -1310,6 +1311,7 @@ feature {ET_AST_NODE} -- Processing
 			l_old_closure: ET_CLOSURE
 			l_old_closure_impl: ET_CLOSURE
 			l_old_initialization_scope: like current_initialization_scope
+			l_old_once_initialization_scope: detachable like current_initialization_scope
 		do
 			if not visited_features.has (a_feature) then
 				visited_features.force_last (a_feature)
@@ -1319,6 +1321,22 @@ feature {ET_AST_NODE} -- Processing
 				current_closure := a_feature
 				l_old_closure_impl := current_closure_impl
 				current_closure_impl := a_feature
+				if a_feature.is_once and then not a_feature.is_once_per_object then 
+					if not {KL_ANY_ROUTINES}.same_objects (a_feature, current_creation_procedure) then
+						l_old_once_initialization_scope := current_initialization_scope
+						current_initialization_scope := new_attachment_scope
+						current_initialization_scope.copy_scope (l_old_once_initialization_scope)
+					else
+						feature_caller_finder.set_anchored_types_ignored (True)
+						feature_caller_finder.set_creation_calls_ignored (True)
+						feature_caller_finder.find_callers_in_system (a_feature, current_class, current_system)
+						if feature_caller_finder.has_caller then
+							l_old_once_initialization_scope := current_initialization_scope
+							current_initialization_scope := new_attachment_scope
+							current_initialization_scope.copy_scope (l_old_once_initialization_scope)
+						end
+					end
+				end
 				l_old_initialization_scope := current_initialization_scope
 				process_all_preconditions (a_feature)
 				if attached a_feature.rescue_clause as l_rescue_clause then
@@ -1332,6 +1350,10 @@ feature {ET_AST_NODE} -- Processing
 					process_compound (l_compound)
 				end
 				process_all_postconditions (a_feature)
+				if l_old_once_initialization_scope /= Void then
+					free_attachment_scope (current_initialization_scope)
+					current_initialization_scope := l_old_once_initialization_scope
+				end
 				current_class_impl := l_old_class_impl
 				current_closure := l_old_closure
 				current_closure_impl := l_old_closure_impl
@@ -1621,7 +1643,9 @@ feature {ET_AST_NODE} -- Processing
 	process_static_call_expression (a_expression: ET_STATIC_CALL_EXPRESSION)
 			-- Process `a_expression'.
 		do
-			if attached a_expression.parenthesis_call as l_parenthesis_call then
+			if a_expression.is_once_creation_call then
+				process_creation_expression (a_expression)
+			elseif attached a_expression.parenthesis_call as l_parenthesis_call then
 				process_qualified_feature_call (l_parenthesis_call)
 			else
 				process_static_feature_call (a_expression)
@@ -1949,6 +1973,9 @@ feature {NONE} -- Implementation
 	qualified_call_finder: ET_QUALIFIED_CALL_FINDER
 			-- Finders of qualified calls
 
+	feature_caller_finder: ET_FEATURE_CALLER_FINDER
+			-- Finders of feature callers
+
 invariant
 
 	current_creation_procedure_not_void: current_creation_procedure /= Void
@@ -1974,5 +2001,6 @@ invariant
 	internal_type_context_not_void: internal_type_context /= Void
 	attribute_sorter_not_void: attribute_sorter /= Void
 	qualified_call_finder_not_void: qualified_call_finder /= Void
+	feature_caller_finder_not_void: feature_caller_finder /= Void
 
 end

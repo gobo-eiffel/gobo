@@ -5,7 +5,7 @@
 		"Eiffel constraint creation clauses"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2026, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_CONSTRAINT_CREATOR
@@ -37,27 +37,6 @@ feature {NONE} -- Initialization
 			create_keyword := tokens.create_keyword
 			end_keyword := tokens.end_keyword
 			precursor (nb)
-		end
-
-feature -- Status report
-
-	has_feature (a_feature: ET_FEATURE): BOOLEAN
-			-- Is `a_feature' listed in current list?
-			-- (The seeds of the creation procedure names must have been resolved first.)
-		require
-			a_feature_not_void: a_feature /= Void
-		local
-			i, nb: INTEGER
-		do
-			nb := count - 1
-			from i := 0 until i > nb loop
-				if a_feature.has_seed (storage.item (i).feature_name.seed) then
-					Result := True
-					i := nb + 1 -- Jump out of the loop.
-				else
-					i := i + 1
-				end
-			end
 		end
 
 feature -- Access

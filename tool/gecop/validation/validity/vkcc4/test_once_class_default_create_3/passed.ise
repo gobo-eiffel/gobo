@@ -1,0 +1,18 @@
+-------------------------------------------------------------------------------
+
+Error code: VKCC
+
+Error: invalid creation procedure for a once class.
+What to do: make sure the creation procedure is immediate (i.e., is declared
+  in this class), is a once feature, and its once keys (if any) do not
+  include "OBJECT".
+
+Class: BB
+Feature: default_create
+Reason: the creation procedure in a once class should be a once procedure.
+Line: 12
+  
+->  default_create
+  
+
+-------------------------------------------------------------------------------

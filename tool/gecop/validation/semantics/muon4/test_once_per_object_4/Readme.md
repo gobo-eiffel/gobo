@@ -8,4 +8,4 @@ In this test, the second call to the once-per-object function `f` is executed fr
 
 ### Notes
 
-* ISE Eiffel (as of 20.05.10.4440 and after) does not protect the call to once-per-object routines on the same object from being executed by two threads at the same time. This may result in having the  body of these once-per-object routines being executed more than once on the same object.
+* ISE Eiffel (as of 20.05.10.4440 and after) does not protect the call to once-per-object routines on the same object from being executed by two threads at the same time. This may result in having the body of these once-per-object routines being executed more than once on the same object.

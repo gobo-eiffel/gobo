@@ -1,0 +1,4 @@
+  [exec] error: timeout command .\\aa.exe
+geant error: cannot delete file 'aa.exe'
+
+BUILD FAILED!

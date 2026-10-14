@@ -37,7 +37,7 @@ conditions for every declaration of a feature `f` in its unfolded form:
 
 * Another condition is needed in the context of SCOOP, the Eiffel concurrency mechanism:
 
-  11. `G` [\[tests\]](../vffd11g) If the *Declaration_body* describes a once per process function, the result type is either separate or expanded.
+  11. `G.` [\[tests\]](../vffd11g) If the *Declaration_body* describes a once per process function, the result type is either separate or expanded.
   
   ISE Eiffel (as of 23.09.10.7341 and after) reports this validity rule violation using the code `VFFD-8`.
 

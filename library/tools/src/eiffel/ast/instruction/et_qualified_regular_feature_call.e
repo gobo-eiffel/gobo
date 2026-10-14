@@ -5,7 +5,7 @@
 		"Eiffel qualified regular feature calls"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2024, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2026, Eric Bezault and others"
 	license: "MIT License"
 
 deferred class ET_QUALIFIED_REGULAR_FEATURE_CALL
@@ -19,7 +19,8 @@ inherit
 			has_address_expression,
 			has_agent,
 			has_typed_object_test,
-			add_old_expressions
+			add_old_expressions,
+			add_formal_arguments
 		end
 
 	ET_QUALIFIED_FEATURE_CALL
@@ -37,7 +38,8 @@ inherit
 			has_address_expression,
 			has_agent,
 			has_typed_object_test,
-			add_old_expressions
+			add_old_expressions,
+			add_formal_arguments
 		redefine
 			reset,
 			position,

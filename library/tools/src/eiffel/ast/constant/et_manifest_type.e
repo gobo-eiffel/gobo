@@ -5,7 +5,7 @@
 		"Eiffel manifest types"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2005-2024, Eric Bezault and others"
+	copyright: "Copyright (c) 2005-2026, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_MANIFEST_TYPE
@@ -18,6 +18,12 @@ inherit
 			is_type_constant
 		end
 
+	ET_CHOICE_CONSTANT
+		undefine
+			reset,
+			is_never_void
+		end
+		
 	ET_BRACED_TYPE
 		redefine
 			reset,

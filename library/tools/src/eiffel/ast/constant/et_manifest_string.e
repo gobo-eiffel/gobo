@@ -5,7 +5,7 @@
 		"Eiffel manifest strings"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2025, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2026, Eric Bezault and others"
 	license: "MIT License"
 
 deferred class ET_MANIFEST_STRING
@@ -21,6 +21,16 @@ inherit
 			reset,
 			is_string_constant,
 			manifest_constant_convert_feature
+		end
+
+	ET_CHOICE_CONSTANT
+		undefine
+			reset,
+			last_position,
+			first_position,
+			is_never_void,
+			manifest_constant_convert_feature,
+			break
 		end
 
 	ET_MANIFEST_STRING_ITEM

@@ -1472,7 +1472,6 @@ void GE_thread_create_with_attr(EIF_REFERENCE current, void (*routine)(EIF_REFER
 #ifdef GE_USE_POSIX_THREADS
 		{
 			pthread_attr_t l_attr;
-			int res;
 
 			if (pthread_attr_init(&l_attr) == 0) {
 					/* Initialize the stack size if more than the minimum. */
@@ -1490,7 +1489,7 @@ void GE_thread_create_with_attr(EIF_REFERENCE current, void (*routine)(EIF_REFER
 				pthread_attr_setdetachstate(&l_attr, PTHREAD_CREATE_DETACHED);
 				SIGBLOCK;
 				GE_unprotected_mutex_lock((EIF_POINTER)l_current_thread_context->children_mutex);
-					/* Use the mutex even it case of success to force the thread being created to wait for its thread id to be set. */
+					/* Use the mutex even in case of success to force the thread being created to wait for its thread id to be set. */
 				if (pthread_create(&l_thread_id, &l_attr, GE_thread_routine, (void*)l_context) == 0) {
 					l_thread_context->thread_id = l_thread_id;
 #ifdef GE_USE_SCOOP
@@ -1514,7 +1513,7 @@ void GE_thread_create_with_attr(EIF_REFERENCE current, void (*routine)(EIF_REFER
 #elif defined EIF_WINDOWS
 		SIGBLOCK;
 		GE_unprotected_mutex_lock((EIF_POINTER)l_current_thread_context->children_mutex);
-			/* Use the mutex even it case of success to force the thread being created to wait for its thread id to be set. */
+			/* Use the mutex even in case of success to force the thread being created to wait for its thread id to be set. */
 		l_thread_id = (EIF_THR_TYPE)_beginthreadex(NULL, (unsigned int)l_attr_stack_size, GE_thread_routine, (void*)l_context, 0, NULL);
 		if (l_thread_id == 0) {
 			l_raise_error = 1;

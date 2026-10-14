@@ -5,7 +5,7 @@
 		"Eiffel character constants of the form 'A'"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2026, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_C1_CHARACTER_CONSTANT
@@ -69,6 +69,18 @@ feature -- Status report
 		ensure
 			instance_free: class
 			definition: Result = {RX_PCRE_ROUTINES}.regexp (literal_regexp).recognizes (a_literal)
+		end
+
+feature -- Setting
+
+	set_value (a_value: CHARACTER_32)
+			-- Set `value` to `a_value`.
+		require
+			valid_value: valid_value (a_value)
+		do
+			value := a_value
+		ensure
+			value_set: value = a_value
 		end
 
 feature -- Processing

@@ -5,7 +5,7 @@
 		"Eiffel binary expressions"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2024, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2026, Eric Bezault and others"
 	license: "MIT License"
 
 deferred class ET_BINARY_EXPRESSION
@@ -19,7 +19,8 @@ inherit
 			has_address_expression,
 			has_agent,
 			has_typed_object_test,
-			add_old_expressions
+			add_old_expressions,
+			add_formal_arguments
 		end
 
 feature -- Access
@@ -109,6 +110,18 @@ feature -- Setting
 			right := a_right
 		ensure
 			right_set: right = a_right
+		end
+
+feature -- Formal arguments
+
+	add_formal_arguments (a_list: DS_ARRAYED_LIST_2 [detachable ET_IDENTIFIER, BOOLEAN])
+			-- Add to `a_list' all formal arguments appearing in current expression
+			-- and (recursively) in its subexpressions: set the boolean to true
+			-- if the formal argument name at the index corresponding to its seed
+			-- is not Void.
+		do
+			left.add_formal_arguments (a_list)
+			right.add_formal_arguments (a_list)
 		end
 
 feature -- Assertions

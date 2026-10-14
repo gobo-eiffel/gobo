@@ -1,0 +1,16 @@
+-------------------------------------------------------------------------------
+
+Error code: VOMB(3)
+
+Error: inspect value appears twice.
+What to do: make sure that all inspect constants have different values. 
+
+Class: AA
+Feature: make
+Duplicate values: 10..10
+Line: 15
+        inspect b
+->      when 10, 10 then
+        else
+
+-------------------------------------------------------------------------------

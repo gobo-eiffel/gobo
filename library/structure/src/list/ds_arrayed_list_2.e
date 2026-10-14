@@ -5,7 +5,7 @@
 		"Lists of pairs implemented with arrays"
 
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 2024, Eric Bezault and others"
+	copyright: "Copyright (c) 2024-2026, Eric Bezault and others"
 	license: "MIT License"
 
 class DS_ARRAYED_LIST_2 [G, H]
@@ -88,6 +88,38 @@ feature -- Status report
 			definition: Result = (count = 0)
 		end
 
+	has_1 (v: G): BOOLEAN
+			-- Does list include a pair whose first item is `v`?
+		local
+			i: INTEGER
+		do
+			from i := count - 1 until i < 0 loop
+				if storage_1.item (i) = v then
+					Result := True
+					i := -1
+				end
+				i := i - 1
+			end
+		ensure
+			not_empty: Result implies not is_empty
+		end
+
+	has_2 (v: H): BOOLEAN
+			-- Does list include a pair whose second item is `v`?
+		local
+			i: INTEGER
+		do
+			from i := count - 1 until i < 0 loop
+				if storage_2.item (i) = v then
+					Result := True
+					i := -1
+				end
+				i := i - 1
+			end
+		ensure
+			not_empty: Result implies not is_empty
+		end
+
 	has_void_1: BOOLEAN
 			-- Does list include a pair whose first item is Void?
 		local
@@ -121,6 +153,38 @@ feature -- Status report
 					end
 					i := i - 1
 				end
+			end
+		ensure
+			not_empty: Result implies not is_empty
+		end
+
+	has_non_void_1: BOOLEAN
+			-- Does list include a pair whose first item is not Void?
+		local
+			i: INTEGER
+		do
+			from i := count - 1 until i < 0 loop
+				if storage_1.item (i) /= Void then
+					Result := True
+					i := -1
+				end
+				i := i - 1
+			end
+		ensure
+			not_empty: Result implies not is_empty
+		end
+
+	has_non_void_2: BOOLEAN
+			-- Does list include a pair whose second item is not Void?
+		local
+			i: INTEGER
+		do
+			from i := count - 1 until i < 0 loop
+				if storage_2.item (i) /= Void then
+					Result := True
+					i := -1
+				end
+				i := i - 1
 			end
 		ensure
 			not_empty: Result implies not is_empty
@@ -179,6 +243,73 @@ feature -- Comparison
 		end
 
 feature -- Element change
+
+	replace_1 (v: G; i: INTEGER)
+			-- Replace first item of the pair at `i'-th position by `v'.
+			-- (Performance: O(1).)
+		require
+			valid_index: 1 <= i and i <= count
+		do
+			storage_1.put (v, i - 1)
+		ensure
+			same_count: count = old count
+			replaced: {KL_TYPE [G]}.same_objects (item_1 (i), v)
+		end
+
+	replace_2 (v: H; i: INTEGER)
+			-- Replace second item of the pair at `i'-th position by `v'.
+			-- (Performance: O(1).)
+		require
+			valid_index: 1 <= i and i <= count
+		do
+			storage_2.put (v, i - 1)
+		ensure
+			same_count: count = old count
+			replaced: {KL_TYPE [H]}.same_objects (item_2 (i), v)
+		end
+
+	replace_all_1 (v: G)
+			-- Replace first item of all pairs by `v'.
+			-- (Performance: O(count).)
+		local
+			i: INTEGER
+		do
+			from i := count - 1 until i < 0 loop
+				storage_1.put (v, i)
+				i := i - 1
+			end
+		ensure
+			same_count: count = old count
+		end
+
+	replace_all_2 (v: H)
+			-- Replace second item of all pairs by `v'.
+			-- (Performance: O(count).)
+		local
+			i: INTEGER
+		do
+			from i := count - 1 until i < 0 loop
+				storage_2.put (v, i)
+				i := i - 1
+			end
+		ensure
+			same_count: count = old count
+		end
+
+	put_last (v1: G; v2: H)
+			-- Add `v1' and `v2' to end of list.
+			-- (Performance: O(1).)
+		require
+			extendible: extendible (1)
+		do
+			special_routines_1.force (storage_1, v1, count)
+			special_routines_2.force (storage_2, v2, count)
+			count := count + 1
+		ensure
+			one_more: count = old count + 1
+			inserted_1: {KL_TYPE [G]}.same_objects (item_1 (count), v1)
+			inserted_2: {KL_TYPE [H]}.same_objects (item_2 (count), v2)
+		end
 
 	force_last (v1: G; v2: H)
 			-- Add `v1' and `v2' to end of list.

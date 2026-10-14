@@ -1,0 +1,4 @@
+[VOMB-4] class AA (15,9): type 'INTEGER_32' of inspect constant is not a generic derivation of 'TYPE'.
+----
+[VOMB-4] class AA (15,14): type 'INTEGER_32' of inspect constant is not a generic derivation of 'TYPE'.
+----

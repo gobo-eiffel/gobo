@@ -5,7 +5,7 @@
 		"Eiffel inspect expressions"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2020-2024, Eric Bezault and others"
+	copyright: "Copyright (c) 2020-2026, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_INSPECT_EXPRESSION
@@ -21,7 +21,13 @@ inherit
 			has_agent,
 			has_typed_object_test,
 			add_old_expressions,
+			add_formal_arguments,
 			add_separate_arguments
+		end
+
+	ET_INSPECT_COMPONENT
+		rename
+			else_part as else_expression
 		end
 
 create
@@ -60,43 +66,18 @@ feature -- Initialization
 
 feature -- Access
 
-	conditional: ET_CONDITIONAL
-			-- Condition
-
-	expression: ET_EXPRESSION
-			-- Inspected expression
-		do
-			Result := conditional.expression
-		ensure
-			expression_not_void: Result /= Void
-		end
-
 	when_parts: detachable ET_WHEN_EXPRESSION_LIST
 			-- When parts
 
 	else_part: detachable ET_CONDITIONAL
 			-- Else part
 
-	end_keyword: ET_KEYWORD
-			-- 'end' keyword
-
-	position: ET_POSITION
-			-- Position of first character of
-			-- current node in source code
+	else_expression: detachable ET_EXPRESSION
+			-- Else expression
 		do
-			Result := conditional.position
-		end
-
-	first_leaf: ET_AST_LEAF
-			-- First leaf node in current node
-		do
-			Result := conditional.first_leaf
-		end
-
-	last_leaf: ET_AST_LEAF
-			-- Last leaf node in current node
-		do
-			Result := end_keyword
+			if attached else_part as l_else_part then
+				Result := l_else_part.expression
+			end
 		end
 
 feature -- Status report
@@ -159,14 +140,21 @@ feature -- Setting
 			else_part_set: else_part = a_else_part
 		end
 
-	set_end_keyword (an_end: like end_keyword)
-			-- Set `end_keyword' to `an_end'.
-		require
-			an_end_not_void: an_end /= Void
+feature -- Formal arguments
+
+	add_formal_arguments (a_list: DS_ARRAYED_LIST_2 [detachable ET_IDENTIFIER, BOOLEAN])
+			-- Add to `a_list' all formal arguments appearing in current expression
+			-- and (recursively) in its subexpressions: set the boolean to true
+			-- if the formal argument name at the index corresponding to its seed
+			-- is not Void.
 		do
-			end_keyword := an_end
-		ensure
-			end_keyword_set: end_keyword = an_end
+			expression.add_formal_arguments (a_list)
+			if attached when_parts as l_when_parts then
+				l_when_parts.add_formal_arguments (a_list)
+			end
+			if attached else_part as l_else_part then
+				l_else_part.expression.add_formal_arguments (a_list)
+			end
 		end
 
 feature -- Assertions
@@ -217,10 +205,5 @@ feature -- Processing
 		do
 			a_processor.process_inspect_expression (Current)
 		end
-
-invariant
-
-	conditional_not_void: conditional /= Void
-	end_keyword_not_void: end_keyword /= Void
 
 end

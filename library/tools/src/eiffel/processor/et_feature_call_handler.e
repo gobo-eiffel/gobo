@@ -145,8 +145,8 @@ inherit
 			process_verbatim_string,
 			process_when_expression,
 			process_when_expression_list,
-			process_when_part,
-			process_when_part_list
+			process_when_compound,
+			process_when_compound_list
 		end
 
 create
@@ -1813,7 +1813,7 @@ feature {ET_AST_NODE} -- Processing
 			process_expression (an_instruction.expression)
 			had_error := has_fatal_error
 			if attached an_instruction.when_parts as l_when_parts then
-				process_when_part_list (l_when_parts)
+				process_when_compound_list (l_when_parts)
 				had_error := had_error or has_fatal_error
 			end
 			if attached an_instruction.else_compound as l_else_compound then
@@ -2706,7 +2706,9 @@ feature {ET_AST_NODE} -- Processing
 			l_seed: INTEGER
 			had_error: BOOLEAN
 		do
-			if attached an_expression.parenthesis_call as l_parenthesis_call then
+			if an_expression.is_once_creation_call then
+				process_creation_expression (an_expression)
+			elseif attached an_expression.parenthesis_call as l_parenthesis_call then
 				process_qualified_feature_call_expression (l_parenthesis_call)
 			else
 				reset_fatal_error (False)
@@ -3114,7 +3116,7 @@ feature {ET_AST_NODE} -- Processing
 			reset_fatal_error (had_error)
 		end
 
-	process_when_part (a_when_part: ET_WHEN_PART)
+	process_when_compound (a_when_part: ET_WHEN_COMPOUND)
 			-- Process `a_when_part'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		local
@@ -3129,7 +3131,7 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_when_part_list (a_list: ET_WHEN_PART_LIST)
+	process_when_compound_list (a_list: ET_WHEN_COMPOUND_LIST)
 			-- Process `a_list'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		local
@@ -3139,7 +3141,7 @@ feature {ET_AST_NODE} -- Processing
 			reset_fatal_error (False)
 			nb := a_list.count
 			from i := 1 until i > nb loop
-				process_when_part (a_list.item (i))
+				process_when_compound (a_list.item (i))
 				had_error := had_error or has_fatal_error
 				i := i + 1
 			end

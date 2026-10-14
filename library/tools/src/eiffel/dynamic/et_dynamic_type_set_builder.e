@@ -5,7 +5,7 @@
 		"Eiffel dynamic type set builders"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2025, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2026, Eric Bezault and others"
 	license: "MIT License"
 
 deferred class ET_DYNAMIC_TYPE_SET_BUILDER
@@ -129,6 +129,13 @@ feature -- Generation
 					if l_seed > 0 then
 						if attached a_type.seeded_dynamic_query (l_seed, current_dynamic_system) as l_feature then
 							l_feature.set_regular (True)
+						end
+					end
+						-- Make sure that feature 'default_create' is alive for expanded types.
+					l_seed := current_system.default_create_seed
+					if l_seed > 0 then
+						if attached a_type.seeded_dynamic_procedure (l_seed, current_dynamic_system) as l_feature then
+							l_feature.set_creation (True)
 						end
 					end
 				else

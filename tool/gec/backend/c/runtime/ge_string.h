@@ -4,7 +4,7 @@
 		"C functions used to manipulate strings"
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2016-2024, Eric Bezault and others"
+	copyright: "Copyright (c) 2016-2026, Eric Bezault and others"
 	license: "MIT License"
 */
 
@@ -139,12 +139,56 @@ extern EIF_REFERENCE GE_str(const char* s);
 extern EIF_POINTER GE_sp8_base_address(EIF_REFERENCE o);
 
 /*
- * Base address of `o' of type "SPECIAL [CHARACTER_832.
+ * Base address of `o' of type "SPECIAL [CHARACTER_32].
  * The base address is the addresss of the first character in `o'.
  * Note: The implementation of this function is generated
  * by the Eiffel compiler.
  */
 extern EIF_POINTER GE_sp32_base_address(EIF_REFERENCE o);
+
+/*
+ * Compare `count1` first characters of `s1` with
+ * `count2` first characters of `s2`.
+ * 0 if same count and equal,
+ * < 0 if `s1` < `s2`,
+ * > 0 if `s1` > `s2`.
+ */
+extern int GE_str8_compare(EIF_CHARACTER_8* s1, EIF_INTEGER count1, EIF_CHARACTER_8* s2, EIF_INTEGER count2);
+
+/*
+ * Compare `count1` first characters of `s1` with
+ * `count2` first characters of `s2`.
+ * 0 if same count and equal,
+ * < 0 if `s1` < `s2`,
+ * > 0 if `s1` > `s2`.
+ */
+extern int GE_str32_compare(EIF_CHARACTER_32* s1, EIF_INTEGER count1, EIF_CHARACTER_32* s2, EIF_INTEGER count2);
+
+/*
+ * Are the `count1` first characters of `s1` the same as
+ * the `count2` first characters of `s2`?
+ */
+extern int GE_str8_same_characters(EIF_CHARACTER_8* s1, EIF_INTEGER count1, EIF_CHARACTER_8* s2, EIF_INTEGER count2);
+
+/*
+ * Are the `count1` first characters of `s1` the same as
+ * the `count2` first characters of `s2`?
+ */
+extern int GE_str32_same_characters(EIF_CHARACTER_32* s1, EIF_INTEGER count1, EIF_CHARACTER_32* s2, EIF_INTEGER count2);
+
+/*
+ * Are the `count` first characters of `s` greater than or equal to
+ * the `count1` first characters of `s1` and less than or equal to
+ * the `count2` first characters of `s2`?
+ */
+extern int GE_str8_is_inbetween(EIF_CHARACTER_8* s, EIF_INTEGER count, EIF_CHARACTER_8* s1, EIF_INTEGER count1, EIF_CHARACTER_8* s2, EIF_INTEGER count2);
+
+/*
+ * Are the `count` first characters of `s` greater than or equal to
+ * the `count1` first characters of `s1` and less than or equal to
+ * the `count2` first characters of `s2`?
+ */
+extern int GE_str32_is_inbetween(EIF_CHARACTER_32* s, EIF_INTEGER count, EIF_CHARACTER_32* s1, EIF_INTEGER count1, EIF_CHARACTER_32* s2, EIF_INTEGER count2);
 
 #ifdef __cplusplus
 }

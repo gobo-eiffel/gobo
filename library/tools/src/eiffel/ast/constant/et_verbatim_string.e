@@ -5,7 +5,7 @@
 		"Eiffel verbatim strings"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2026, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_VERBATIM_STRING
@@ -84,6 +84,20 @@ feature -- Access
 			-- Position of last character of current node in source code
 		do
 			create {ET_COMPRESSED_POSITION} Result.make (line + value.occurrences ('%N') + 1, {UC_UTF8_ROUTINES}.unicode_character_count (close_white_characters) + {UC_UTF8_ROUTINES}.unicode_character_count (marker))
+		end
+
+feature -- Setting
+
+	set_value (a_value: like value)
+			-- Set `value` to `a_value`.
+		require
+			a_value_not_void: a_value /= Void
+			a_value_is_string_8: a_value.same_type ({STRING_8} "")
+			valid_utf8_value: {UC_UTF8_ROUTINES}.valid_utf8 (a_value)
+		do
+			value := a_value
+		ensure
+			value_set: value = a_value
 		end
 
 feature -- Processing

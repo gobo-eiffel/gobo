@@ -2,14 +2,118 @@
 
 ## Version xx.xx.xx - xxxxxx
 
+### gec
+
+* Fixed some issues that prevented the GC from collecting a
+  SCOOP region (and stopping its thread) when no objects in
+  this region were referenced from other regions anymore.
+* Made sure to properly synchronize with already locked regions
+  in case of multiple separate arguments. The new implementation
+  ensures that the already locked regions are ready to execute
+  upcoming separate calls on their processors before synchronizing.
+* Improved the way SCOOP passive regions are handled at run time.
+* Fixed bug (infinite loop) during Degree 3 when incrementally
+  recompiling a class declaring two features with the same name,
+  even though this validity error was previously reported during
+  Degree 4.
+* Fixed C code generation when calling a `precursor` which is a
+  once-per-object routine.
+* Fixed runtime C code when compiling with gcc 15.2.0 on Ubuntu 26.04.
+* Avoid possible infinite loops when inheritance cycles or type
+  anchor cycles have been detected during a previous Degree but
+  the compiler proceeds further in fault tolerant mode.
+* Upgraded Zig toolchain to version 0.17.0.
+
+### gedoc
+
+* Added the generation of the contract-view of classes
+  when using the format `html-stylesheet`.
+
+### gelsp
+
+* Added pre- and postconditions to the feature signature in
+  the tooltip shown when mouse hovering over a feature name.
+* Added support for contract-view (or short form) and
+  flat-contract-view (or flat short form) of a class, where
+  internal implementation details are hidden, keeping only
+  an interface representation.
+* Correctly point to the formal argument `a` when hoverring
+  the mouse over the anchor of a type of the form `like a`
+  (it was trying to find a feature `a`).
+
+### Gobo Eiffel FreeELKS Library
+
+* Made implementation of `ISE_SCOOP_RUNTIME.region_id` more
+  robust: it does not return a `uint16`-truncated address 
+  anymore but a real `uint16` id. As a consequence an exception
+  is raised when the number of SCOOP regions is greater than
+  65535.
+
+## Version 26.09.03 - 3 September 2026
+
+### gec
+
+* Made sure that `default_create` is called when initializing
+  expanded objects.
+* When generating a new ECF file, turn on the preconditions.
+* Implemented SCOOP wait conditions.
+* Improved the way multiple SCOOP separate arguments are handled
+  at run time.
+
+### gecop
+
+* Added semantics tests for `VOIT` (Iteration rule).
+* Added validation tests for `VTEC-2` (Expanded Type rule).
+
+### gedoc
+
+* When generating a new ECF file, turn on the preconditions.
+* Added formats `contract_view` and `flat_contract_view` to
+  generate the contract-view (or short form) and flat-contract-view
+  (or flat short form) of a class or of a set of classes, where
+  internal implementation details are hidden, keeping only
+  an interface representation.
+* Added the generation of the flat-contract-view of classes
+  when using the format `html-stylesheet`.
+
+### gelsp
+
+* Fixed tooltip for the feature names of qualified calls when
+  the target types are generic.
+
+### Gobo Eiffel Tools Library
+
+* Improved detection of non-initialialized attributes of attached
+  types when the initialization occurs in a once-routine.
+* Added validity checks for expanded types. Validity rules `VTEC-2`.
+
+## Version 26.06.30 - 30 June 2026
+
 ### gecop
 
 * Added validation tests for `VYCP` (Conversion Procedure rule) and
   `VYCQ` (Conversion Query rule).
+* Added validation tests for `VHPR-2` (Parent rule).
+* Added validation tests for `VGFG-3G` (Formal Generic rule).
+* Added validation tests for `VKCC-4` and `VKCC-6G`
+  (Creation Clause rule).
+* Added validation tests for `VKIN-6G` (Creation Instruction rule).
+* Added validation tests for `VKEX-5G` (Creation Expression rule).
+* Added semantics tests for `MKIN` (Creation Instruction semantics).
+* Added semantics tests for `VOMB` (Multi-branch rule).
+* Added semantics tests for `VOIN` (Interval rule).
+* Added semantics tests for `MOMB` (Multi-Branch semantics).
 
 ### Gobo Eiffel Tools Library
 
-* Check validity of convert clauses. Validity errors `VYCP` and `VYCQ`.
+* Added validity checks for convert clauses. Validity rules `VYCP`
+  and `VYCQ`.
+* Added support for [once classes](https://www.eiffel.org/blog/Alexander%20Kogtenkov/2020/12/once-classes)
+  (not in the ECMA standard, but supported by ISE Eiffel).
+* Added validity checks for inspect instructions/expressions.
+  Validity rules `VOMB` and `VOIN`.
+* Added support for inspect instructions/expressions on `STRING`
+  and `TYPE` expressions.
 
 ## Version 26.05.14 - 14 May 2026
 

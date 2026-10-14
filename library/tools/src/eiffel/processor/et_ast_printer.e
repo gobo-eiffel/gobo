@@ -404,6 +404,10 @@ feature {NONE} -- Implementation
 				Result := l_pretty_printer
 			else
 				create Result.make_null
+				Result.set_use_uppercase_class_names (False)
+				Result.set_use_lowercase_feature_names (False)
+				Result.set_use_lowercase_keywords (False)
+				Result.set_use_lowercase_local_names (False)
 				internal_pretty_printer := Result
 			end
 		ensure

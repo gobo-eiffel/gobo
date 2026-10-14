@@ -5,7 +5,7 @@
 		"Eiffel Abstract Syntax Tree factories"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2025, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2026, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_AST_FACTORY
@@ -2989,7 +2989,7 @@ feature -- AST nodes
 			end
 		end
 
-	new_inspect_instruction (a_conditional: detachable ET_CONDITIONAL; a_when_parts: detachable ET_WHEN_PART_LIST;
+	new_inspect_instruction (a_conditional: detachable ET_CONDITIONAL; a_when_parts: detachable ET_WHEN_COMPOUND_LIST;
 		an_else_compound: detachable ET_COMPOUND; an_end: detachable ET_KEYWORD): detachable ET_INSPECT_INSTRUCTION
 			-- New inspect instruction
 		do
@@ -3865,8 +3865,8 @@ feature -- AST nodes
 			end
 		end
 
-	new_when_part (a_choices: detachable ET_CHOICE_LIST;
-		a_then_compound: detachable ET_COMPOUND): detachable ET_WHEN_PART
+	new_when_compound (a_choices: detachable ET_CHOICE_LIST;
+		a_then_compound: detachable ET_COMPOUND): detachable ET_WHEN_COMPOUND
 			-- New when part
 		do
 			if a_choices /= Void then
@@ -3874,7 +3874,7 @@ feature -- AST nodes
 			end
 		end
 
-	new_when_part_list (nb: INTEGER): detachable ET_WHEN_PART_LIST
+	new_when_compound_list (nb: INTEGER): detachable ET_WHEN_COMPOUND_LIST
 			-- New when part list with capacity `nb'
 		require
 			nb_positive: nb >= 0

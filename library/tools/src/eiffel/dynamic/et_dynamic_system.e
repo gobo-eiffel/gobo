@@ -948,6 +948,8 @@ feature {NONE} -- Types
 					initialize_routine_type (l_type)
 				elseif l_base_class.is_predicate_class then
 					initialize_routine_type (l_type)
+				elseif l_base_class.is_once then
+					initialize_once_type (l_type)
 				end
 				propagate_type_of_type_result_type (l_type)
 				propagate_alive_conforming_descendants (l_type)
@@ -1047,6 +1049,20 @@ feature {NONE} -- Types
 					end
 				end
 			end
+		end
+
+	initialize_once_type (a_type: ET_DYNAMIC_PRIMARY_TYPE)
+			-- Initialize type `a_type' whose base class is a once class.
+		require
+			a_type_not_void: a_type /= Void
+			is_once_type: a_type.base_class.is_once
+		local
+			l_index_attribute: ET_ATTRIBUTE
+		do
+			create l_index_attribute.make (tokens.index_pseudo_feature_name, natural_32_type.base_type, a_type.base_class)
+				-- Make pseudo attribute '_index' alive at the first
+				-- position in the attribute list of `a_type`.
+			a_type.set_attribute_position (a_type.dynamic_query (l_index_attribute, Current), 1)
 		end
 
 	propagate_type_of_type_result_type (a_type: ET_DYNAMIC_TYPE)

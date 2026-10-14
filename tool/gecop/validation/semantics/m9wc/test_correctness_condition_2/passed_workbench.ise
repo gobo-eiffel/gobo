@@ -1,0 +1,20 @@
+BB.is_valid: False
+
+aa: system execution failed.
+Following is the set of recorded exceptions:
+
+******************************** Thread exception *****************************
+In thread           Root thread            0x0 (thread id)
+*******************************************************************************
+-------------------------------------------------------------------------------
+Class / Object      Routine                Nature of exception           Effect
+-------------------------------------------------------------------------------
+AA                  f @N                   foo:
+<XXXXXXXXXXXXXXXX>                         Precondition violated.        Fail
+-------------------------------------------------------------------------------
+AA                  make @N
+<XXXXXXXXXXXXXXXX>                         Routine failure.              Fail
+-------------------------------------------------------------------------------
+AA                  root's creation                                     
+<XXXXXXXXXXXXXXXX>                         Routine failure.              Exit
+-------------------------------------------------------------------------------

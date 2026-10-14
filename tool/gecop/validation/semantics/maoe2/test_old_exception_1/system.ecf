@@ -18,7 +18,7 @@
 			<exclude>/EIFGENs$</exclude>
 		</file_rule>
 		<option warning="true">
-			<assertion postcondition="true"/>
+			<assertions postcondition="true"/>
 		</option>
 		<setting name="console_application" value="true"/>
 		<setting name="exception_trace" value="true"/>

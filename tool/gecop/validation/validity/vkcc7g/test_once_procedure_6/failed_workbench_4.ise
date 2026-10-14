@@ -1,0 +1,15 @@
+
+aa: PANIC: illegal value type ...
+
+aa: system execution failed.
+Following is the set of recorded exceptions.
+NB: The raised panic may have induced completely inconsistent information:
+
+-------------------------------------------------------------------------------
+Class / Object      Routine                Nature of exception           Effect
+-------------------------------------------------------------------------------
+AA                  root's creation        illegal value type:          
+<XXXXXXXXXXXXXXXX>                         Eiffel run-time panic.        Bye
+-------------------------------------------------------------------------------
+
+aa: dumping core to generate debugging information...

@@ -1,0 +1,18 @@
+-------------------------------------------------------------------------------
+
+Error code: VOIT(1)
+
+Error: Iteration expression should conform to ITERABLE [G].
+What to do: make sure the Iteration expression conforms to ITERABLE [G].
+
+Class: AA
+Feature: make
+Target type: ITERABLE [Generic #1]
+Source type: detachable STRING_8
+Type of the iteration expression is not attached.
+Line: 13
+      do
+->      across s as c loop end
+        print ("Failed")
+
+-------------------------------------------------------------------------------

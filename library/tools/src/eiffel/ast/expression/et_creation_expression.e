@@ -46,7 +46,10 @@ feature -- Access
 
 feature -- Status report
 
-	is_never_void: BOOLEAN = True
+	is_never_void: BOOLEAN
 			-- Can current expression never be void?
+		once
+			Result := True
+		end
 
 end

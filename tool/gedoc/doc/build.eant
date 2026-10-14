@@ -4,7 +4,7 @@
 
 	<description>
 		description: "Gobo Eiffel Doc documentation"
-		copyright: "Copyright (c) 2017-2025, Eric Bezault and others"
+		copyright: "Copyright (c) 2017-2026, Eric Bezault and others"
 		license: "MIT License"
 	</description>
 
@@ -26,6 +26,7 @@
 		<geant target="${target}" arguments="index"/>
 		<geant target="${target}" arguments="usage"/>
 		<geant target="${target}" arguments="pretty_printer"/>
+		<geant target="${target}" arguments="contract_viewer"/>
 		<geant target="${target}" arguments="html_ise_stylesheet"/>
 		<geant target="${target}" arguments="descendants"/>
 		<geant target="${target}" arguments="unused_classes"/>

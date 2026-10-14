@@ -4,7 +4,7 @@
 		"C functions used to manipulate strings"
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2016-2024, Eric Bezault and others"
+	copyright: "Copyright (c) 2016-2026, Eric Bezault and others"
 	license: "MIT License"
 */
 
@@ -535,6 +535,122 @@ EIF_REFERENCE GE_istr32_from_nstr(EIF_NATIVE_CHAR* s)
 EIF_REFERENCE GE_str(const char* s)
 {
 	return GE_ms(s, strlen(s));
+}
+
+/*
+ * Compare `count1` first characters of `s1` with
+ * `count2` first characters of `s2`.
+ * 0 if same count and equal,
+ * < 0 if `s1` < `s2`,
+ * > 0 if `s1` > `s2`.
+ */
+int GE_str8_compare(EIF_CHARACTER_8* s1, EIF_INTEGER count1, EIF_CHARACTER_8* s2, EIF_INTEGER count2)
+{
+	EIF_INTEGER i, nb;
+	EIF_CHARACTER_8 c1, c2;
+
+	if (count1 < count2) {
+		nb = count1;
+	} else {
+		nb = count2;
+	}
+	for (i = 0; i < nb; i++) {
+		c1 = s1[i];
+		c2 = s2[i];
+		if (c1 > c2) {
+			return 1;
+		} else if (c1 < c2) {
+			return -1;
+		}
+	}
+	if (count1 < count2) {
+		return -1;
+	} else if (count1 > count2) {
+		return 1;
+	} else {
+		return 0;
+	}
+}
+
+/*
+ * Compare `count1` first characters of `s1` with
+ * `count2` first characters of `s2`.
+ * 0 if same count and equal,
+ * < 0 if `s1` < `s2`,
+ * > 0 if `s1` > `s2`.
+ */
+int GE_str32_compare(EIF_CHARACTER_32* s1, EIF_INTEGER count1, EIF_CHARACTER_32* s2, EIF_INTEGER count2)
+{
+	EIF_INTEGER i, nb;
+	EIF_CHARACTER_32 c1, c2;
+
+	if (count1 < count2) {
+		nb = count1;
+	} else {
+		nb = count2;
+	}
+	for (i = 0; i < nb; i++) {
+		c1 = s1[i];
+		c2 = s2[i];
+		if (c1 > c2) {
+			return 1;
+		} else if (c1 < c2) {
+			return -1;
+		}
+	}
+	if (count1 < count2) {
+		return -1;
+	} else if (count1 > count2) {
+		return 1;
+	} else {
+		return 0;
+	}
+}
+
+/*
+ * Are the `count1` first characters of `s1` the same as
+ * the `count2` first characters of `s2`?
+ */
+int GE_str8_same_characters(EIF_CHARACTER_8* s1, EIF_INTEGER count1, EIF_CHARACTER_8* s2, EIF_INTEGER count2)
+{
+	if (count1 != count2) {
+		return 0;
+	} else {
+		return (GE_str8_compare(s1, count1, s2, count2) == 0);
+	}
+}
+
+/*
+ * Are the `count1` first characters of `s1` the same as
+ * the `count2` first characters of `s2`?
+ */
+int GE_str32_same_characters(EIF_CHARACTER_32* s1, EIF_INTEGER count1, EIF_CHARACTER_32* s2, EIF_INTEGER count2)
+{
+	if (count1 != count2) {
+		return 0;
+	} else {
+		return (GE_str32_compare(s1, count1, s2, count2) == 0);
+	}
+}
+
+/*
+ * Are the `count` first characters of `s` greater than or equal to
+ * the `count1` first characters of `s1` and less than or equal to
+ * the `count2` first characters of `s2`?
+ */
+int GE_str8_is_inbetween(EIF_CHARACTER_8* s, EIF_INTEGER count, EIF_CHARACTER_8* s1, EIF_INTEGER count1, EIF_CHARACTER_8* s2, EIF_INTEGER count2)
+{
+	return ((GE_str8_compare(s, count, s1, count1) >= 0) && (GE_str8_compare(s, count, s2, count2) <= 0));
+}
+
+/*
+ * Are the `count` first characters of `s` greater than or equal to
+ * the `count1` first characters of `s1` and less than or equal to
+ * the `count2` first characters of `s2`?
+ */
+int GE_str32_is_inbetween(EIF_CHARACTER_32* s, EIF_INTEGER count, EIF_CHARACTER_32* s1, EIF_INTEGER count1, EIF_CHARACTER_32* s2, EIF_INTEGER count2)
+{
+	return ((GE_str32_compare(s, count, s1, count1) >= 0) && (GE_str32_compare(s, count, s2, count2) <= 0));
 }
 
 #ifdef __cplusplus

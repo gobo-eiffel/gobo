@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 			is_keyword := tokens.is_keyword
 			unique_keyword := tokens.unique_keyword
 			clients := tokens.empty_clients
-			create constant.make ("1", 1, False)
+			create constant.make (a_class)
 			implementation_class := a_class
 			implementation_feature := Current
 		ensure
@@ -102,7 +102,7 @@ feature -- Access
 	unique_keyword: ET_KEYWORD
 			-- 'unique' keyword
 
-	constant: ET_REGULAR_INTEGER_CONSTANT
+	constant: ET_UNIQUE_CONSTANT
 			-- Constant value
 
 	header_break: detachable ET_BREAK

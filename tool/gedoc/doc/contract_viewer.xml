@@ -1,0 +1,98 @@
+﻿<?xml version="1.0"?> 
+
+<!--
+	description:
+
+		"Eiffel Contract-Viewer"
+
+	tool: "Gobo Eiffel Doc"
+	copyright: "Copyright (c) 2026, Eric Bezault and others"
+	license: "MIT License"
+-->
+
+<chapter xmlns="http://gobo-eiffel.gobosoft.com/documentation" id="gedoc/contract_viewer">
+<chapterinfo>
+	<copyright>
+		<year>2026</year>
+		<holder>Eric Bezault</holder>
+	</copyright>
+	<author>
+		<firstname>Eric</firstname><surname>Bezault</surname>
+	</author>
+	<email>ericb@gobosoft.com</email>
+	<date>31 August 2026</date>
+</chapterinfo>
+
+<title>Eiffel Contract-Viewer</title>
+
+<para>
+<projectname>gedoc</projectname> can be used as an Eiffel contract-viewer. The contract-view
+of a class is a pretty-printed view of its class text where internal implementation details
+are hidden. It therefore does not produce valid Eiffel code, but rather an interface representation
+of the class, also known as <projectname>short</projectname> form. Only exported features,
+their pre- and postconditions, class invariants, and exported creation procedures are retained.
+Assertions containing calls to non-exported features are also omitted. 
+</para>
+
+<section><title>Contract-view of a single class</title>
+<para>
+Here is how to generate the contract-view of a single class <classname>FOO</classname>:
+<programlisting>
+	<filename>gedoc --format=contract_view --force --class=FOO project.ecf</filename>
+</programlisting>
+where <filename>project.ecf</filename> is an ECF file describing an Eiffel project containing
+class <classname>FOO</classname>. The contract-view will be generated in file
+<filename>foo.ecv</filename>.
+</para>
+<para>
+The command-line option <filename>--force</filename> tells <projectname>gedoc</projectname>
+to overwrite the file <filename>foo.ecv</filename> if it already exists. Without this option,
+files will not be overwritten and <projectname>gedoc</projectname> will emit an error
+message. Alternatively, the command-line option <filename>--interactive</filename> can
+be used to ask the user confirmation before overwriting files. If you want to
+generate the contract-view file in a directory different from the one containing the
+class text file, use the command-line option <filename>--output</filename>.
+</para>
+</section>
+
+<section><title>Contract-view of an Eiffel project</title>
+<para>
+Here is how to generate the contract-view of all Eiffel classes in an Eiffel project:
+<programlisting>
+	<filename>gedoc --format=contract_view --force project.ecf</filename>
+</programlisting>
+where <filename>project.ecf</filename> is an ECF file describing the Eiffel project.
+You can also generate the contract-view of a subset of classes in this Eiffel project,
+using the command-line option <filename>--class</filename> with wildcards. For example,
+to generate the contract-view only for the classes in a given Eiffel library whose names
+start with <classname>DS_</classname>, type:
+<programlisting>
+	<filename>gedoc --format=contract_view --force --class=DS_* project.ecf</filename>
+</programlisting>
+To generate the contract-view of all classes in a given library, use the command-line
+option <filename>--library</filename>, possibly with wildcards:
+<programlisting>
+	<filename>gedoc --format=contract_view --force --library=structure project.ecf</filename>
+</programlisting>
+</para>
+<para>
+As described in the previous section, the command-line option <filename>--output</filename>
+can be used to generate the contract-view files in a directory different from the
+ones contaning the class text files. The command-line option 
+<filename>--library-prefix</filename> can also be used to generate the contract-view
+files in a subdirectory of this output directory, named after the Eiffel
+library containing the corresponding classes (one subdirectory per library).
+</para>
+</section>
+
+<section><title>Flat-contract-view of a class or of an Eiffel project</title>
+<para>
+The contract-view shows only features and invariants declared in the class itself, whereas
+the flat-contract-view also includes inherited features and invariants. To generate the
+flat-contract-view, also known as <projectname>flat short</projectname> form, of a class
+or of an Eiffel project, replace the command-line option <filename>--format=contract_view</filename>
+with <filename>--format=flat_contract_view</filename> in the examples of the previous sections.
+</para>
+</section>
+
+</chapter>

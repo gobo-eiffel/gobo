@@ -1,0 +1,12 @@
+-------------------------------------------------------------------------------
+
+Obsolete syntax used at line 11 in class AA
+Make an expanded version of the base class associated with this type.
+
+        local
+            b: expanded BB
+---------------^
+        do
+
+-------------------------------------------------------------------------------
+Passed

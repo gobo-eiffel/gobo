@@ -5,7 +5,7 @@
 		"Eiffel alias feature names"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2005-2020, Eric Bezault and others"
+	copyright: "Copyright (c) 2005-2026, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_ALIAS_NAME
@@ -775,7 +775,6 @@ feature -- Access
 			alias_lower_name_not_empty: Result.count > 0
 			alias_lower_name_is_string: {KL_ANY_ROUTINES}.same_types (Result, "")
 			valid_utf8_alias_lower_name: {UC_UTF8_ROUTINES}.valid_utf8 (Result)
-			definition: Result.is_equal (alias_name.as_lower)
 		end
 
 	operator_name: STRING
@@ -789,8 +788,12 @@ feature -- Access
 				Result := tokens.parentheses_symbol_name
 			when infix_and_code then
 				Result := tokens.and_keyword_name
+			when infix_and_symbol_code then
+				Result := tokens.and_symbol_name
 			when infix_and_then_code then
 				Result := tokens.and_then_keywords_name
+			when infix_and_then_symbol_code then
+				Result := tokens.and_then_symbol_name
 			when infix_div_code then
 				Result := tokens.div_symbol_name
 			when infix_divide_code then
@@ -801,6 +804,8 @@ feature -- Access
 				Result := tokens.gt_symbol_name
 			when infix_implies_code then
 				Result := tokens.implies_keyword_name
+			when infix_implies_symbol_code then
+				Result := tokens.implies_symbol_name
 			when infix_le_code then
 				Result := tokens.le_symbol_name
 			when infix_lt_code then
@@ -811,8 +816,12 @@ feature -- Access
 				Result := tokens.mod_symbol_name
 			when infix_or_code then
 				Result := tokens.or_keyword_name
+			when infix_or_symbol_code then
+				Result := tokens.or_symbol_name
 			when infix_or_else_code then
 				Result := tokens.or_else_keywords_name
+			when infix_or_else_symbol_code then
+				Result := tokens.or_else_symbol_name
 			when infix_plus_code then
 				Result := tokens.plus_symbol_name
 			when infix_power_code then
@@ -821,6 +830,8 @@ feature -- Access
 				Result := tokens.times_symbol_name
 			when infix_xor_code then
 				Result := tokens.xor_keyword_name
+			when infix_xor_symbol_code then
+				Result := tokens.xor_symbol_name
 			when infix_dotdot_code then
 				Result := tokens.dotdot_symbol_name
 			when prefix_minus_code then
@@ -829,6 +840,8 @@ feature -- Access
 				Result := tokens.plus_symbol_name
 			when prefix_not_code then
 				Result := tokens.not_keyword_name
+			when prefix_not_symbol_code then
+				Result := tokens.not_symbol_name
 			else
 					-- Should never happen.
 				Result := tokens.unknown_name
@@ -851,7 +864,6 @@ feature -- Access
 			operator_lower_name_not_empty: Result.count > 0
 			operator_lower_name_is_string: {KL_ANY_ROUTINES}.same_types (Result, "")
 			valid_utf8_operator_lower_name: {UC_UTF8_ROUTINES}.valid_utf8 (Result)
-			definition: Result.is_equal (operator_name.as_lower)
 		end
 
 	hash_code: INTEGER

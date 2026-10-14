@@ -5,7 +5,7 @@
 		"Contexts to evaluate Eiffel types"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2025, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2026, Eric Bezault and others"
 	license: "MIT License"
 
 deferred class ET_TYPE_CONTEXT
@@ -82,6 +82,17 @@ feature -- Access
 	adapted_base_class_with_seeded_feature (a_seed: INTEGER): ET_ADAPTED_CLASS
 			-- Base class of current context, or in case of a formal parameter
 			-- one of its constraint adapted base classes containing a feature
+			-- with seed `a_seed' (or any of the constraints if none contains
+			-- such feature)
+		require
+			valid_context: is_valid_context
+			-- no_cycle: no cycle in anchored types involved.
+		deferred
+		end
+
+	adapted_base_type_with_seeded_feature (a_seed: INTEGER): ET_ADAPTED_CLASS
+			-- Base type of current context, or in case of a formal parameter
+			-- one of its constraint adapted base types containing a feature
 			-- with seed `a_seed' (or any of the constraints if none contains
 			-- such feature)
 		require

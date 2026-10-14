@@ -5,7 +5,7 @@
 		"Eiffel call expressions"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2024, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2026, Eric Bezault and others"
 	license: "MIT License"
 
 deferred class ET_CALL_EXPRESSION
@@ -32,7 +32,8 @@ inherit
 			has_agent,
 			has_typed_object_test,
 			is_instance_free,
-			add_old_expressions
+			add_old_expressions,
+			add_formal_arguments
 		end
 
 	ET_CHOICE_CONSTANT
@@ -43,7 +44,8 @@ inherit
 			has_address_expression,
 			has_agent,
 			has_typed_object_test,
-			add_old_expressions
+			add_old_expressions,
+			add_formal_arguments
 		end
 
 feature -- Access

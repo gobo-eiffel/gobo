@@ -1,0 +1,37 @@
+-------------------------------------------------------------------------------
+
+Error code: VOMB(6)
+
+Error: incompatible Unique constants.
+What to do: make sure that all Unique inspect constants in Multi_branch
+  instruction come from the same class of origin, or if a static access
+  make sure it is indeed a static access to a constant.
+
+Class: AA
+Feature: make
+Constant: G From: BB
+Origin of conflicting constants: AA
+Line: 16
+        when {AA}.f then
+->      when {BB}.g .. {BB}.h then
+        else
+
+-------------------------------------------------------------------------------
+
+Error code: VOMB(6)
+
+Error: incompatible Unique constants.
+What to do: make sure that all Unique inspect constants in Multi_branch
+  instruction come from the same class of origin, or if a static access
+  make sure it is indeed a static access to a constant.
+
+Class: AA
+Feature: make
+Constant: H From: BB
+Origin of conflicting constants: AA
+Line: 16
+        when {AA}.f then
+->      when {BB}.g .. {BB}.h then
+        else
+
+-------------------------------------------------------------------------------

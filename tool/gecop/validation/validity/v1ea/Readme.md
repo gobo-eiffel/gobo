@@ -9,8 +9,8 @@ Click on the `[tests]` label following the condition numbers below to see tests 
 
 An attribute of type `T` in an expanded class `C` is valid if and only if:
 
-1. `G` [\[tests\]](../v1ea1g) if `T` is either separate or expanded.
-2. `G` if `T` is an expanded type, its base class is not a direct or indirect expanded client of `C`.
+1. `G.` [\[tests\]](../v1ea1g) if `T` is either separate or expanded.
+2. `G.` if `T` is an expanded type, its base class is not a direct or indirect expanded client of `C`.
 
 ### Notes
 

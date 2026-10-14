@@ -49,16 +49,25 @@ feature -- Basic operation
 			i: INTEGER_64
 			nb: INTEGER_64
 		do
-			nb := a_timeout // 1_000_000
+			nb := (a_timeout // 10_000_000).min (10)
 			from until
 				value = a_value or i > nb
 			loop
 				if i = nb then
-					{EXECUTION_ENVIRONMENT}.sleep (a_timeout \\ 1_000_000)
+					{EXECUTION_ENVIRONMENT}.sleep (a_timeout \\ 10_000_000)
 				else
-						-- 1 millisecond.
-					{EXECUTION_ENVIRONMENT}.sleep (1_000_000)
+						-- 10 millisecond.
+					{EXECUTION_ENVIRONMENT}.sleep (10_000_000)
 				end
+				i := i + 1
+			end
+			i := 1
+			nb := (a_timeout // 100_000_000) - 1
+			from until
+				value = a_value or i > nb
+			loop
+					-- 100 millisecond.
+				{EXECUTION_ENVIRONMENT}.sleep (100_000_000)
 				i := i + 1
 			end
 		ensure

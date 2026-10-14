@@ -4,7 +4,7 @@
 		"Part of ISE Eiffel runtime. Needed to compile class ISE_SCOOP_RUNTIME."
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2022-2024, Eric Bezault and others"
+	copyright: "Copyright (c) 2022-2026, Eric Bezault and others"
 	license: "MIT License"
 */
 
@@ -29,6 +29,11 @@ extern "C" {
 
 #define EIF_NULL_PROCESSOR (EIF_SCP_PID)-1
 #ifdef GE_USE_SCOOP
+/* TODO: There is currently no way to get the SCOOP region from a given id.
+ * Ideally `x` should be an Eiffel object, not a region id.
+ * Here we are using the region of the Current object, hoping that this
+ * is the region with the given id.
+ */
 #define eif_scoop_set_is_impersonation_allowed(x,y) GE_scoop_region_set_impersonation_allowed(GE_current_context()->region,(y));
 #else
 #define eif_scoop_set_is_impersonation_allowed(x,y) /* */

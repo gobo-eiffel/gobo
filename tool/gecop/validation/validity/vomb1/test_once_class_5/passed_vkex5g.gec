@@ -1,0 +1,2 @@
+[VKEX-5G] class AA (16,11): the creation type '[attached] BB' of the creation expression with the once-per-process creation procedure `f' is a reference type, but it is not separate.
+----

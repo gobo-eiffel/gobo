@@ -19,7 +19,7 @@ A *Creation_instruction* of creation type `CT`, appearing in a class `C`, is val
 A *Creation_instruction* of creation type `CT`, appearing in a class `C`, is valid if and only if it satisfies the following conditions:
 
 1. `CT` conforms to the creation target’s type.
-2. The feature of the *Creation_call* of the instruction’s unfolded form is available for creation to `C`.
+2. The feature of the *Creation_call* of the instruction's unfolded form is available for creation to `C`.
 3. That *Creation_call* is argument-valid.
 4. `CT` is generic-creation-ready.
 
@@ -31,7 +31,7 @@ A *Creation_instruction* of creation type `CT`, appearing in a class `C`, is val
 
 * Another condition is needed in the context of SCOOP, the Eiffel concurrency mechanism:
 
-  5. `G` [\[tests\]](../vkin5g) The *Region* part, when provided, should use the type specifier `NONE`.
+  5. `G.` [\[tests\]](../vkin5g) The *Region* part, when provided, should use the type specifier `NONE`.
   
   This is used to indicate that the SCOOP region created will be a passive region. Here is an example:
 
@@ -45,3 +45,13 @@ A *Creation_instruction* of creation type `CT`, appearing in a class `C`, is val
   Note that the *Region* part is silently ignored when the creation type is not separate, which makes it easier to compile the same Eiffel code in SCOOP and non-SCOOP modes.
 
   SCOOP is not described in the ECMA Eiffel standard, therefore this condition is not part of the standard.
+
+* Another condition is needed in the context of once classes and SCOOP, the Eiffel concurrency mechanism:
+
+  6. `G.` [\[tests\]](../vkin6g) If the feature of the *Creation_call* of the instruction's unfolded
+     form is a once per process creation procedure, `CT` is either separate or expanded.
+  
+  ISE Eiffel (as of 25.12.9.8922 and after) fails to report this validity rule violation.
+
+  Once classes and SCOOP are not described in the ECMA Eiffel standard, therefore
+  this condition extension is not part of the standard.

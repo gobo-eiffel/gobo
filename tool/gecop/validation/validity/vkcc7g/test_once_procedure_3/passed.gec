@@ -1,0 +1,9 @@
+bf is {BB}.f
+bf 1
+bf is {BB}.f
+bg is {BB}.g
+bg 2
+bf is {BB}.f
+bg is {BB}.g
+bf 1
+bg 2

@@ -320,7 +320,36 @@ feature {LS_ANY} -- Processing
 		deferred
 		end
 
+	process_custom_field (a_field_name: STRING_8; a_value: LS_ANY)
+			-- Process custom field name `a_field_name` with value `a_value`.
+		require
+			a_field_name_not_void: a_field_name /= Void
+			a_value_not_void: a_value /= Void
+		deferred
+		end
+
 	process_custom_notification (a_value: LS_CUSTOM_NOTIFICATION)
+			-- Process `a_value`.
+		require
+			a_value_not_void: a_value /= Void
+		deferred
+		end
+
+	process_custom_params (a_value: LS_CUSTOM_PARAMS)
+			-- Process `a_value`.
+		require
+			a_value_not_void: a_value /= Void
+		deferred
+		end
+
+	process_custom_request (a_value: LS_CUSTOM_REQUEST)
+			-- Process `a_value`.
+		require
+			a_value_not_void: a_value /= Void
+		deferred
+		end
+
+	process_custom_result (a_value: LS_CUSTOM_RESULT)
 			-- Process `a_value`.
 		require
 			a_value_not_void: a_value /= Void

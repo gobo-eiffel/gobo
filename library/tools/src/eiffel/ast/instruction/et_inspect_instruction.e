@@ -5,7 +5,7 @@
 		"Eiffel inspect instructions"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2024, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2026, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_INSPECT_INSTRUCTION
@@ -21,6 +21,11 @@ inherit
 			has_typed_object_test,
 			has_inline_separate_instruction,
 			nested_instruction_count
+		end
+
+	ET_INSPECT_COMPONENT
+		rename
+			else_part as else_compound
 		end
 
 create
@@ -58,44 +63,11 @@ feature -- Initialization
 
 feature -- Access
 
-	conditional: ET_CONDITIONAL
-			-- Condition
-
-	expression: ET_EXPRESSION
-			-- Inspected expression
-		do
-			Result := conditional.expression
-		ensure
-			expression_not_void: Result /= Void
-		end
-
-	when_parts: detachable ET_WHEN_PART_LIST
+	when_parts: detachable ET_WHEN_COMPOUND_LIST
 			-- When parts
 
 	else_compound: detachable ET_COMPOUND
 			-- Else part
-
-	end_keyword: ET_KEYWORD
-			-- 'end' keyword
-
-	position: ET_POSITION
-			-- Position of first character of
-			-- current node in source code
-		do
-			Result := conditional.position
-		end
-
-	first_leaf: ET_AST_LEAF
-			-- First leaf node in current node
-		do
-			Result := conditional.first_leaf
-		end
-
-	last_leaf: ET_AST_LEAF
-			-- Last leaf node in current node
-		do
-			Result := end_keyword
-		end
 
 feature -- Status report
 
@@ -168,16 +140,6 @@ feature -- Setting
 			else_compound_set: else_compound = a_compound
 		end
 
-	set_end_keyword (an_end: like end_keyword)
-			-- Set `end_keyword' to `an_end'.
-		require
-			an_end_not_void: an_end /= Void
-		do
-			end_keyword := an_end
-		ensure
-			end_keyword_set: end_keyword = an_end
-		end
-
 feature -- Processing
 
 	process (a_processor: ET_AST_PROCESSOR)
@@ -185,10 +147,5 @@ feature -- Processing
 		do
 			a_processor.process_inspect_instruction (Current)
 		end
-
-invariant
-
-	conditional_not_void: conditional /= Void
-	end_keyword_not_void: end_keyword /= Void
 
 end

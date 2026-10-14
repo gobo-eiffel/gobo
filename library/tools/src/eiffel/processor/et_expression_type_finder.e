@@ -3255,7 +3255,9 @@ feature {ET_AST_NODE} -- Processing
 	process_static_call_expression (an_expression: ET_STATIC_CALL_EXPRESSION)
 			-- Process `an_expression'.
 		do
-			if attached an_expression.parenthesis_call as l_parenthesis_call then
+			if an_expression.is_once_creation_call then
+				find_creation_expression_type (an_expression, current_context)
+			elseif attached an_expression.parenthesis_call as l_parenthesis_call then
 				find_qualified_call_expression_type (l_parenthesis_call, current_context)
 			else
 				find_static_call_expression_type (an_expression, current_context)

@@ -1,0 +1,8 @@
+bf is {BB}.f
+bf 1
+bf 3
+bf is {BB}.f
+bg is {BB}.g
+bg = bf: False
+bf = old_bf: True
+bg 0

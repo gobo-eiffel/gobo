@@ -5,7 +5,7 @@
 		"Eiffel qualified anchored types"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2024, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2025, Eric Bezault and others"
 	license: "MIT License"
 
 deferred class ET_QUALIFIED_LIKE_IDENTIFIER
@@ -26,6 +26,7 @@ inherit
 			add_adapted_base_classes_to_list,
 			adapted_base_class_with_named_feature,
 			adapted_base_class_with_seeded_feature,
+			adapted_base_type_with_seeded_feature,
 			same_syntactical_qualified_like_identifier_with_type_marks,
 			same_named_class_type_with_type_marks,
 			same_named_formal_parameter_type_with_type_marks,
@@ -221,6 +222,52 @@ feature -- Access
 					l_target_context.force_last (l_target_type)
 					{ET_ADAPTED_BASE_CLASS_CHECKER}.reset_context_if_multiple_constraints (not attached {ET_CLASS} l_adapted_base_class, l_adapted_base_class, l_target_context)
 					Result := l_query.type.adapted_base_class_with_seeded_feature (a_seed, l_target_context)
+					l_target_context.keep_first (l_old_count)
+				end
+			end
+		end
+
+	adapted_base_type_with_seeded_feature (a_seed: INTEGER; a_context: ET_TYPE_CONTEXT): ET_ADAPTED_CLASS
+			-- Base type of current type when it appears in `a_context', or in case of
+			-- a formal parameter one of its constraint adapted base types containing
+			-- a feature with seed `a_seed' (or any of the constraints if none contains
+			-- such feature)
+		local
+			l_adapted_base_class: ET_ADAPTED_CLASS
+			l_target_type: ET_TYPE
+			l_target_context: ET_NESTED_TYPE_CONTEXT
+			l_query: detachable ET_QUERY
+			l_old_count: INTEGER
+		do
+			if seed = 0 then
+					-- Qualified anchored type not resolved yet.
+				Result := tokens.unknown_class
+			else
+				l_target_type := target_type
+				if implementation_class = a_context.root_context.base_class then
+					l_adapted_base_class := l_target_type.adapted_base_class_with_named_feature (name, a_context)
+					l_query := l_adapted_base_class.named_query (name)
+				else
+					l_adapted_base_class := l_target_type.adapted_base_class_with_seeded_feature (seed, a_context)
+					l_query := l_adapted_base_class.base_class.seeded_query (seed)
+				end
+				if l_query = Void then
+						-- Internal error: an inconsistency has been
+						-- introduced in the AST since we resolved
+						-- current qualified anchored type.
+						-- In the implementation class, we know that there is
+						-- extactly one constraint with a query of this name.
+						-- In descendant classes, we know that there is
+						-- at least one constraint with a query with this seed,
+						-- and if there are more than one, then they all have
+						-- the same type.
+					Result := tokens.unknown_class
+				else
+					l_target_context := a_context.as_nested_type_context
+					l_old_count := l_target_context.count
+					l_target_context.force_last (l_target_type)
+					{ET_ADAPTED_BASE_CLASS_CHECKER}.reset_context_if_multiple_constraints (not attached {ET_CLASS} l_adapted_base_class, l_adapted_base_class, l_target_context)
+					Result := l_query.type.adapted_base_type_with_seeded_feature (a_seed, l_target_context)
 					l_target_context.keep_first (l_old_count)
 				end
 			end

@@ -21,9 +21,6 @@ inherit
 			report_caller
 		end
 
-	ET_SHARED_CLASS_COMPARATOR_BY_NAME
-		export {NONE} all end
-
 create
 
 	make
@@ -65,31 +62,9 @@ feature -- Basic operations
 
 	find_callers_in_system (a_callee_feature: ET_FEATURE; a_callee_class: ET_CLASS; a_system: ET_SYSTEM)
 			-- Find callers in `a_system' of `a_callee_feature' from `a_callee_class'.
-		local
-			l_old_callee_feature: like callee_feature
-			l_old_callee_class: like callee_class
-			l_classes: DS_ARRAYED_LIST [ET_CLASS]
-			l_sorter: DS_QUICK_SORTER [ET_CLASS]
 		do
-			l_old_callee_feature := callee_feature
-			callee_feature := a_callee_feature
-			l_old_callee_class := callee_class
-			callee_class := a_callee_class
-			callee_seeds.wipe_out
-			a_callee_feature.add_seeds_to_set (callee_seeds)
-			callee_classes.wipe_out
-			callee_classes.force (a_callee_class)
-			callee_classes.append (a_callee_class.ancestor_classes)
-			callee_classes.append (a_callee_class.descendants)
-			create l_classes.make (3000)
-			a_system.classes_do_recursive (agent l_classes.force_last)
-			create l_sorter.make (class_comparator_by_name)
-			l_classes.sort (l_sorter)
-			l_classes.do_all (agent {ET_CLASS}.process (Current))
-			callee_seeds.wipe_out
-			callee_classes.wipe_out
-			callee_feature := l_old_callee_feature
-			callee_class := l_old_callee_class
+			set_system_classes_sorted (True)
+			precursor (a_callee_feature, a_callee_class, a_system)
 			last_caller := Void
 			last_call_hierarchy_incoming_call := Void
 		end

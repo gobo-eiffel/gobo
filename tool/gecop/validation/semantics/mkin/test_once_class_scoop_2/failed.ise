@@ -1,0 +1,21 @@
+b = a.b: False
+b is {BB}.f: True
+
+aa: system execution failed.
+Following is the set of recorded exceptions:
+
+******************************** Thread exception *****************************
+In thread           Root thread            0x0 (thread id)
+*******************************************************************************
+-------------------------------------------------------------------------------
+Class / Object      Routine                Nature of exception           Effect
+-------------------------------------------------------------------------------
+AA                  make @N                Segmentation violation:
+<XXXXXXXXXXXXXXXX>                         Operating system signal.      Fail
+-------------------------------------------------------------------------------
+AA                  make @N
+<XXXXXXXXXXXXXXXX>                         Routine failure.              Fail
+-------------------------------------------------------------------------------
+AA                  root's creation                                     
+<XXXXXXXXXXXXXXXX>                         Routine failure.              Exit
+-------------------------------------------------------------------------------

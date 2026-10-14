@@ -1,0 +1,4 @@
+AA: before creation of b
+End of BB.make
+AA: after creation of b
+AA: checking that b is not Void

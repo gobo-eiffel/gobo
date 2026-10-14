@@ -1,0 +1,4 @@
+A: before creation of b
+A: after creation of b
+A: checking that b is not Void
+End of B.make

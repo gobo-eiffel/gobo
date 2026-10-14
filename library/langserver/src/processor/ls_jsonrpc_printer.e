@@ -1207,6 +1207,17 @@ feature {LS_ANY} -- Processing
 			utf8_string.append_character ('}')
 		end
 
+	process_custom_field (a_field_name: STRING_8; a_value: LS_ANY)
+			-- Process custom field name `a_field_name` with value `a_value`.
+		do
+			process_comma_if_not_first
+			utf8_string.append_character ('"')
+			utf8_string.append_string (a_field_name)
+			utf8_string.append_character ('"')
+			utf8_string.append_character (':')
+			a_value.process (Current)
+		end
+
 	process_custom_notification (a_value: LS_CUSTOM_NOTIFICATION)
 			-- Process `a_value`.
 		do
@@ -1219,13 +1230,57 @@ feature {LS_ANY} -- Processing
 			utf8_string.append_character (':')
 			a_value.method.process (Current)
 			if attached a_value.params as l_params then
-				process_comma_if_not_first
+				utf8_string.append_character (',')
 				utf8_string.append_character ('"')
 				utf8_string.append_string ({LS_CUSTOM_NOTIFICATION}.params_name)
 				utf8_string.append_character ('"')
 				utf8_string.append_character (':')
 				l_params.process (Current)
 			end
+			utf8_string.append_character ('}')
+		end
+
+	process_custom_params (a_value: LS_CUSTOM_PARAMS)
+			-- Process `a_value`.
+		do
+			utf8_string.append_character ('{')
+			a_value.process_custom_fields (Current)
+			utf8_string.append_character ('}')
+		end
+
+	process_custom_request (a_value: LS_CUSTOM_REQUEST)
+			-- Process `a_value`.
+		do
+			utf8_string.append_character ('{')
+			process_jsonrpc_version
+			utf8_string.append_character (',')
+			utf8_string.append_character ('"')
+			utf8_string.append_string ({LS_CUSTOM_REQUEST}.id_name)
+			utf8_string.append_character ('"')
+			utf8_string.append_character (':')
+			a_value.id.process (Current)
+			utf8_string.append_character (',')
+			utf8_string.append_character ('"')
+			utf8_string.append_string ({LS_CUSTOM_REQUEST}.method_name)
+			utf8_string.append_character ('"')
+			utf8_string.append_character (':')
+			a_value.method.process (Current)
+			if attached a_value.params as l_params then
+				utf8_string.append_character (',')
+				utf8_string.append_character ('"')
+				utf8_string.append_string ({LS_CUSTOM_REQUEST}.params_name)
+				utf8_string.append_character ('"')
+				utf8_string.append_character (':')
+				l_params.process (Current)
+			end
+			utf8_string.append_character ('}')
+		end
+
+	process_custom_result (a_value: LS_CUSTOM_RESULT)
+			-- Process `a_value`.
+		do
+			utf8_string.append_character ('{')
+			a_value.process_custom_fields (Current)
 			utf8_string.append_character ('}')
 		end
 

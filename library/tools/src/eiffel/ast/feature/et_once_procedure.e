@@ -5,7 +5,7 @@
 		"Eiffel once-procedures"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2024, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2026, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_ONCE_PROCEDURE
@@ -18,13 +18,34 @@ inherit
 			is_once_per_process,
 			is_once_per_thread,
 			is_once_per_object
+		redefine
+			once_creation_index
 		end
 
 	ET_ONCE_ROUTINE
+		redefine	
+			once_creation_index
+		end
 
 create
 
 	make
+
+feature -- Access
+
+	once_creation_index: NATURAL_32
+			-- Index in the list of creation procedures in once class.
+			-- Zero if not a once creation procedure of a once class.
+
+feature -- Setting
+
+	set_once_creation_index (a_index: NATURAL_32)
+			-- Set `once_creation_index` to `a_index`.
+		do
+			once_creation_index := a_index
+		ensure
+			once_creation_index_set: once_creation_index = a_index
+		end
 
 feature -- Duplication
 

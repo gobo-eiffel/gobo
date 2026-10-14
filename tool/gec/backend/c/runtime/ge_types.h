@@ -4,7 +4,7 @@
 		"C functions used to implement type information"
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2016-2024, Eric Bezault and others"
+	copyright: "Copyright (c) 2016-2026, Eric Bezault and others"
 	license: "MIT License"
 */
 
@@ -571,6 +571,10 @@ extern EIF_BOOLEAN GE_type_in_dynamic_type_set(EIF_TYPE_INDEX a_type, EIF_TYPE_I
 extern GE_attribute* GE_attribute_with_name(EIF_TYPE_INDEX a_type, char* name);
 #endif
 
+/*
+ * Does `a_type_1' conform to `a_type' and `a_type' conform to `a_type_2'?
+ */
+extern int GE_encoded_type_is_inbetween(EIF_ENCODED_TYPE a_type, EIF_ENCODED_TYPE a_type_1, EIF_ENCODED_TYPE a_type_2);
 
 #ifdef __cplusplus
 }

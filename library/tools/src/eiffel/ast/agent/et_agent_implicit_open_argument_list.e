@@ -5,7 +5,7 @@
 		"Eiffel lists of agent implicit open arguments"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2024, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2026, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_AGENT_IMPLICIT_OPEN_ARGUMENT_LIST
@@ -72,11 +72,20 @@ feature -- Status report
 			-- Result := False
 		end
 
+feature -- Formal arguments
+
+	add_formal_arguments (a_list: DS_ARRAYED_LIST_2 [detachable ET_IDENTIFIER, BOOLEAN])
+			-- Add to `a_list' all formal arguments appearing in current operands
+			-- and (recursively) in their subexpressions: set the boolean to true
+			-- if the formal argument name at the index corresponding to its seed
+			-- is not Void.
+		do
+		end
 feature -- Assertions
 
 	add_old_expressions (a_list: DS_ARRAYED_LIST [ET_OLD_EXPRESSION])
-			-- Add to `a_list' all old expressions appearing in current expression
-			-- and (recursively) in its subexpressions.
+			-- Add to `a_list' all old expressions appearing in current operands
+			-- and (recursively) in their subexpressions.
 		do
 		end
 

@@ -5,7 +5,7 @@ This [test](.) is exercising the condition [4](../Readme.md) of the validity rul
 ### Description
 
 In this test, class `BB [G]` declares a conversion procedure of the form `f ({CC [ANY], CC [G]})`,
-a but the two convert types have the same base class. This violates `VYCP-4`.
+but the two convert types have the same base class. This violates `VYCP-4`.
 
 ### Notes
 

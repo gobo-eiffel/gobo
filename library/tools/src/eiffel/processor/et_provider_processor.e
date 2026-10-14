@@ -5,7 +5,7 @@
 		"Eiffel provider processors"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2019-2023, Eric Bezault and others"
+	copyright: "Copyright (c) 2019-2026, Eric Bezault and others"
 	license: "MIT License"
 
 deferred class ET_PROVIDER_PROCESSOR
@@ -142,8 +142,8 @@ inherit
 			process_verbatim_string,
 			process_when_expression,
 			process_when_expression_list,
-			process_when_part,
-			process_when_part_list
+			process_when_compound,
+			process_when_compound_list
 		end
 
 feature {ET_AST_NODE} -- Processing
@@ -975,7 +975,7 @@ feature {ET_AST_NODE} -- Processing
 		do
 			process_expression (an_instruction.expression)
 			if attached an_instruction.when_parts as l_when_parts then
-				process_when_part_list (l_when_parts)
+				process_when_compound_list (l_when_parts)
 			end
 			if attached an_instruction.else_compound as l_else_compound then
 				process_compound (l_else_compound)
@@ -1483,7 +1483,7 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_when_part (a_when_part: ET_WHEN_PART)
+	process_when_compound (a_when_part: ET_WHEN_COMPOUND)
 			-- Process `a_when_part'.
 		do
 			process_choice_list (a_when_part.choices)
@@ -1492,14 +1492,14 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_when_part_list (a_list: ET_WHEN_PART_LIST)
+	process_when_compound_list (a_list: ET_WHEN_COMPOUND_LIST)
 			-- Process `a_list'.
 		local
 			i, nb: INTEGER
 		do
 			nb := a_list.count
 			from i := 1 until i > nb loop
-				process_when_part (a_list.item (i))
+				process_when_compound (a_list.item (i))
 				i := i + 1
 			end
 		end

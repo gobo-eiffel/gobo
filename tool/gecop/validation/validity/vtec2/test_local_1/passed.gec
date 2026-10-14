@@ -1,0 +1,2 @@
+[VTEC-2] class AA (11,7): the version of 'default_create' in the base class of the expanded type '[attached] BB' is not a creation procedure exported to AA.
+----

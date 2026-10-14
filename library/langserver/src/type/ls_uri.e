@@ -37,7 +37,7 @@
 			file:///C%3A/project/readme.md
 	]"
 	library: "Gobo Eiffel Language Server Protocol Library"
-	copyright: "Copyright (c) 2025, Eric Bezault and others"
+	copyright: "Copyright (c) 2025-2026, Eric Bezault and others"
 	license: "MIT License"
 
 deferred class LS_URI
@@ -49,6 +49,20 @@ inherit
 convert
 
 	value: {READABLE_STRING_GENERAL}
+
+feature -- Status report
+
+	same_uri (other: LS_URI): BOOLEAN
+			-- Is current URO and `other` considered to be the same URI?
+		require
+			other_not_void: other /= Void
+		do
+			if other = Current then
+				Result := True
+			else
+				Result := utf8_value.same_string (other.utf8_value)
+			end
+		end
 
 feature -- Access
 

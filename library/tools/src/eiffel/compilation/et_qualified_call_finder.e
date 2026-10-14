@@ -884,7 +884,7 @@ feature {ET_AST_NODE} -- Processing
 	process_inspect_instruction (a_instruction: ET_INSPECT_INSTRUCTION)
 			-- Process `a_instruction'.
 		local
-			l_when_part: ET_WHEN_PART
+			l_when_part: ET_WHEN_COMPOUND
 			i, nb: INTEGER
 		do
 			a_instruction.conditional.expression.process (Current)
@@ -1171,7 +1171,9 @@ feature {ET_AST_NODE} -- Processing
 	process_static_call_expression (a_expression: ET_STATIC_CALL_EXPRESSION)
 			-- Process `a_expression'.
 		do
-			if attached a_expression.parenthesis_call as l_parenthesis_call then
+			if a_expression.is_once_creation_call then
+				process_creation_expression (a_expression)
+			elseif attached a_expression.parenthesis_call as l_parenthesis_call then
 				process_qualified_feature_call (l_parenthesis_call)
 			else
 				process_static_feature_call (a_expression)

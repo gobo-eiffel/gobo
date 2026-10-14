@@ -1,0 +1,4 @@
+[VKIN-6G] class AA (16,11): the creation type '[attached] BB' of the creation instruction with the once-per-process creation procedure `make' is a reference type, but it is not separate.
+----
+[VKIN-6G] class AA (26,11): the creation type '[attached] BB' of the creation instruction with the once-per-process creation procedure `make' is a reference type, but it is not separate.
+----

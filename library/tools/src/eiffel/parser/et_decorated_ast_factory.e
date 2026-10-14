@@ -5,7 +5,7 @@
 		"Eiffel decorated Abstract Syntax Tree factories"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2024, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2026, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_DECORATED_AST_FACTORY
@@ -3296,7 +3296,7 @@ feature -- AST nodes
 			end
 		end
 
-	new_inspect_instruction (a_conditional: detachable ET_CONDITIONAL; a_when_parts: detachable ET_WHEN_PART_LIST;
+	new_inspect_instruction (a_conditional: detachable ET_CONDITIONAL; a_when_parts: detachable ET_WHEN_COMPOUND_LIST;
 		an_else_compound: detachable ET_COMPOUND; an_end: detachable ET_KEYWORD): detachable ET_INSPECT_INSTRUCTION
 			-- New inspect instruction
 		do

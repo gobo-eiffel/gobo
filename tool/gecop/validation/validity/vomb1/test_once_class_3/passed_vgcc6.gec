@@ -1,0 +1,2 @@
+[VGCC-6] class AA (15,14): procedure `g' of class BB is not exported for creation to class AA.
+----

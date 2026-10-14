@@ -5,7 +5,7 @@
 		"Eiffel AST iterators. AST nodes not containing a given position will be skipped."
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2024, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2026, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_AST_ITERATOR_BY_POSITION
@@ -218,8 +218,8 @@ inherit
 			process_verbatim_string,
 			process_when_expression,
 			process_when_expression_list,
-			process_when_part,
-			process_when_part_list
+			process_when_compound,
+			process_when_compound_list
 		end
 
 	ET_SHARED_TOKEN_CONSTANTS
@@ -1864,7 +1864,7 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_when_part (a_when_part: ET_WHEN_PART)
+	process_when_compound (a_when_part: ET_WHEN_COMPOUND)
 			-- Process `a_when_part'.
 		do
 			if a_when_part.contains_position (current_position) then
@@ -1872,7 +1872,7 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_when_part_list (a_list: ET_WHEN_PART_LIST)
+	process_when_compound_list (a_list: ET_WHEN_COMPOUND_LIST)
 			-- Process `a_list'.
 		do
 			if a_list.contains_position (current_position) then

@@ -268,6 +268,15 @@ feature -- Class names
 			ise_runtime_class_name_not_void: Result /= Void
 		end
 
+	ise_scoop_runtime_class_name: ET_CLASS_NAME
+			-- "ISE_SCOOP_RUNTIME" class name
+		once
+			create {ET_IDENTIFIER} Result.make (capitalized_ise_scoop_runtime_name)
+		ensure
+			instance_free: class
+			ise_scoop_runtime_class_name_not_void: Result /= Void
+		end
+
 	iterable_class_name: ET_CLASS_NAME
 			-- "ITERABLE" class name
 		once
@@ -981,6 +990,15 @@ feature -- Feature names
 		ensure
 			instance_free: class
 			c_independent_store_feature_name_not_void: Result /= Void
+		end
+
+	c_region_id_feature_name: ET_FEATURE_NAME
+			-- 'c_region_id' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (c_region_id_name)
+		ensure
+			instance_free: class
+			c_region_id_feature_name_not_void: Result /= Void
 		end
 
 	c_retrieved_feature_name: ET_FEATURE_NAME
@@ -1809,6 +1827,15 @@ feature -- Feature names
 		ensure
 			instance_free: class
 			in_assertion_feature_name_not_void: Result /= Void
+		end
+
+	index_pseudo_feature_name: ET_FEATURE_NAME
+			-- '_index' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (index_pseudo_name)
+		ensure
+			instance_free: class
+			index_pseudo_feature_name_not_void: Result /= Void
 		end
 
 	init_exception_manager_feature_name: ET_FEATURE_NAME
@@ -4774,6 +4801,15 @@ feature -- Keywords
 			keyword_not_void: Result /= Void
 		end
 
+	interface_keyword: ET_KEYWORD
+			-- 'interface' keyword
+		once
+			create Result.make_interface
+		ensure
+			instance_free: class
+			keyword_not_void: Result /= Void
+		end
+
 	invariant_keyword: ET_INVARIANT_KEYWORD
 			-- 'invariant' keyword
 		once
@@ -5101,6 +5137,7 @@ feature -- Keyword and symbol names
 	capitalized_internal_name: STRING = "INTERNAL"
 	capitalized_ise_exception_manager_name: STRING = "ISE_EXCEPTION_MANAGER"
 	capitalized_ise_runtime_name: STRING = "ISE_RUNTIME"
+	capitalized_ise_scoop_runtime_name: STRING = "ISE_SCOOP_RUNTIME"
 	capitalized_iterable_name: STRING = "ITERABLE"
 	capitalized_iteration_cursor_name: STRING = "ITERATION_CURSOR"
 	capitalized_memory_name: STRING = "MEMORY"
@@ -5219,6 +5256,9 @@ feature -- Keyword and symbol names
 
 	c_independent_store_name: STRING = "c_independent_store"
 			-- Name of Eiffel feature 'c_independent_store'
+
+	c_region_id_name: STRING = "c_region_id"
+			-- Name of Eiffel feature 'c_region_id'
 
 	c_retrieved_name: STRING = "c_retrieved"
 			-- Name of Eiffel feature 'c_retrieved'
@@ -5495,6 +5535,9 @@ feature -- Keyword and symbol names
 
 	in_assertion_name: STRING = "in_assertion"
 			-- Name of Eiffel feature 'in_assertion'
+
+	index_pseudo_name: STRING = "_index"
+			-- Name of Eiffel pseudo feature '_index'
 
 	init_exception_manager_name: STRING = "init_exception_manager"
 			-- Name of Eiffel feature 'init_exception_manager'
@@ -6150,6 +6193,7 @@ feature -- Keyword and symbol names
 	indexing_keyword_name: STRING = "indexing"
 	inherit_keyword_name: STRING = "inherit"
 	inspect_keyword_name: STRING = "inspect"
+	interface_keyword_name: STRING = "interface"
 	invariant_keyword_name: STRING = "invariant"
 	is_keyword_name: STRING = "is"
 	like_keyword_name: STRING = "like"

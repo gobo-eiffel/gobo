@@ -65,7 +65,7 @@ and thirteen utilities:
 * [Gobo Eiffel C Compilation](./tool/gecc/doc/index.html) (gecc)
 * [Gobo Eiffel Cop](./tool/gecop/doc/index.html) (gecop)
 * [Gobo Eiffel Doc](./tool/gedoc/doc/index.html) (gedoc)
-* [Gobo Eiffel Image](./tool/image/doc/index.html) (geimage)
+* [Gobo Eiffel Image](./tool/geimage/doc/index.html) (geimage)
 * Gobo Eiffel Language Server (gelsp)
 * [Gobo Eiffel Lex](./tool/gelex/doc/index.html) (gelex)
 * [Gobo Eiffel Lint](./tool/gelint/doc/index.html) (gelint)
@@ -81,7 +81,7 @@ library classes provided in this package.
 
 The supported Eiffel compilers, in alphabetical order, are:
 
-* Gobo Eiffel Compiler (gec) 26.05.14
+* Gobo Eiffel Compiler (gec) 26.09.03
 * ISE Eiffel 25.12.9.8922 (Classic and .NET)
 
 For more details about the supported Eiffel compilers, please see the file

@@ -21,7 +21,11 @@
 #include "eif_config.h"
 #endif
 
+#include <time.h>
 #include <stdlib.h>
+#ifndef EIF_WINDOWS
+#include <unistd.h>
+#endif
 #ifdef WIN32
 #include <windows.h>
 #include <string.h>

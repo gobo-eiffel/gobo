@@ -5,7 +5,7 @@
 		"Eiffel features equipped with dynamic type sets"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2025, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2026, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_DYNAMIC_FEATURE
@@ -175,6 +175,8 @@ feature {NONE} -- Initialization
 				is_copy_routine := True
 			elseif a_feature.has_seed (a_system.current_system.is_equal_seed) then
 				is_is_equal_routine := True
+			elseif a_feature.has_seed (a_system.current_system.default_create_seed) then
+				is_default_create_routine := True
 			end
 			if
 				a_feature.implementation_class.name.same_class_name (tokens.file_class_name) and then
@@ -305,6 +307,9 @@ feature -- Access
 						l_other_precursors.force_last (Result)
 					end
 				end
+			end
+			if a_feature.is_once_per_object then
+				target_type.set_has_once_per_object_routines (True)
 			end
 		ensure
 			dynamic_precursor_not_void: Result /= Void
@@ -542,6 +547,9 @@ feature -- Status report
 
 	is_is_equal_routine: BOOLEAN
 			-- Is current feature the version of 'ANY.is_equal' in `target_type'?
+
+	is_default_create_routine: BOOLEAN
+			-- Is current feature the version of 'ANY.default_create' in `target_type'?
 
 	is_semistrict (a_system: ET_DYNAMIC_SYSTEM): BOOLEAN
 			-- Is current feature semistrict?

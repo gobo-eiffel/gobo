@@ -1,0 +1,20 @@
+b 1
+
+aa: system execution failed.
+Following is the set of recorded exceptions:
+
+-------------------------------------------------------------------------------
+Class / Object      Routine                Nature of exception           Effect
+-------------------------------------------------------------------------------
+ANY                 g @N                   Segmentation violation:
+<XXXXXXXXXXXXXXXX>  (From BB)              Operating system signal.      Fail
+-------------------------------------------------------------------------------
+ANY                 g @N
+<XXXXXXXXXXXXXXXX>  (From BB)              Routine failure.              Fail
+-------------------------------------------------------------------------------
+AA                  make @N
+<XXXXXXXXXXXXXXXX>                         Routine failure.              Fail
+-------------------------------------------------------------------------------
+AA                  root's creation                                     
+<XXXXXXXXXXXXXXXX>                         Routine failure.              Exit
+-------------------------------------------------------------------------------

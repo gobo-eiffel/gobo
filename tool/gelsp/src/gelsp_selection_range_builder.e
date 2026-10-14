@@ -176,7 +176,7 @@ inherit
 			process_variant,
 			process_verbatim_string,
 			process_when_expression,
-			process_when_part
+			process_when_compound
 		end
 
 	ET_SHARED_TOKEN_CONSTANTS
@@ -2165,7 +2165,7 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_when_part (a_when_part: ET_WHEN_PART)
+	process_when_compound (a_when_part: ET_WHEN_COMPOUND)
 			-- Process `a_when_part'.
 		local
 			l_range: LS_RANGE

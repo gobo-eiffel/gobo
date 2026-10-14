@@ -5,7 +5,7 @@
 		"Eiffel closures, e.g. features, invariants, inline agents"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2006-2024, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2025, Eric Bezault and others"
 	license: "MIT License"
 
 deferred class ET_CLOSURE
@@ -13,6 +13,8 @@ deferred class ET_CLOSURE
 inherit
 
 	ET_AST_NODE
+
+	HASHABLE
 
 feature -- Status report
 
@@ -110,6 +112,12 @@ feature -- Access
 			Result := Current
 		ensure
 			implementation_closure_not_void: Result /= Void
+		end
+
+	hash_code: INTEGER
+			-- Hash code value
+		do
+			Result := position.line
 		end
 
 feature -- Measurement

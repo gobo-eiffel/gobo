@@ -5,7 +5,7 @@
 		"Eiffel AST processors"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2024, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2026, Eric Bezault and others"
 	license: "MIT License"
 
 deferred class ET_AST_PROCESSOR
@@ -1660,14 +1660,14 @@ feature {ET_AST_NODE} -- Processing
 		deferred
 		end
 
-	process_when_part (a_when_part: ET_WHEN_PART)
+	process_when_compound (a_when_part: ET_WHEN_COMPOUND)
 			-- Process `a_when_part'.
 		require
 			a_when_part_not_void: a_when_part /= Void
 		deferred
 		end
 
-	process_when_part_list (a_list: ET_WHEN_PART_LIST)
+	process_when_compound_list (a_list: ET_WHEN_COMPOUND_LIST)
 			-- Process `a_list'.
 		require
 			a_list_not_void: a_list /= Void

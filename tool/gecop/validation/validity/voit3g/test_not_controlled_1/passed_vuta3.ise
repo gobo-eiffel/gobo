@@ -1,0 +1,49 @@
+-------------------------------------------------------------------------------
+
+Error code: VUTA(3)
+
+Error: separate target of the Object_call is not controlled.
+What to do: ensure the target of the call is controlled or is not separate.
+
+Class: AA
+Feature: make
+Type: separate STRING_8
+Called feature: new_cursor
+Line: 14
+        create s.make_from_separate ("eiffel")
+->      across s as c loop end
+        print ("Failed")
+
+-------------------------------------------------------------------------------
+
+Error code: VUTA(3)
+
+Error: separate target of the Object_call is not controlled.
+What to do: ensure the target of the call is controlled or is not separate.
+
+Class: AA
+Feature: make
+Type: separate ITERATION_CURSOR [CHARACTER_8]
+Called feature: after
+Line: 14
+        create s.make_from_separate ("eiffel")
+->      across s as c loop end
+        print ("Failed")
+
+-------------------------------------------------------------------------------
+
+Error code: VUTA(3)
+
+Error: separate target of the Object_call is not controlled.
+What to do: ensure the target of the call is controlled or is not separate.
+
+Class: AA
+Feature: make
+Type: separate ITERATION_CURSOR [CHARACTER_8]
+Called feature: forth
+Line: 14
+        create s.make_from_separate ("eiffel")
+->      across s as c loop end
+        print ("Failed")
+
+-------------------------------------------------------------------------------

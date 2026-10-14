@@ -1,0 +1,17 @@
+-------------------------------------------------------------------------------
+
+Error code: VOMB(5)
+
+Error: conflict between Unique and non-Unique inspect constants.
+What to do: if Unique values are required, make sure that any other
+  inspect constant is an integer with negative or zero value. 
+
+Class: AA
+Feature: make
+Non-Unique value: 10
+Line: 16
+        when f then
+->      when 10 then
+        else
+
+-------------------------------------------------------------------------------

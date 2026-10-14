@@ -5,14 +5,14 @@
 		"Eiffel lists of 'when' parts in inspect expressions"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2020-2024, Eric Bezault and others"
+	copyright: "Copyright (c) 2020-2026, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_WHEN_EXPRESSION_LIST
 
 inherit
 
-	ET_AST_NODE
+	ET_WHEN_COMPONENT_LIST
 
 	ET_HEAD_LIST [ET_WHEN_EXPRESSION]
 
@@ -155,6 +155,25 @@ feature -- Status report
 						-- Jump out of the loop.
 					i := nb
 				end
+				i := i + 1
+			end
+		end
+
+feature -- Formal arguments
+
+	add_formal_arguments (a_list: DS_ARRAYED_LIST_2 [detachable ET_IDENTIFIER, BOOLEAN])
+			-- Add to `a_list' all formal arguments appearing in current when parts
+			-- and (recursively) in their subexpressions: set the boolean to true
+			-- if the formal argument name at the index corresponding to its seed
+			-- is not Void.
+		require
+			a_list_not_void: a_list /= Void
+		local
+			i, nb: INTEGER
+		do
+			nb := count
+			from i := 1 until i > nb loop
+				item (i).add_formal_arguments (a_list)
 				i := i + 1
 			end
 		end

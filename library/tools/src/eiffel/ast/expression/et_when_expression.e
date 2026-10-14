@@ -5,14 +5,19 @@
 		"Eiffel 'when' parts in inspect expressions"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2020-2024, Eric Bezault and others"
+	copyright: "Copyright (c) 2020-2026, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_WHEN_EXPRESSION
 
 inherit
 
-	ET_AST_NODE
+	ET_WHEN_COMPONENT
+		rename
+			then_part as then_expression
+		redefine
+			reset
+		end
 
 create
 
@@ -39,33 +44,17 @@ feature -- Initialization
 	reset
 			-- Reset when part as it was when it was last parsed.
 		do
-			choices.reset
+			precursor
 			then_expression.reset
 		end
 
 feature -- Access
-
-	choices: ET_CHOICE_LIST
-			-- Choices
 
 	then_keyword: ET_KEYWORD
 			-- Then keyword
 
 	then_expression: ET_EXPRESSION
 			-- Then expression
-
-	position: ET_POSITION
-			-- Position of first character of
-			-- current node in source code
-		do
-			Result := choices.position
-		end
-
-	first_leaf: ET_AST_LEAF
-			-- First leaf node in current node
-		do
-			Result := choices.first_leaf
-		end
 
 	last_leaf: ET_AST_LEAF
 			-- Last leaf node in current node
@@ -123,6 +112,19 @@ feature -- Setting
 			then_keyword_set: then_keyword = a_then
 		end
 
+feature -- Formal arguments
+
+	add_formal_arguments (a_list: DS_ARRAYED_LIST_2 [detachable ET_IDENTIFIER, BOOLEAN])
+			-- Add to `a_list' all formal arguments appearing in current when part
+			-- and (recursively) in its subexpressions: set the boolean to true
+			-- if the formal argument name at the index corresponding to its seed
+			-- is not Void.
+		require
+			a_list_not_void: a_list /= Void
+		do
+			then_expression.add_formal_arguments (a_list)
+		end
+
 feature -- Assertions
 
 	add_old_expressions (a_list: DS_ARRAYED_LIST [ET_OLD_EXPRESSION])
@@ -147,7 +149,6 @@ feature -- Processing
 
 invariant
 
-	choices_not_void: choices /= Void
 	then_keyword_not_void: then_keyword /= Void
 	then_expression_not_void: then_expression /= Void
 

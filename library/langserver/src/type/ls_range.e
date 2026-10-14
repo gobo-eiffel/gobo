@@ -17,7 +17,7 @@
 			}
 	]"
 	library: "Gobo Eiffel Language Server Protocol Library"
-	copyright: "Copyright (c) 2025, Eric Bezault and others"
+	copyright: "Copyright (c) 2025-2026, Eric Bezault and others"
 	license: "MIT License"
 
 class LS_RANGE
@@ -25,6 +25,14 @@ class LS_RANGE
 inherit
 
 	LS_EDIT_RANGE
+		redefine
+			is_equal
+		end
+
+	HASHABLE
+		redefine
+			is_equal
+		end
 
 create
 
@@ -45,6 +53,18 @@ feature {NONE} -- Initialization
 			end_set: end_ = a_end
 		end
 
+feature -- Status report
+
+	contains (a_position: LS_POSITION): BOOLEAN
+			-- Does current range contain `a_position`?
+		require
+			a_position_not_void: a_position /= Void
+		do
+			Result := start <= a_position and a_position < end_
+		ensure
+			definition: Result = (start <= a_position and a_position < end_)
+		end
+
 feature -- Access
 
 	start: LS_POSITION
@@ -52,6 +72,12 @@ feature -- Access
 
 	end_: LS_POSITION
 			-- The range's end position.
+
+	hash_code: INTEGER
+			-- Hash code value
+		do
+			Result := start.hash_code
+		end
 
 feature -- Setting
 
@@ -73,6 +99,14 @@ feature -- Setting
 			end_ := a_end
 		ensure
 			end_set: end_ = a_end
+		end
+
+feature -- Comparison
+
+	is_equal (other: like Current): BOOLEAN
+			-- Is `other` equal to `Current`?
+		do
+			Result := other.start.is_equal (start) and other.end_.is_equal (end_)
 		end
 
 feature -- Field names

@@ -1,0 +1,21 @@
+
+aa: PANIC: main entry point vanished ...
+
+aa: system execution failed.
+Following is the set of recorded exceptions.
+NB: The raised panic may have induced completely inconsistent information:
+
+******************************** Thread exception *****************************
+In thread           Root thread            0x0 (thread id)
+*******************************************************************************
+-------------------------------------------------------------------------------
+Class / Object      Routine                Nature of exception           Effect
+-------------------------------------------------------------------------------
+AA                  root's creation        attr_positive:               
+<XXXXXXXXXXXXXXXX>                         Precondition violated.        Exit
+-------------------------------------------------------------------------------
+AA                  root's creation        main entry point vanished:   
+<XXXXXXXXXXXXXXXX>                         Eiffel run-time panic.        Bye
+-------------------------------------------------------------------------------
+
+aa: dumping core to generate debugging information...

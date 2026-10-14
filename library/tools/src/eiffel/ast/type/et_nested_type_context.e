@@ -5,7 +5,7 @@
 		"Nested contexts to evaluate Eiffel types"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2025, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2026, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_NESTED_TYPE_CONTEXT
@@ -168,6 +168,35 @@ feature -- Access
 				l_type := last
 				remove_last
 				Result := l_type.adapted_base_class_with_seeded_feature (a_seed, Current)
+				put_last (l_type)
+			end
+		end
+
+	adapted_base_type_with_seeded_feature (a_seed: INTEGER): ET_ADAPTED_CLASS
+			-- Base type of current context, or in case of a formal parameter
+			-- one of its constraint adapted base types containing a feature
+			-- with seed `a_seed' (or any of the constraints if none contains
+			-- such feature)
+		local
+			l_type: ET_TYPE
+			l_index: INTEGER
+		do
+			if count = 0 then
+				Result := root_context.context_adapted_base_type_with_seeded_feature (a_seed)
+			elseif attached {ET_LIKE_N} last as l_like_n then
+				l_index := l_like_n.index
+				if l_index = 0 or l_index >= count then
+					Result := root_context.context_adapted_base_type_with_seeded_feature (a_seed)
+				else
+					l_type := item (l_index)
+					put (l_like_n.previous, count)
+					Result := l_type.adapted_base_type_with_seeded_feature (a_seed, Current)
+					put (l_like_n, count)
+				end
+			else
+				l_type := last
+				remove_last
+				Result := l_type.adapted_base_type_with_seeded_feature (a_seed, Current)
 				put_last (l_type)
 			end
 		end

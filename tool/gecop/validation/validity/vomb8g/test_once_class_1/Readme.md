@@ -1,0 +1,13 @@
+# Validity VOMB-8G
+
+This [test](.) is exercising the condition [8G](../Readme.md) of the validity rule [VOMB](../../vomb/Readme.md).
+
+### Description
+
+In this test, the type of inspect expression is separate but not controlled.
+This violates `VOMB-8G`.
+
+### Notes
+
+* ISE Eiffel (as of 25.12.9.8922 and after) fails to report this validity rule
+  violation and the execution hangs forever.

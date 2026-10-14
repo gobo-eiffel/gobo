@@ -6,21 +6,21 @@
 		"Future Work"
 
 	tool: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2006-2025, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2026, Eric Bezault and others"
 	license: "MIT License"
 -->
 
 <chapter xmlns="http://gobo-eiffel.gobosoft.com/documentation" id="gec/future">
 <chapterinfo>
 	<copyright>
-		<year>2006-2025</year>
+		<year>2006-2026</year>
 		<holder>Eric Bezault</holder>
 	</copyright>
 	<author>
 		<firstname>Eric</firstname><surname>Bezault</surname>
 	</author>
 	<email>ericb@gobosoft.com</email>
-	<date>31 August 2025</date>
+	<date>5 July 2026</date>
 </chapterinfo>
 
 <title>Future Work</title>
@@ -103,8 +103,8 @@ or even native code.
 
 <section><title>IDE</title>
 <para>
-A graphical development environment for <projectname>gec</projectname> should
-be provided. One solution could be to implement a plugin for VSCode.
+A <ulink url="https://marketplace.visualstudio.com/items?itemName=gobosoft.gobo-eiffel">VS Code</ulink>
+extension is already available, using a LSP server. Extensions for other IDEs could be provided.
 </para>
 </section>
 

@@ -1,0 +1,4 @@
+[VKEX-5G] class AA (15,17): the creation type '[attached] BB' of the creation expression with the once-per-process creation procedure `make' is a reference type, but it is not separate.
+----
+[VKEX-5G] class AA (23,17): the creation type '[attached] BB' of the creation expression with the once-per-process creation procedure `make' is a reference type, but it is not separate.
+----

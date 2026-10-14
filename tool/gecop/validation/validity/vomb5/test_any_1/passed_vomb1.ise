@@ -1,0 +1,17 @@
+-------------------------------------------------------------------------------
+
+Error code: VOMB(1)
+
+Error: incorrect type for inspect expression.
+What to do: make sure that type is INTEGER, CHARACTER, NATURAL, a .NET enum, or
+  an attached type based on a once class.
+
+Class: AA
+Feature: make
+Type: ANY
+Line: 14
+        b := 1
+->      inspect b
+        else
+
+-------------------------------------------------------------------------------

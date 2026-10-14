@@ -5,7 +5,7 @@
 		"Eiffel 'free-operator' feature names"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2005-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2005-2026, Eric Bezault and others"
 	license: "MIT License"
 
 deferred class ET_FREE_NAME
@@ -26,17 +26,20 @@ feature -- Access
 		local
 			i, nb: INTEGER
 			c: CHARACTER
+			l_cloned: BOOLEAN
 		do
 			Result := name
 			nb := Result.count
 			from i := 1 until i > nb loop
 				c := Result.item (i)
 				if c >= 'A' and c <= 'Z' then
-					Result := Result.as_lower
-					i := nb + 1 -- Jump out of the loop.
-				else
-					i := i + 1
+					if not l_cloned then
+						Result := Result.twin
+						l_cloned := True
+					end
+					Result.put (c.as_lower, i)
 				end
+				i := i + 1
 			end
 		end
 
@@ -55,8 +58,24 @@ feature -- Access
 			-- Lower-name of operator
 			-- (using UTF-8 encoding)
 			-- (May return the same object as `operator_name' if already in lower case.)
+		local
+			i, nb: INTEGER
+			c: CHARACTER
+			l_cloned: BOOLEAN
 		do
 			Result := operator_name
+			nb := Result.count
+			from i := 1 until i > nb loop
+				c := Result.item (i)
+				if c >= 'A' and c <= 'Z' then
+					if not l_cloned then
+						Result := Result.twin
+						l_cloned := True
+					end
+					Result.put (c.as_lower, i)
+				end
+				i := i + 1
+			end
 		ensure
 			operator_lower_name_not_void: Result /= Void
 			operator_lower_name_not_empty: Result.count > 0

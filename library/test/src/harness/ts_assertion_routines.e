@@ -5,7 +5,7 @@
 		"Assertion routines"
 
 	library: "Gobo Eiffel Test Library"
-	copyright: "Copyright (c) 2000-2024, Eric Bezault and others"
+	copyright: "Copyright (c) 2000-2026, Eric Bezault and others"
 	license: "MIT License"
 
 deferred class TS_ASSERTION_ROUTINES
@@ -295,6 +295,68 @@ feature {TS_TEST_HANDLER} -- Equality
 			l_fatal := assertions.exception_on_error
 			assertions.set_exception_on_error (False)
 			assert_integers_not_equal (a_tag, expected, actual)
+			assertions.set_exception_on_error (l_fatal)
+		end
+
+	assert_naturals_16_equal (a_tag: STRING; expected, actual: NATURAL_16)
+			-- Assert that `expected = actual'.
+		require
+			a_tag_not_void: a_tag /= Void
+		local
+			l_message: STRING
+		do
+			assertions.add_assertion
+			if expected /= actual then
+				l_message := assert_strings_equal_message (a_tag, expected.out, actual.out)
+				logger.report_failure (a_tag, l_message)
+				assertions.report_error (l_message)
+			else
+				logger.report_success (a_tag)
+			end
+		end
+
+	check_naturals_16_equal (a_tag: STRING; expected, actual: NATURAL_16)
+			-- Check that `expected = actual'.
+			-- Violation of this assertion is not fatal.
+		require
+			a_tag_not_void: a_tag /= Void
+		local
+			l_fatal: BOOLEAN
+		do
+			l_fatal := assertions.exception_on_error
+			assertions.set_exception_on_error (False)
+			assert_naturals_16_equal (a_tag, expected, actual)
+			assertions.set_exception_on_error (l_fatal)
+		end
+
+	assert_naturals_16_not_equal (a_tag: STRING; expected, actual: NATURAL_16)
+			-- Assert that `expected /= actual'.
+		require
+			a_tag_not_void: a_tag /= Void
+		local
+			l_message: STRING
+		do
+			assertions.add_assertion
+			if expected = actual then
+				l_message := assert_strings_not_equal_message (a_tag, expected.out, actual.out)
+				logger.report_failure (a_tag, l_message)
+				assertions.report_error (l_message)
+			else
+				logger.report_success (a_tag)
+			end
+		end
+
+	check_naturals_16_not_equal (a_tag: STRING; expected, actual: NATURAL_16)
+			-- Check that `expected /= actual'.
+			-- Violation of this assertion is not fatal.
+		require
+			a_tag_not_void: a_tag /= Void
+		local
+			l_fatal: BOOLEAN
+		do
+			l_fatal := assertions.exception_on_error
+			assertions.set_exception_on_error (False)
+			assert_naturals_16_not_equal (a_tag, expected, actual)
 			assertions.set_exception_on_error (l_fatal)
 		end
 

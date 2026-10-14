@@ -4,7 +4,7 @@
 
 		"Eiffel standard test cases"
 
-	copyright: "Copyright (c) 2002-2025, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2026, Eric Bezault and others"
 	license: "MIT License"
 
 class EIFFEL_TEST_CASE
@@ -475,10 +475,10 @@ feature {NONE} -- Test ISE Eiffel
 			a_line: STRING
 			a_pattern1, a_pattern2, a_pattern3, a_pattern4, a_pattern5, a_pattern6: STRING
 			a_pattern7, a_pattern8, a_pattern9, a_pattern10, a_pattern11, a_pattern12: STRING
-			a_pattern13: STRING
+			a_pattern13, a_pattern14: STRING
 			a_regexp1, a_regexp2, a_regexp3, a_regexp4, a_regexp5, a_regexp6: RX_PCRE_REGULAR_EXPRESSION
 			a_regexp7, a_regexp8, a_regexp9, a_regexp10, a_regexp11, a_regexp12: RX_PCRE_REGULAR_EXPRESSION
-			a_regexp13: RX_PCRE_REGULAR_EXPRESSION
+			a_regexp13, a_regexp14: RX_PCRE_REGULAR_EXPRESSION
 			l_empty_line: BOOLEAN
 			l_first_line: BOOLEAN
 		do
@@ -548,6 +548,11 @@ feature {NONE} -- Test ISE Eiffel
 			a_regexp13.compile (a_pattern13)
 			assert ("cannot compile regexp '" + a_pattern13 + "'", a_regexp13.is_compiled)
 			a_regexp13.optimize
+			a_pattern14 := "NMAKE : fatal error U1077:(.*)"
+			create a_regexp14.make
+			a_regexp14.compile (a_pattern14)
+			assert ("cannot compile regexp '" + a_pattern14 + "'", a_regexp14.is_compiled)
+			a_regexp14.optimize
 				-- Copy files.
 			create out_file.make (an_output_filename)
 			out_file.open_append
@@ -614,6 +619,8 @@ feature {NONE} -- Test ISE Eiffel
 							elseif a_regexp13.recognizes (a_line) then
 								out_file.put_string ("Parse error (XML syntax)  in compile_ise.ecf ")
 								out_file.put_line (a_regexp13.captured_substring (2))
+							elseif a_regexp14.recognizes (a_line) then
+								out_file.put_line ("NMAKE : fatal error U1077")
 							else
 								out_file.put_line (a_line)
 							end
@@ -645,103 +652,6 @@ feature {NONE} -- Test ISE Eiffel
 				out_file.close
 			else
 				assert ("cannot open file '" + an_output_filename + "'", False)
-			end
-		end
-
-	concat_output1_ise
-			-- Concat the logs of the compilation to 'output.log'.
-		local
-			out_file: KL_TEXT_OUTPUT_FILE
-			in_file: KL_TEXT_INPUT_FILE
-			in_filename: STRING
-			a_line: STRING
-			a_pattern1, a_pattern2, a_pattern3: STRING
-			a_regexp1, a_regexp2, a_regexp3: RX_PCRE_REGULAR_EXPRESSION
-			done: BOOLEAN
-			has_empty_line: BOOLEAN
-			l_first_line: BOOLEAN
-		do
-				-- Compile regexps.
-			a_pattern1 := "BUILD FAILED!"
-			create a_regexp1.make
-			a_regexp1.compile (a_pattern1)
-			assert ("cannot compile regexp '" + a_pattern1 + "'", a_regexp1.is_compiled)
-			a_regexp1.optimize
-			a_pattern2 := "\(version .*\)"
-			create a_regexp2.make
-			a_regexp2.compile (a_pattern2)
-			assert ("cannot compile regexp '" + a_pattern2 + "'", a_regexp2.is_compiled)
-			a_regexp2.optimize
-			a_pattern3 := "\[ *[0-9]+%% - *[0-9]+\] Degree [0-9]+"
-			create a_regexp3.make
-			a_regexp3.compile (a_pattern3)
-			assert ("cannot compile regexp '" + a_pattern3 + "'", a_regexp3.is_compiled)
-			a_regexp3.optimize
-				-- Copy files.
-			create out_file.make (output_log_filename)
-			out_file.open_write
-			if out_file.is_open_write then
-				from
-					in_filename := output1_log_filename
-				until
-					in_filename = Void
-				loop
-					create in_file.make (in_filename)
-					in_file.open_read
-					if in_file.is_open_read then
-						from
-							done := False
-							in_file.read_line
-							l_first_line := True
-						until
-							done or
-							in_file.end_of_file
-						loop
-							a_line := in_file.last_string
-							if l_first_line and then a_line.starts_with ({UC_UTF8_ROUTINES}.utf8_bom) then
-								a_line := a_line.tail (a_line.count - {UC_UTF8_ROUTINES}.utf8_bom.count)
-							end
-							if a_regexp1.recognizes (a_line) then
-								done := True
-							elseif a_regexp2.matches (a_line) then
-									-- Skip it.
-								in_file.read_line
-							elseif a_regexp3.matches (a_line) then
-									-- Skip it.
-								in_file.read_line
-							elseif a_line.count = 0 then
-								has_empty_line := True
-								in_file.read_line
-							else
-								if has_empty_line then
-									out_file.put_new_line
-									has_empty_line := False
-								end
-								out_file.put_line (a_line)
-								in_file.read_line
-							end
-							l_first_line := False
-						end
-						if has_empty_line then
-							if not done then
-								out_file.put_new_line
-							end
-							has_empty_line := False
-						end
-						in_file.close
-					else
-						out_file.close
-						assert ("cannot open file '" + in_filename + "'", False)
-					end
-					if in_filename = output1_log_filename then
-						in_filename := error1_log_filename
-					else
-						in_filename := Void
-					end
-				end
-				out_file.close
-			else
-				assert ("cannot open file '" + output_log_filename + "'", False)
 			end
 		end
 

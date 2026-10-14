@@ -1,0 +1,48 @@
+-------------------------------------------------------------------------------
+
+Error code: VOMB(5)
+
+Error: conflict between Unique and non-Unique inspect constants.
+What to do: if Unique values are required, make sure that any other
+  inspect constant is an integer with negative or zero value. 
+
+Class: AA
+Feature: make
+Non-Unique value: 10
+Line: 16
+        when -1 .. 10 then
+->      when {AA}.f .. {AA}.g then
+        else
+
+-------------------------------------------------------------------------------
+
+Error code: VOMB(5)
+
+Error: conflict between Unique and non-Unique inspect constants.
+What to do: if Unique values are required, make sure that any other
+  inspect constant is an integer with negative or zero value. 
+
+Class: AA
+Feature: make
+Non-Unique value: 10
+Line: 16
+        when -1 .. 10 then
+->      when {AA}.f .. {AA}.g then
+        else
+
+-------------------------------------------------------------------------------
+
+Error code: VOMB(3)
+
+Error: inspect value appears twice.
+What to do: make sure that all inspect constants have different values. 
+
+Class: AA
+Feature: make
+Duplicate values: 1..2
+Line: 16
+        when -1 .. 10 then
+->      when {AA}.f .. {AA}.g then
+        else
+
+-------------------------------------------------------------------------------

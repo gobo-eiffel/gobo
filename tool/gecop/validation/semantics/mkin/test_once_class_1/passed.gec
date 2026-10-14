@@ -1,0 +1,3 @@
+b1 = {BB}.f: True
+b2 = {BB}.f: True
+b1 = b2: True

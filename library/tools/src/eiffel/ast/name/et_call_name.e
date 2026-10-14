@@ -5,7 +5,7 @@
 		"Eiffel feature call names"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2005-2023, Eric Bezault and others"
+	copyright: "Copyright (c) 2005-2026, Eric Bezault and others"
 	license: "MIT License"
 
 deferred class ET_CALL_NAME
@@ -51,7 +51,6 @@ feature -- Access
 			lower_name_not_empty: Result.count > 0
 			lower_name_is_string: {KL_ANY_ROUTINES}.same_types (Result, "")
 			valid_utf8_lower_name: {UC_UTF8_ROUTINES}.valid_utf8 (Result)
-			definition: Result.same_string (name.as_lower)
 		end
 
 	seed: INTEGER
