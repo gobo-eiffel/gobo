@@ -263,6 +263,53 @@ feature -- Test
 			assert_strings_equal ("captured_substring4", "44004", l_regexp.captured_substring (4))
 		end
 
+feature -- Test match limit
+
+	test_match_limit1
+			-- Test feature `set_match_limit' with a pattern which
+			-- backtracks quadratically (see issue #88).
+		local
+			l_regexp: RX_PCRE_REGULAR_EXPRESSION
+			l_subject: STRING
+		do
+			create l_regexp.make
+			l_regexp.compile ("[A-Za-z0-9._%%+-]+@[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)*\.[A-Za-z]{2,}")
+			assert ("compiled", l_regexp.is_compiled)
+			assert_integers_equal ("no_limit_by_default", 0, l_regexp.match_limit)
+			create l_subject.make_filled ('x', 20_000)
+			l_subject.append_string (" fin a@example.fr")
+			l_regexp.set_match_limit (100_000)
+			assert_integers_equal ("match_limit_set", 100_000, l_regexp.match_limit)
+			l_regexp.match (l_subject)
+			assert ("limit_exceeded", l_regexp.match_limit_exceeded)
+			assert ("not_matched", not l_regexp.has_matched)
+				-- A short subject stays under the limit and still matches.
+			l_regexp.match ("contact: a@example.fr")
+			assert ("limit_not_exceeded", not l_regexp.match_limit_exceeded)
+			assert ("matched", l_regexp.has_matched)
+			assert_strings_equal ("captured_substring0", "a@example.fr", l_regexp.captured_substring (0))
+		end
+
+	test_match_limit2
+			-- Test that no limit (the default) leaves matching unchanged,
+			-- and that `wipe_out' resets `match_limit_exceeded'.
+		local
+			l_regexp: RX_PCRE_REGULAR_EXPRESSION
+		do
+			create l_regexp.make
+			l_regexp.compile ("(a+)+b")
+			l_regexp.set_match_limit (10)
+			l_regexp.match ("aaaaaaaaaaaaaaaaaaaacb")
+			assert ("limit_exceeded", l_regexp.match_limit_exceeded)
+			assert ("not_matched1", not l_regexp.has_matched)
+			l_regexp.wipe_out
+			assert ("wiped_out", not l_regexp.match_limit_exceeded)
+			l_regexp.set_match_limit (0)
+			l_regexp.match ("aaaab")
+			assert ("no_limit", not l_regexp.match_limit_exceeded)
+			assert ("matched", l_regexp.has_matched)
+		end
+
 feature -- Test Input 1
 
 	test_input1_regexp1

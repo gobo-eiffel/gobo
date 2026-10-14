@@ -67,6 +67,35 @@ feature -- Resetting
 		do
 			precursor
 			subject_next_start := subject_start
+			match_limit_exceeded := False
+		end
+
+feature -- Status report
+
+	match_limit_exceeded: BOOLEAN
+			-- Did the last match attempt give up because it needed
+			-- more than `match_limit' matching steps?
+			-- In that case `has_matched' is False, but this does not
+			-- mean that the subject contains no match.
+
+feature -- Access
+
+	match_limit: INTEGER
+			-- Maximum number of internal matching steps allowed for one
+			-- call to a matching routine (`match', `match_substring',
+			-- `first_match', `next_match', ...); 0 means no limit.
+			-- Equivalent of PCRE's `match_limit'. It is not reset by `reset'.
+
+feature -- Element change
+
+	set_match_limit (a_limit: INTEGER)
+			-- Set `match_limit' to `a_limit' (0 means no limit).
+		require
+			a_limit_not_negative: a_limit >= 0
+		do
+			match_limit := a_limit
+		ensure
+			match_limit_set: match_limit = a_limit
 		end
 
 feature -- Compilation
@@ -226,6 +255,10 @@ feature {NONE} -- Access
 
 	eptr_capacity: INTEGER
 
+	match_step_count: INTEGER
+			-- Number of matching steps performed so far by the current
+			-- call to a matching routine
+
 feature {NONE} -- Setting
 
 	set_next_start (an_index: INTEGER)
@@ -264,6 +297,8 @@ feature {NONE} -- Matching
 			l_start_bits: like start_bits
 		do
 			set_subject (a_subject)
+			match_step_count := 0
+			match_limit_exceeded := False
 			subject_next_start := a_start
 			subject_end := a_end
 			match_count := 0
@@ -409,14 +444,16 @@ feature {NONE} -- Matching
 					end
 				end
 				if not stop then
-					if match_start (first_matched_index) then
+					if match_start (first_matched_index) and not match_limit_exceeded then
 						offset_vector.put (first_matched_index, 0)
 						offset_vector.put (subject_next_start, 1)
 						match_count := match_count // 2
 						stop := True
 					else
 						match_count := 0
-						stop := is_anchored or else first_matched_index > a_end
+							-- When the step limit has been exceeded, give up (fail closed):
+							-- no further start position is tried.
+						stop := is_anchored or else first_matched_index > a_end or else match_limit_exceeded
 							-- Yes, move at least one step behind the subject:
 						first_matched_index := first_matched_index + 1
 					end
@@ -495,11 +532,23 @@ feature {NONE} -- Matching
 			new_count: INTEGER
 		do
 			ec := a_ec
+				-- Count this call as one matching step (equivalent of PCRE's `match_limit').
+				-- Once the limit has been exceeded, every pending and subsequent call fails
+				-- immediately so that the whole backtracking tree unwinds quickly.
+			if match_limit > 0 then
+				match_step_count := match_step_count + 1
+				if match_step_count > match_limit then
+					match_limit_exceeded := True
+				end
+			end
+			if match_limit_exceeded then
+				Result := return_false
+			end
 				-- At the start of a bracketed group, add the current subject pointer to the
 				-- stack of such pointers, to be re-instated at the end of the group when we hit
 				-- the closing ket. When `match' is called in other circumstances, we don't add to
 				-- the stack.
-			if a_isgroup then
+			if a_isgroup and Result = return_none then
 				eptr_upper := eptr_upper + 1
 				if eptr_capacity <= eptr_upper then
 					new_capacity := 2 * (eptr_upper + 1)
