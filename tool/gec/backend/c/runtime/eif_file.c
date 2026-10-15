@@ -1201,7 +1201,7 @@ EIF_BOOLEAN eif_file_creatable(EIF_FILENAME path, EIF_INTEGER nbytes)
 	} else {
 			/* Search the directory separator. */
 #ifdef EIF_WINDOWS
-		memcpy(temp, path, nbytes);
+		GE_memcpy(temp, path, nbytes);
 		ptr = wcsrchr(temp, '\\');
 		if (!ptr) {
 				/* On Windows we can have a forward slash as separator. */

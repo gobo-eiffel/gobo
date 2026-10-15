@@ -4,7 +4,7 @@
 		"C functions used to implement Storable facilities"
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2025, Eric Bezault and others"
+	copyright: "Copyright (c) 2025-2026, Eric Bezault and others"
 	license: "MIT License"
 */
 
@@ -195,7 +195,7 @@ static void GE_storable_out_write_character_8(GE_storable_out_buffer* a_buffer, 
 	while (a_num > i++) {
 		GE_storable_out_check_buffer_capacity(a_buffer, sizeof(EIF_CHARACTER_8));
 		l_value = *a_object++;
-		memcpy(a_buffer->bytes + a_buffer->count, &l_value, sizeof(EIF_CHARACTER_8));
+		GE_memcpy(a_buffer->bytes + a_buffer->count, &l_value, sizeof(EIF_CHARACTER_8));
 		a_buffer->count += sizeof(EIF_CHARACTER_8);
 	}
 }
@@ -212,7 +212,7 @@ static void GE_storable_out_write_boolean(GE_storable_out_buffer* a_buffer, EIF_
 	while (a_num > i++) {
 		GE_storable_out_check_buffer_capacity(a_buffer, sizeof(char));
 		l_value = EIF_TEST(*a_object++);
-		memcpy(a_buffer->bytes + a_buffer->count, &l_value, sizeof(char));
+		GE_memcpy(a_buffer->bytes + a_buffer->count, &l_value, sizeof(char));
 		a_buffer->count += sizeof(char);
 	}
 }
@@ -228,7 +228,7 @@ static void GE_storable_out_write_integer_8(GE_storable_out_buffer* a_buffer, EI
 	while (a_num > i++) {
 		GE_storable_out_check_buffer_capacity(a_buffer, sizeof(EIF_INTEGER_8));
 		l_value = *a_object++;
-		memcpy(a_buffer->bytes + a_buffer->count, &l_value, sizeof(EIF_INTEGER_8));
+		GE_memcpy(a_buffer->bytes + a_buffer->count, &l_value, sizeof(EIF_INTEGER_8));
 		a_buffer->count += sizeof(EIF_INTEGER_8);
 	}
 }
@@ -252,7 +252,7 @@ static void GE_storable_out_write_integer_16(GE_storable_out_buffer* a_buffer, E
 	while (a_num > i++) {
 		GE_storable_out_check_buffer_capacity(a_buffer, sizeof(EIF_INTEGER_16));
 		l_value = (EIF_INTEGER_16)GE_integer_16_to_be(*a_object++);
-		memcpy(a_buffer->bytes + a_buffer->count, &l_value, sizeof(EIF_INTEGER_16));
+		GE_memcpy(a_buffer->bytes + a_buffer->count, &l_value, sizeof(EIF_INTEGER_16));
 		a_buffer->count += sizeof(EIF_INTEGER_16);
 	}
 }
@@ -276,7 +276,7 @@ static void GE_storable_out_write_integer_32(GE_storable_out_buffer* a_buffer, E
 	while (a_num > i++) {
 		GE_storable_out_check_buffer_capacity(a_buffer, sizeof(EIF_INTEGER_32));
 		l_value = (EIF_INTEGER_32)GE_integer_32_to_be(*a_object++);
-		memcpy(a_buffer->bytes + a_buffer->count, &l_value, sizeof(EIF_INTEGER_32));
+		GE_memcpy(a_buffer->bytes + a_buffer->count, &l_value, sizeof(EIF_INTEGER_32));
 		a_buffer->count += sizeof(EIF_INTEGER_32);
 	}
 }
@@ -304,11 +304,11 @@ static void GE_storable_out_write_integer_64(GE_storable_out_buffer* a_buffer, E
 		   first the lower part and then the upper part. */
 		l_lower = (*a_object & GE_nat64(0x00000000FFFFFFFF));
 		l_value = GE_integer_32_to_be((EIF_INTEGER_32)l_lower);
-		memcpy(a_buffer->bytes + a_buffer->count, &l_value, sizeof(EIF_INTEGER_32));
+		GE_memcpy(a_buffer->bytes + a_buffer->count, &l_value, sizeof(EIF_INTEGER_32));
 		a_buffer->count += sizeof(EIF_INTEGER_32);
 		l_upper = ((*a_object++ >> 32) & GE_nat64(0x00000000FFFFFFFF));
 		l_value = GE_integer_32_to_be((EIF_INTEGER_32)l_upper);
-		memcpy(a_buffer->bytes + a_buffer->count, &l_value, sizeof(EIF_INTEGER_32));
+		GE_memcpy(a_buffer->bytes + a_buffer->count, &l_value, sizeof(EIF_INTEGER_32));
 		a_buffer->count += sizeof(EIF_INTEGER_32);
 	}
 }
@@ -342,7 +342,7 @@ static void GE_storable_out_write_real_64(GE_storable_out_buffer* a_buffer, EIF_
 	while (a_num > i++) {
 		GE_storable_out_check_buffer_capacity(a_buffer, sizeof(EIF_REAL_64));
 		l_value = GE_real_64_to_le(*a_object++);
-		memcpy(a_buffer->bytes + a_buffer->count, &l_value, sizeof(EIF_REAL_64));
+		GE_memcpy(a_buffer->bytes + a_buffer->count, &l_value, sizeof(EIF_REAL_64));
 		a_buffer->count += sizeof(EIF_REAL_64);
 	}
 }

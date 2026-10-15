@@ -4,7 +4,7 @@
 		"C functions used to implement Storable facilities"
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2025, Eric Bezault and others"
+	copyright: "Copyright (c) 2025-2026, Eric Bezault and others"
 	license: "MIT License"
 */
 
@@ -200,7 +200,7 @@ static void GE_storable_in_read_character_8(GE_storable_in_buffer* a_buffer, EIF
 
 	while (a_num > i++) {
 		GE_storable_in_check_buffer_capacity(a_buffer, sizeof(EIF_CHARACTER_8));
-		memcpy(&l_value, a_buffer->bytes + a_buffer->position, sizeof(EIF_CHARACTER_8));
+		GE_memcpy(&l_value, a_buffer->bytes + a_buffer->position, sizeof(EIF_CHARACTER_8));
 		*a_object++ = l_value;
 		a_buffer->position += sizeof(EIF_CHARACTER_8);
 	}
@@ -217,7 +217,7 @@ static void GE_storable_in_read_boolean(GE_storable_in_buffer* a_buffer, EIF_BOO
 	/* Note: BOOLEANs as stored as chars. */
 	while (a_num > i++) {
 		GE_storable_in_check_buffer_capacity(a_buffer, sizeof(char));
-		memcpy(&l_value, a_buffer->bytes + a_buffer->position, sizeof(char));
+		GE_memcpy(&l_value, a_buffer->bytes + a_buffer->position, sizeof(char));
 		*a_object++ = EIF_TEST(l_value);
 		a_buffer->position += sizeof(char);
 	}
@@ -233,7 +233,7 @@ static void GE_storable_in_read_integer_8(GE_storable_in_buffer* a_buffer, EIF_I
 
 	while (a_num > i++) {
 		GE_storable_in_check_buffer_capacity(a_buffer, sizeof(EIF_INTEGER_8));
-		memcpy(&l_value, a_buffer->bytes + a_buffer->position, sizeof(EIF_INTEGER_8));
+		GE_memcpy(&l_value, a_buffer->bytes + a_buffer->position, sizeof(EIF_INTEGER_8));
 		*a_object++ = l_value;
 		a_buffer->position += sizeof(EIF_INTEGER_8);
 	}
@@ -257,7 +257,7 @@ static void GE_storable_in_read_integer_16(GE_storable_in_buffer* a_buffer, EIF_
 
 	while (a_num > i++) {
 		GE_storable_in_check_buffer_capacity(a_buffer, sizeof(EIF_INTEGER_16));
-		memcpy(&l_value, a_buffer->bytes + a_buffer->position, sizeof(EIF_INTEGER_16));
+		GE_memcpy(&l_value, a_buffer->bytes + a_buffer->position, sizeof(EIF_INTEGER_16));
 		*a_object++ = (EIF_INTEGER_16)GE_integer_16_from_be(l_value);
 		a_buffer->position += sizeof(EIF_INTEGER_16);
 	}
@@ -281,7 +281,7 @@ static void GE_storable_in_read_integer_32(GE_storable_in_buffer* a_buffer, EIF_
 
 	while (a_num > i++) {
 		GE_storable_in_check_buffer_capacity(a_buffer, sizeof(EIF_INTEGER_32));
-		memcpy(&l_value, a_buffer->bytes + a_buffer->position, sizeof(EIF_INTEGER_32));
+		GE_memcpy(&l_value, a_buffer->bytes + a_buffer->position, sizeof(EIF_INTEGER_32));
 		*a_object++ = (EIF_INTEGER_32)GE_integer_32_from_be(l_value);
 		a_buffer->position += sizeof(EIF_INTEGER_32);
 	}
@@ -308,9 +308,9 @@ static void GE_storable_in_read_integer_64(GE_storable_in_buffer* a_buffer, EIF_
 		GE_storable_in_check_buffer_capacity(a_buffer, sizeof(EIF_INTEGER_64));
 		/* Note: INTEGER_64s are stored as two INTEGER_32s,
 		   first the lower part and then the upper part. */
-		memcpy(&l_value, a_buffer->bytes + a_buffer->position, sizeof(EIF_INTEGER_32));
+		GE_memcpy(&l_value, a_buffer->bytes + a_buffer->position, sizeof(EIF_INTEGER_32));
 		l_lower = (EIF_INTEGER_64)GE_integer_32_from_be(l_value);
-		memcpy(&l_value, a_buffer->bytes + a_buffer->position + sizeof(EIF_INTEGER_32), sizeof(EIF_INTEGER_32));
+		GE_memcpy(&l_value, a_buffer->bytes + a_buffer->position + sizeof(EIF_INTEGER_32), sizeof(EIF_INTEGER_32));
 		l_upper = (EIF_INTEGER_64)GE_integer_32_from_be(l_value);
 		*a_object++ = (l_lower & GE_nat64(0x00000000FFFFFFFF)) | (l_upper << 32);
 		a_buffer->position += sizeof(EIF_INTEGER_64);
@@ -345,7 +345,7 @@ static void GE_storable_in_read_real_64(GE_storable_in_buffer* a_buffer, EIF_REA
 	   everything else is stored in big endian mode. */
 	while (a_num > i++) {
 		GE_storable_in_check_buffer_capacity(a_buffer, sizeof(EIF_REAL_64));
-		memcpy(&l_value, a_buffer->bytes + a_buffer->position, sizeof(EIF_REAL_64));
+		GE_memcpy(&l_value, a_buffer->bytes + a_buffer->position, sizeof(EIF_REAL_64));
 		*a_object++ = GE_real_64_from_le(l_value);
 		a_buffer->position += sizeof(EIF_REAL_64);
 	}
@@ -889,7 +889,7 @@ static void GE_storable_in_read_tuple_subobject(GE_storable_in_buffer* a_buffer,
 					GE_raise_with_message(GE_EX_RETR, l_error_message);
 				}
 				l_other_object_offset = GE_type_infos[l_runtime_type].attributes[GE_type_infos[l_runtime_type].attribute_count]->offset;
-				memcpy((char*)GE_field_address_at(l_runtime_attribute->offset, l_object, 0), (char*)GE_field_address_at(l_other_object_offset, l_other_object->object, 0), l_runtime_attribute->size);
+				GE_memcpy((char*)GE_field_address_at(l_runtime_attribute->offset, l_object, 0), (char*)GE_field_address_at(l_other_object_offset, l_other_object->object, 0), l_runtime_attribute->size);
 			} else if (l_pointer) {
 				l_unresolved_address = GE_storable_in_new_unresolved_address(l_pointer, l_object, 0, "TUPLE", l_runtime_attribute, 0);
 				l_object_index = l_pointer & 0x000000000FFFFFFF;

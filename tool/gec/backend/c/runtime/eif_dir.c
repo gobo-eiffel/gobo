@@ -406,7 +406,7 @@ EIF_INTEGER eif_dir_current(EIF_FILENAME a_buffer, EIF_INTEGER a_count)
 	if (cwd) {
 		l_nbytes = (strlen(cwd) + 1) * sizeof(char);
 		if (a_buffer && (a_count >= l_nbytes)) {
-			memcpy(a_buffer, cwd, l_nbytes);
+			GE_memcpy(a_buffer, cwd, l_nbytes);
 		}
 		free(cwd);	/* Not `eif_free', getcwd() call malloc in POSIX.1 */
 	} else {

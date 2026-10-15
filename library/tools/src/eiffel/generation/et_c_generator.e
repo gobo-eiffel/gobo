@@ -1369,16 +1369,6 @@ feature {NONE} -- Generate external C files
 #	define GE_OPENBSD
 #endif
 
-/*
- * Workaround for crashes (illegal instruction signal) when calling
- * `memset` in Azure Devops pipelines under Windows.
- */
-#if defined(GE_WINDOWS) && defined(__clang__)
-#include <string.h>
-extern void* GE_memset(void* str, int c, size_t n);
-#define memset(x, y, z) GE_memset((x), (y), (z))
-#endif
-
 #define GC_IGNORE_WARN
 #define GC_NOT_DLL
 #define GC_THREADS
@@ -21505,7 +21495,7 @@ feature {NONE} -- Deep features generation
 					current_file.put_new_line
 					if l_special_type.attribute_count > 2 then
 						print_indentation
-						current_file.put_string (c_memcpy)
+						current_file.put_string (c_ge_memcpy)
 						current_file.put_character ('(')
 						current_file.put_character ('(')
 						current_file.put_character ('(')
@@ -21564,7 +21554,7 @@ feature {NONE} -- Deep features generation
 								-- Copy items if they are not reference objects or expanded
 								-- objects containing (recursively) reference attributes.
 							print_indentation
-							current_file.put_string (c_memcpy)
+							current_file.put_string (c_ge_memcpy)
 							current_file.put_character ('(')
 							current_file.put_character ('(')
 							current_file.put_string (c_void)
@@ -21626,7 +21616,7 @@ feature {NONE} -- Deep features generation
 						attached {ET_DYNAMIC_TUPLE_TYPE} a_type as l_tuple_type and then not l_tuple_type.item_type_sets.is_empty
 					then
 						print_indentation
-						current_file.put_string (c_memcpy)
+						current_file.put_string (c_ge_memcpy)
 						current_file.put_character ('(')
 						current_file.put_character ('(')
 						current_file.put_character ('(')
@@ -26739,7 +26729,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			else
 					-- Note: do not copy the flag, SCOOP region, nor once-per-object.
 				print_indentation
-				current_file.put_string (c_memcpy)
+				current_file.put_string (c_ge_memcpy)
 				current_file.put_character ('(')
 				current_file.put_character ('(')
 				current_file.put_character ('(')
@@ -26861,7 +26851,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 						-- nor 'capacity' and 'count'.
 				if a_special_type.attribute_count > 2 then
 					print_indentation
-					current_file.put_string (c_memcpy)
+					current_file.put_string (c_ge_memcpy)
 					current_file.put_character ('(')
 					current_file.put_character ('(')
 					current_file.put_character ('(')
@@ -26920,7 +26910,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 					print_semicolon_newline
 				else
 					print_indentation
-					current_file.put_string (c_memcpy)
+					current_file.put_string (c_ge_memcpy)
 					current_file.put_character ('(')
 						-- Get rid of the volatile type marker.
 					current_file.put_character ('(')
@@ -27310,7 +27300,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				else
 						-- Note: do not copy the flag, SCOOP region, nor once-per-object.
 					print_indentation
-					current_file.put_string (c_memcpy)
+					current_file.put_string (c_ge_memcpy)
 					current_file.put_character ('(')
 					current_file.put_character ('(')
 					current_file.put_character ('(')
@@ -37665,21 +37655,17 @@ feature {NONE} -- C function generation
 				print_type_declaration (an_array_type, current_file)
 				current_file.put_character (' ')
 				print_result_name (current_file)
-				current_file.put_character (';')
-				current_file.put_new_line
+				print_semicolon_newline
 				l_temp := temp_variable
 				print_indentation
 				print_type_declaration (l_special_type, current_file)
 				current_file.put_character (' ')
 				print_temp_name (l_temp, current_file)
-				current_file.put_character (';')
-				current_file.put_new_line
+				print_semicolon_newline
 					-- Create 'area'.
 				print_indentation
 				print_temp_name (l_temp, current_file)
-				current_file.put_character (' ')
-				current_file.put_character ('=')
-				current_file.put_character (' ')
+				print_assign_to
 				current_file.put_string (c_ge_new)
 				current_file.put_integer (l_special_type.id)
 				current_file.put_character ('(')
@@ -37690,26 +37676,22 @@ feature {NONE} -- C function generation
 				current_file.put_character (' ')
 				current_file.put_string (c_eif_true)
 				current_file.put_character (')')
-				current_file.put_character (';')
-				current_file.put_new_line
+				print_semicolon_newline
 					-- Set 'count' of 'area'.
 				print_indentation
 				print_attribute_special_count_access (l_temp, l_special_type, False)
-				current_file.put_character (' ')
-				current_file.put_character ('=')
-				current_file.put_character (' ')
+				print_assign_to
 				current_file.put_character ('c')
-				current_file.put_character (';')
-				current_file.put_new_line
+				print_semicolon_newline
 					-- Copy items to 'area'.
 				print_indentation
-				current_file.put_line ("if (n!=0) {")
+				current_file.put_line ("if (n != 0) {")
 				indent
 				print_indentation
 				current_file.put_line ("va_list v;")
 				print_indentation
 				print_type_declaration (l_integer_type, current_file)
-				current_file.put_line (" j = n;")
+				current_file.put_line (" j;")
 				print_indentation
 				print_type_declaration (l_item_type, current_file)
 				if not l_item_type.is_expanded or else l_item_type.is_basic then
@@ -37720,18 +37702,16 @@ feature {NONE} -- C function generation
 				current_file.put_character (' ')
 				current_file.put_character ('*')
 				current_file.put_character ('i')
-				current_file.put_character (' ')
-				current_file.put_character ('=')
-				current_file.put_character (' ')
+				print_assign_to
 				print_attribute_special_item_access (l_temp, l_special_type, False)
-				current_file.put_character (';')
-				current_file.put_new_line
+				print_semicolon_newline
 				print_indentation
 				current_file.put_line ("va_start(v, n);")
 				print_indentation
-				current_file.put_line ("while (j--) {")
+				current_file.put_line ("for (j = 0; j < n; j++) {")
 				indent
 				print_indentation
+				current_file.put_string ("i[j] = ")
 				if
 					l_item_type = current_dynamic_system.boolean_type or
 					l_item_type = current_dynamic_system.character_8_type or
@@ -37744,7 +37724,6 @@ feature {NONE} -- C function generation
 						-- 'int', and that promotion to 'int' leaves the type unchanged
 						-- if all values cannot be represented with an 'int' or
 						-- 'unsigned int'.
-					current_file.put_string ("*(i++) = ")
 					print_type_cast (l_item_type, current_file)
 					current_file.put_string ("va_arg(v, int")
 				elseif
@@ -37752,16 +37731,14 @@ feature {NONE} -- C function generation
 				then
 						-- ISO C 99 says that 'float' is promoted to 'double' when
 						-- passed as argument of a function.
-					current_file.put_string ("*(i++) = ")
 					print_type_cast (l_item_type, current_file)
 					current_file.put_string ("va_arg(v, double")
 				else
-					current_file.put_string ("*(i++) = va_arg(v, ")
+					current_file.put_string ("va_arg(v, ")
 					print_type_declaration (l_item_type, current_file)
 				end
 				current_file.put_character (')')
-				current_file.put_character (';')
-				current_file.put_new_line
+				print_semicolon_newline
 				dedent
 				print_indentation
 				current_file.put_character ('}')
@@ -37775,9 +37752,7 @@ feature {NONE} -- C function generation
 					-- Create array object.
 				print_indentation
 				print_result_name (current_file)
-				current_file.put_character (' ')
-				current_file.put_character ('=')
-				current_file.put_character (' ')
+				print_assign_to
 				current_file.put_string (c_ge_new)
 				current_file.put_integer (an_array_type.id)
 				current_file.put_character ('(')
@@ -37785,42 +37760,31 @@ feature {NONE} -- C function generation
 				print_comma
 				current_file.put_string (c_eif_true)
 				current_file.put_character (')')
-				current_file.put_character (';')
-				current_file.put_new_line
+				print_semicolon_newline
 					-- Set 'area'.
 				print_indentation
 				print_attribute_access (l_queries.first, tokens.result_keyword, an_array_type, False)
-				current_file.put_character (' ')
-				current_file.put_character ('=')
-				current_file.put_character (' ')
+				print_assign_to
 				print_temp_name (l_temp, current_file)
-				current_file.put_character (';')
-				current_file.put_new_line
+				print_semicolon_newline
 					-- Set 'lower'.
 				print_indentation
 				print_attribute_access (l_queries.item (2), tokens.result_keyword, an_array_type, False)
-				current_file.put_character (' ')
-				current_file.put_character ('=')
-				current_file.put_character (' ')
+				print_assign_to
 				current_file.put_character ('1')
-				current_file.put_character (';')
-				current_file.put_new_line
+				print_semicolon_newline
 					-- Set 'upper'.
 				print_indentation
 				print_attribute_access (l_queries.item (3), tokens.result_keyword, an_array_type, False)
-				current_file.put_character (' ')
-				current_file.put_character ('=')
-				current_file.put_character (' ')
+				print_assign_to
 				current_file.put_character ('c')
-				current_file.put_character (';')
-				current_file.put_new_line
+				print_semicolon_newline
 					-- Return the array.
 				print_indentation
 				current_file.put_string (c_return)
 				current_file.put_character (' ')
 				print_result_name (current_file)
-				current_file.put_character (';')
-				current_file.put_new_line
+				print_semicolon_newline
 				dedent
 				current_file.put_character ('}')
 				current_file.put_new_line
@@ -37900,24 +37864,21 @@ feature {NONE} -- C function generation
 				indent
 					-- Copy items to 'area'.
 				print_indentation
-				current_file.put_line ("if (n!=0) {")
+				current_file.put_line ("if (n != 0) {")
 				indent
 				print_indentation
 				current_file.put_line ("va_list v;")
 				print_indentation
 				print_type_declaration (l_integer_type, current_file)
-				current_file.put_line (" j = n;")
+				current_file.put_line (" j;")
 				l_temp := temp_variable
 				print_indentation
 				print_type_declaration (l_special_type, current_file)
 				current_file.put_character (' ')
 				print_temp_name (l_temp, current_file)
-				current_file.put_character (' ')
-				current_file.put_character ('=')
-				current_file.put_character (' ')
+				print_assign_to
 				print_attribute_access (l_queries.first, tokens.current_keyword, an_array_type, False)
-				current_file.put_character (';')
-				current_file.put_new_line
+				print_semicolon_newline
 				print_indentation
 				print_type_declaration (l_item_type, current_file)
 				if not l_item_type.is_expanded or else l_item_type.is_basic then
@@ -37928,22 +37889,20 @@ feature {NONE} -- C function generation
 				current_file.put_character (' ')
 				current_file.put_character ('*')
 				current_file.put_character ('i')
-				current_file.put_character (' ')
-				current_file.put_character ('=')
-				current_file.put_character (' ')
+				print_assign_to
 				print_attribute_special_item_access (l_temp, l_special_type, False)
 				current_file.put_character (' ')
 				current_file.put_character ('+')
 				current_file.put_character (' ')
 				current_file.put_character ('s')
-				current_file.put_character (';')
-				current_file.put_new_line
+				print_semicolon_newline
 				print_indentation
 				current_file.put_line ("va_start(v, n);")
 				print_indentation
-				current_file.put_line ("while (j--) {")
+				current_file.put_line ("for (j = 0; j < n; j++) {")
 				indent
 				print_indentation
+				current_file.put_string ("i[j] = ")
 				if
 					l_item_type = current_dynamic_system.boolean_type or
 					l_item_type = current_dynamic_system.character_8_type or
@@ -37956,7 +37915,6 @@ feature {NONE} -- C function generation
 						-- 'int', and that promotion to 'int' leaves the type unchanged
 						-- if all values cannot be represented with an 'int' or
 						-- 'unsigned int'.
-					current_file.put_string ("*(i++) = ")
 					print_type_cast (l_item_type, current_file)
 					current_file.put_string ("va_arg(v, int")
 				elseif
@@ -37964,16 +37922,14 @@ feature {NONE} -- C function generation
 				then
 						-- ISO C 99 says that 'float' is promoted to 'double' when
 						-- passed as argument of a function.
-					current_file.put_string ("*(i++) = ")
 					print_type_cast (l_item_type, current_file)
 					current_file.put_string ("va_arg(v, double")
 				else
-					current_file.put_string ("*(i++) = va_arg(v, ")
+					current_file.put_string ("va_arg(v, ")
 					print_type_declaration (l_item_type, current_file)
 				end
 				current_file.put_character (')')
-				current_file.put_character (';')
-				current_file.put_new_line
+				print_semicolon_newline
 				dedent
 				print_indentation
 				current_file.put_character ('}')
@@ -49949,6 +49905,7 @@ feature {NONE} -- Constants
 	c_ge_lock_marking: STRING = "GE_lock_marking"
 	c_ge_ma: STRING = "GE_ma"
 	c_ge_mark_object: STRING = "GE_mark_object"
+	c_ge_memcpy: STRING = "GE_memcpy"
 	c_ge_memset: STRING = "GE_memset"
 	c_ge_min_int32: STRING = "GE_min_int32"
 	c_ge_min_int64: STRING = "GE_min_int64"
@@ -50189,7 +50146,6 @@ feature {NONE} -- Constants
 	c_last_rescue: STRING = "last_rescue"
 	c_line: STRING = "#line"
 	c_memcmp: STRING = "memcmp"
-	c_memcpy: STRING = "memcpy"
 	c_mutex: STRING = "mutex"
 	c_mutex_suffix: STRING = "_mutex"
 	c_not: STRING = "!"

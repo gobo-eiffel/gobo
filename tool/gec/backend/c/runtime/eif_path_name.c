@@ -4,7 +4,7 @@
 		"C functions used to implement class PATH_NAME"
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2006-2024, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2026, Eric Bezault and others"
 	license: "MIT License"
 */
 
@@ -201,7 +201,7 @@ EIF_INTEGER eif_home_directory_name_ptr(EIF_FILENAME a_buffer, EIF_INTEGER a_cou
 			if (l_env_value) {
 				l_nbytes = (EIF_INTEGER)((wcslen(l_env_value) + 1) * sizeof(wchar_t));
 				if (a_count >= l_nbytes) {
-					memcpy(a_buffer, l_env_value, l_nbytes);
+					GE_memcpy(a_buffer, l_env_value, l_nbytes);
 				}
 				return l_nbytes;
 			} else {
@@ -223,7 +223,7 @@ EIF_INTEGER eif_home_directory_name_ptr(EIF_FILENAME a_buffer, EIF_INTEGER a_cou
 	}
 	l_nbytes = (strlen(l_env_value) + 1) * sizeof(char);
 	if (a_buffer && (a_count >= l_nbytes)) {
-		memcpy(a_buffer, l_env_value, l_nbytes);
+		GE_memcpy(a_buffer, l_env_value, l_nbytes);
 	}
 	return l_nbytes;
 #endif
@@ -269,7 +269,7 @@ EIF_INTEGER eif_temporary_directory_name_ptr(EIF_FILENAME a_buffer, EIF_INTEGER 
 	(l_env_value = "/tmp");
 	l_nbytes = (strlen(l_env_value) + 1) * sizeof(char);
 	if (a_buffer && (a_count >= l_nbytes)) {
-		memcpy(a_buffer, l_env_value, l_nbytes);
+		GE_memcpy(a_buffer, l_env_value, l_nbytes);
 	}
 	return l_nbytes;
 #endif
