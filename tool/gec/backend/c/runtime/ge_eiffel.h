@@ -372,19 +372,8 @@ typedef EIF_NATIVE_CHAR* EIF_FILENAME;
 #define GE_IS_64_BITS EIF_TEST(sizeof(void*)==8)
 #endif
 
-/*
- * Workaround for crashes (illegal instruction signal) when calling
- * `memset` and `memcpy` in Azure Devops pipelines under Windows and Linux.
- */
-#if !defined(GE_MACOS) && defined(__clang__)
-#include <string.h>
-extern void* GE_memset(void* str, int c, size_t n);
-#define memset(x, y, z) GE_memset((x), (y), (z))
-extern void* GE_memcpy(void* destination, const void* source, size_t size);
-#else
 #define GE_memset(x, y, z) memset((x), (y), (z))
 #define GE_memcpy(x, y, z) memcpy((x), (y), (z))
-#endif
 
 /* Posix threads */
 #if !defined(EIF_WINDOWS)

@@ -327,22 +327,6 @@ extern void* GE_unprotected_recalloc(void* p, size_t old_nelem, size_t new_nelem
 #define GE_free(p) free((void*)(p))
 #endif
 
-#if !defined(GE_MACOS) && defined(__clang__)
-/*
- * Memory setting.
- * Workaround for crashes (illegal instruction signal) when calling 
- * `memset` in Azure Devops pipelines under Windows.
- */
-extern void* GE_memset(void* str, int c, size_t n);
-
-/*
- * Memory copy.
- * Workaround for crashes (illegal instruction signal) when calling 
- * `memset` in Azure Devops pipelines under Windows and Linux.
- */
-extern void* GE_memcpy(void* destination, const void* source, size_t size);
-#endif
-
 /*
  * Dispose
  */

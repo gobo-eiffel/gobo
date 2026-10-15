@@ -1369,16 +1369,6 @@ feature {NONE} -- Generate external C files
 #	define GE_OPENBSD
 #endif
 
-/*
- * Workaround for crashes (illegal instruction signal) when calling
- * `memset` in Azure Devops pipelines under Windows.
- */
-#if defined(GE_WINDOWS) && defined(__clang__)
-#include <string.h>
-extern void* GE_memset(void* str, int c, size_t n);
-#define memset(x, y, z) GE_memset((x), (y), (z))
-#endif
-
 #define GC_IGNORE_WARN
 #define GC_NOT_DLL
 #define GC_THREADS
