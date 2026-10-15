@@ -5,7 +5,7 @@
 		"Test features of class RX_PCRE_REGULAR_EXPRESSION"
 
 	library: "Gobo Eiffel Regexp Library"
-	copyright: "Copyright (c) 2002-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2026, Eric Bezault and others"
 	license: "MIT License"
 
 class RX_TEST_PCRE_REGULAR_EXPRESSION

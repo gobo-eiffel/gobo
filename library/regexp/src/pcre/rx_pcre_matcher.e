@@ -5,7 +5,7 @@
 		"PCRE regexp matchers"
 
 	library: "Gobo Eiffel Regexp Library"
-	copyright: "Copyright (c) 2001-2019, Harald Erdbruegger and others"
+	copyright: "Copyright (c) 2001-2026, Harald Erdbruegger and others"
 	license: "MIT License"
 
 class RX_PCRE_MATCHER
@@ -50,6 +50,7 @@ feature {NONE} -- Initialization
 			eptr_vector := SPECIAL_INTEGER_.make_filled (0, eptr_capacity)
 			eptr_lower := 0
 			eptr_upper := -1
+			match_step_count := 0
 		end
 
 feature -- Resetting
@@ -86,7 +87,7 @@ feature -- Access
 			-- `first_match', `next_match', ...); 0 means no limit.
 			-- Equivalent of PCRE's `match_limit'. It is not reset by `reset'.
 
-feature -- Element change
+feature -- Setting
 
 	set_match_limit (a_limit: INTEGER)
 			-- Set `match_limit' to `a_limit' (0 means no limit).
@@ -134,24 +135,6 @@ feature -- Compilation
 			if offset_vector.count < offset_vector_count then
 				offset_vector := SPECIAL_INTEGER_.aliased_resized_area_with_default (offset_vector, 0, offset_vector_count)
 			end
-		end
-
-feature -- Access
-
-	captured_start_position (n: INTEGER): INTEGER
-			-- Start position of the `n'-th captured substring;
-			-- 'n = 0' represents the whole matched string.
-			-- Return 0 if undefined captured substring.
-		do
-			Result := offset_vector.item (n * 2)
-		end
-
-	captured_end_position (n: INTEGER): INTEGER
-			-- End position of the `n'-th captured substring;
-			-- 'n = 0' represents the whole matched string.
-			-- Return -1 if undefined captured substring.
-		do
-			Result := offset_vector.item (n * 2 + 1) - 1
 		end
 
 feature -- Matching
@@ -211,6 +194,24 @@ feature -- Matching
 			else
 				match_it (subject, subject_next_start, subject_end)
 			end
+		end
+
+feature -- Matching output
+
+	captured_start_position (n: INTEGER): INTEGER
+			-- Start position of the `n'-th captured substring;
+			-- 'n = 0' represents the whole matched string.
+			-- Return 0 if undefined captured substring.
+		do
+			Result := offset_vector.item (n * 2)
+		end
+
+	captured_end_position (n: INTEGER): INTEGER
+			-- End position of the `n'-th captured substring;
+			-- 'n = 0' represents the whole matched string.
+			-- Return -1 if undefined captured substring.
+		do
+			Result := offset_vector.item (n * 2 + 1) - 1
 		end
 
 feature {NONE} -- Status report
@@ -2246,5 +2247,10 @@ feature {NONE} -- Constants
 	return_none: INTEGER = 0
 
 	return_false: INTEGER = -1
+
+invariant
+
+	match_limit_not_negative: match_limit >= 0
+	match_step_count_not_negative: match_step_count >= 0
 
 end
