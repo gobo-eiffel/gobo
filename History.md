@@ -54,6 +54,14 @@
   is raised when the number of SCOOP regions is greater than
   65535.
 
+### Gobo Eiffel Regexp Library
+
+* Added `match_limit`/`set_match_limit` to limit the number of internal
+  steps when calling one of the `match` routines. The default is `0`,
+  which means no limit. When exceeding this limit, the match fails
+  (i.e. `has_matched` is set to False) and `match_limit_exceeded` is set
+  to True.
+
 ## Version 26.09.03 - 3 September 2026
 
 ### gec
