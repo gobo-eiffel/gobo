@@ -41,6 +41,11 @@
   the mouse over the anchor of a type of the form `like a`
   (it was trying to find a feature `a`).
 
+### getest
+
+* Exit with code `1` when a test case class contains a syntax
+  error.
+
 ### Gobo Eiffel FreeELKS Library
 
 * Made implementation of `ISE_SCOOP_RUNTIME.region_id` more

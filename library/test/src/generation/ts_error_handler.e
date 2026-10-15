@@ -5,7 +5,7 @@
 		"Test config error handlers"
 
 	library: "Gobo Eiffel Test Library"
-	copyright: "Copyright (c) 2000, Eric Bezault and others"
+	copyright: "Copyright (c) 2000-2026, Eric Bezault and others"
 	license: "MIT License"
 
 class TS_ERROR_HANDLER
@@ -13,28 +13,11 @@ class TS_ERROR_HANDLER
 inherit
 
 	ET_ERROR_HANDLER
-		redefine
-			report_error
-		end
 
 create
 
 	make_standard,
 	make_null
-
-feature -- Reporting
-
-	report_error (an_error: UT_ERROR)
-			-- Report `an_error'.
-		do
-			precursor (an_error)
-			error_reported := True
-		end
-
-feature -- Access
-
-	error_reported: BOOLEAN
-			-- Has an error been reported?
 
 feature -- Syntax errors
 
