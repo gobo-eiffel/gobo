@@ -116,34 +116,11 @@ section of the configuration file above:</p>
         clause of the <font color="#000080"><em><strong><tt>default</tt></strong></em></font>
         section of the configuration file) should also be listed
         here.</li>
-    <li>Depending on the Eiffel compiler you are using these
-        other clusters should also be listed:<pre>        <font
-color="#800000">-- Gobo Eiffel Test Harness Library
-    $GOBO/library/test/src/harness
-        -- Gobo Eiffel Structure Library
-    $GOBO/library/structure/src/container
-    $GOBO/library/structure/src/dispenser
-    $GOBO/library/structure/src/list
-    $GOBO/library/structure/src/set
-    $GOBO/library/structure/src/sort
-    $GOBO/library/structure/src/support
-    $GOBO/library/structure/src/table
-        -- Gobo Eiffel Utility Library
-    $GOBO/library/utility/src/command
-    $GOBO/library/utility/src/error
-    $GOBO/library/utility/src/formatter
-    $GOBO/library/utility/src/support
-        -- Gobo Eiffel Kernel Library
-    $GOBO/library/kernel/src/basic
-    $GOBO/library/kernel/src/elks
-    $GOBO/library/kernel/src/io
-    $GOBO/library/kernel/src/misc
-    $GOBO/library/kernel/src/unicode
-    $GOBO/library/kernel/src/support
-    $GOBO/library/kernel/src/spec/&lt;<em>compiler</em>&gt;</font></pre>
-        <p>where <font color="#800000"><tt>&lt;</tt><em><tt>compiler</tt></em><tt>&gt;</tt></font>
-        is either <font color="#800000"><tt>ge</tt></font>, <font
-        color="#800000"><tt>ise</tt></font>.</p>
+    <li>These libraries should also be listed:<pre>    <font
+color="#800000">&lt;library name="free_elks" location="${GOBO}/library/free_elks/library_${GOBO_EIFFEL}.ecf" readonly="true"/&gt;
+    &lt;library name="kernel" location="${GOBO}/library/kernel/library.ecf" readonly="true"/&gt;
+    &lt;library name="structure" location="${GOBO}/library/structure/library.ecf" readonly="true"/&gt;
+    &lt;library name="test_skl" location="${GOBO}/library/test/library_skl.ecf" readonly="true"/&gt;</font></pre>
     </li>
 </ol>
 
@@ -169,7 +146,7 @@ Test Summary for my_test
 <table border="0" width="100%">
     <tr>
         <td><address>
-            <font size="2"><b>Copyright © 2001-2019</b></font><font
+            <font size="2"><b>Copyright © 2001-2026</b></font><font
             size="1"><b>, </b></font><font size="2"><strong>Eric
             Bezault</strong></font><strong> </strong><font
             size="2"><br>
@@ -179,7 +156,7 @@ Test Summary for my_test
             <strong>https:</strong></font><a
             href="https://www.gobosoft.com"><font size="2">//www.gobosoft.com</font></a><font
             size="2"><br>
-            <strong>Last Updated:</strong> 15 March 2019</font><br>
+            <strong>Last Updated:</strong> 15 October 2026</font><br>
             <!--webbot bot="PurpleText"
             preview="
 $Date$

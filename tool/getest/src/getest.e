@@ -4,7 +4,7 @@
 
 		"Gobo Eiffel Test"
 
-	copyright: "Copyright (c) 2000-2024, Eric Bezault and others"
+	copyright: "Copyright (c) 2000-2026, Eric Bezault and others"
 	license: "MIT License"
 
 class GETEST
@@ -82,7 +82,7 @@ feature -- Processing
 							a_config.set_default_test_included (default_test_included)
 						end
 						process (a_config)
-						if error_handler.error_reported then
+						if error_handler.has_error then
 							Exceptions.die (1)
 						end
 					end
@@ -118,7 +118,7 @@ feature -- Processing
 			testcases: TS_TESTCASES
 			nb: INTEGER
 		do
-			if not error_handler.error_reported then
+			if not error_handler.has_error then
 				if need_header then
 					std.output.put_line ("Preparing Test Cases")
 				end
@@ -149,7 +149,7 @@ feature -- Processing
 			a_command_name: STRING
 			l_geant_pathname: STRING
 		do
-			if not error_handler.error_reported then
+			if not error_handler.has_error then
 				if need_header then
 					std.output.put_line ("Compiling Test Cases")
 				end
@@ -177,7 +177,7 @@ feature -- Processing
 			a_command: DP_SHELL_COMMAND
 			a_command_name: STRING
 		do
-			if not error_handler.error_reported then
+			if not error_handler.has_error then
 				if need_header then
 					std.output.put_line ("Running Test Cases")
 					std.output.put_new_line
