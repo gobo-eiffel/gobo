@@ -109,11 +109,11 @@ jobs:
         eiffel_compiler: [ge, debug_ge, ise, debug_ise]
         system_under_test: [library, tool]
         os: [ubuntu-26.04, ubuntu-24.04, ubuntu-22.04, ubuntu-26.04-arm, ubuntu-24.04-arm, ubuntu-22.04-arm]
-      exclude:
-        - os: ubuntu-22.04
-          eiffel_compiler: ise
-        - os: ubuntu-22.04
-          eiffel_compiler: debug_ise
+        exclude:
+          - os: ubuntu-22.04
+            eiffel_compiler: ise
+          - os: ubuntu-22.04
+            eiffel_compiler: debug_ise
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v6
