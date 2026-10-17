@@ -99,18 +99,6 @@ stages:
 
   - template: .azure/test.yml
     parameters:
-      os: linux_ubuntu_22_04
-      c_compiler: zig
-      vm_image: ubuntu-22.04
-
-  - template: .azure/test.yml
-    parameters:
-      os: linux_ubuntu_22_04
-      c_compiler: gcc
-      vm_image: ubuntu-22.04
-
-  - template: .azure/test.yml
-    parameters:
       os: macos_15
       c_compiler: zig
       vm_image: macos-15
