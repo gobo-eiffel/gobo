@@ -302,6 +302,8 @@ feature {NONE} -- Initialization
 			create integer_choice_constant.make ("1", 1, False)
 			create inspect_if_choices.make (1000)
 			create inspect_case_choices.make (1000)
+			create false_constant.make
+			create true_constant.make
 			create included_header_filenames.make (100)
 			included_header_filenames.set_equality_tester (string_equality_tester)
 			create included_cpp_header_filenames.make (50)
@@ -13965,18 +13967,22 @@ feature {NONE} -- Expression generation
 			l_semistrict_target: ET_WRITABLE
 			l_implies: BOOLEAN
 			l_or: BOOLEAN
+			l_and: BOOLEAN
 			l_actual: ET_EXPRESSION
 			l_actual_type_set: ET_DYNAMIC_TYPE_SET
 			l_semistrict_target_not_set: BOOLEAN
 		do
 			l_assignment_target := assignment_target
 			assignment_target := Void
-			l_target := a_call.left
-			l_name := a_call.name
-			l_target_type_set := dynamic_type_set (l_target)
-			l_target_type := l_target_type_set.static_type
-			l_target_static_type := l_target_type.primary_type
 			if in_operand then
+				l_target := a_call.left
+				l_name := a_call.name
+				l_target_type_set := dynamic_type_set (l_target)
+				l_target_type := l_target_type_set.static_type
+				l_target_static_type := l_target_type.primary_type
+				l_or := l_name.is_infix_or_else or l_name.is_infix_or or l_name.is_infix_or_else_symbol or l_name.is_infix_or_symbol
+				l_and := l_name.is_infix_and_then or l_name.is_infix_and or l_name.is_infix_and_then_symbol or l_name.is_infix_and_symbol
+				l_implies := l_name.is_infix_implies or l_name.is_infix_implies_symbol
 				if l_assignment_target /= Void then
 					l_semistrict_target := l_assignment_target
 					print_operand (l_target)
@@ -13995,7 +14001,6 @@ feature {NONE} -- Expression generation
 				current_file.put_string (c_if)
 				current_file.put_character (' ')
 				current_file.put_character ('(')
-				l_or := l_name.is_infix_or_else or l_name.is_infix_or or l_name.is_infix_or_else_symbol or l_name.is_infix_or_symbol
 				if l_or then
 					current_file.put_character ('!')
 					current_file.put_character ('(')
@@ -14010,21 +14015,40 @@ feature {NONE} -- Expression generation
 				current_file.put_new_line
 				call_operands.wipe_out
 				indent
-				l_actual := a_call.right
-				l_actual_type_set := dynamic_type_set (l_actual)
-				print_assignment_operand (l_actual, l_actual_type_set, l_semistrict_target, l_target_static_type)
-				fill_call_operands (1)
-				if l_semistrict_target /= call_operands.first then
+				if l_implies and l_target.is_false_expression (current_type.base_type, False) then
 					print_indentation
 					print_writable (l_semistrict_target)
 					print_assign_to
-					print_attachment_expression (call_operands.first, l_actual_type_set, l_target_static_type)
+					current_file.put_string (c_eif_false)
 					print_semicolon_newline
+				elseif l_or and l_target.is_true_expression (current_type.base_type, False) then
+					print_indentation
+					print_writable (l_semistrict_target)
+					print_assign_to
+					current_file.put_string (c_eif_false)
+					print_semicolon_newline
+				elseif l_and and l_target.is_false_expression (current_type.base_type, False) then
+					print_indentation
+					print_writable (l_semistrict_target)
+					print_assign_to
+					current_file.put_string (c_eif_false)
+					print_semicolon_newline
+				else
+					l_actual := a_call.right
+					l_actual_type_set := dynamic_type_set (l_actual)
+					print_assignment_operand (l_actual, l_actual_type_set, l_semistrict_target, l_target_static_type)
+					fill_call_operands (1)
+					if l_semistrict_target /= call_operands.first then
+						print_indentation
+						print_writable (l_semistrict_target)
+						print_assign_to
+						print_attachment_expression (call_operands.first, l_actual_type_set, l_target_static_type)
+						print_semicolon_newline
+					end
 				end
 				dedent
 				print_indentation
 				current_file.put_character ('}')
-				l_implies := l_name.is_infix_implies or l_name.is_infix_implies_symbol
 				if l_implies or l_semistrict_target_not_set then
 					current_file.put_character (' ')
 					current_file.put_string (c_else)
@@ -40677,7 +40701,7 @@ feature {NONE} -- Assertion generation
 					l_postconditions := l_all_postconditions.item_1 (i)
 					l_old_postconditions := current_postconditions
 					current_postconditions := l_postconditions
-					l_postconditions.add_old_expressions (l_old_expressions)
+					l_postconditions.add_old_expressions (l_old_expressions, current_type.base_type)
 					if l_first and then not l_old_expressions.is_empty then
 						print_old_expressions_comment
 						l_first := False
@@ -40691,7 +40715,7 @@ feature {NONE} -- Assertion generation
 			elseif attached a_feature.postconditions as l_postconditions_impl and then not l_postconditions_impl.are_all_true then
 				l_old_postconditions := current_postconditions
 				current_postconditions := l_postconditions_impl
-				l_postconditions_impl.add_old_expressions (l_old_expressions)
+				l_postconditions_impl.add_old_expressions (l_old_expressions, current_type.base_type)
 				if l_old_expressions.is_empty then
 					print_old_expressions_comment
 				end
@@ -47209,7 +47233,15 @@ feature {ET_AST_NODE} -- Processing
 	process_infix_expression (an_expression: ET_INFIX_EXPRESSION)
 			-- Process `an_expression'.
 		do
-			print_infix_expression (an_expression)
+			if an_expression.is_false_expression (current_type.base_type, True) then
+				false_constant.set_index (an_expression.index)
+				print_false_constant (false_constant)
+			elseif an_expression.is_true_expression (current_type.base_type, True) then
+				true_constant.set_index (an_expression.index)
+				print_true_constant (true_constant)
+			else
+				print_infix_expression (an_expression)
+			end
 		end
 
 	process_inline_separate_instruction (a_instruction: ET_INLINE_SEPARATE_INSTRUCTION)
@@ -48770,6 +48802,14 @@ feature {NONE} -- Inspect instructions/expressions
 	inspect_choice_string_count: INTEGER
 			-- Number of strings appearing in inspect instructions/expressions
 			-- in current feature, so far
+
+feature {NONE} -- Boolean constants
+
+	false_constant: ET_FALSE_CONSTANT
+			-- 'False' used when optimizing boolan expressions
+
+	true_constant: ET_TRUE_CONSTANT
+			-- 'True' used when optimizing boolan expressions
 
 feature {NONE} -- Unqualified call expressions
 
@@ -50460,5 +50500,8 @@ invariant
 	no_void_inspect_if_choices: not inspect_if_choices.has_void
 	inspect_case_choices_not_void: inspect_case_choices /= Void
 	no_void_inspect_case_choices: not inspect_case_choices.has_void
+		-- Boolean constants.
+	false_constant_not_void: false_constant /= Void
+	true_constant_not_void: true_constant /= Void
 
 end

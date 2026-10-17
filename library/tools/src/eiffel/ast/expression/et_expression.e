@@ -137,6 +137,30 @@ feature -- Status report
 			-- Result := False
 		end
 
+	is_false_expression (a_context: ET_TYPE_CONTEXT; a_no_call: BOOLEAN): BOOLEAN
+			-- Can current expression be proven to be False statically when viewed from `a_context'?
+			-- If `a_no_call` is True, then return False if some calls could be executed
+			-- even if current expression can be proven to be False statically.
+		require
+			a_context_not_void: a_context /= Void
+			a_context_valid: a_context.is_valid_context
+			-- no_cycle: no cycle in anchored types involved.
+		do
+			Result := is_false
+		end
+
+	is_true_expression (a_context: ET_TYPE_CONTEXT; a_no_call: BOOLEAN): BOOLEAN
+			-- Can current expression be proven to be True statically when viewed from `a_context'?
+			-- If `a_no_call` is True, then return False if some calls could be executed
+			-- even if current expression can be proven to be True statically.
+		require
+			a_context_not_void: a_context /= Void
+			a_context_valid: a_context.is_valid_context
+			-- no_cycle: no cycle in anchored types involved.
+		do
+			Result := is_true
+		end
+
 	is_prefix_expression: BOOLEAN
 			-- Is current expression a prefix expression?
 		do
@@ -206,9 +230,9 @@ feature -- Formal arguments
 
 feature -- Assertions
 
-	add_old_expressions (a_list: DS_ARRAYED_LIST [ET_OLD_EXPRESSION])
+	add_old_expressions (a_list: DS_ARRAYED_LIST [ET_OLD_EXPRESSION]; a_context: ET_TYPE_CONTEXT)
 			-- Add to `a_list' all old expressions appearing in current expression
-			-- and (recursively) in its subexpressions.
+			-- and (recursively) in its subexpressions when viewed from `a_context'.
 		do
 		end
 

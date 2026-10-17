@@ -28,7 +28,9 @@ inherit
 			add_formal_arguments
 		redefine
 			reset,
-			is_never_void
+			is_never_void,
+			is_false_expression,
+			is_true_expression
 		end
 
 	ET_CHOICE_CONSTANT
@@ -40,7 +42,9 @@ inherit
 			has_typed_object_test,
 			add_old_expressions,
 			add_formal_arguments,
-			is_never_void
+			is_never_void,
+			is_false_expression,
+			is_true_expression
 		end
 
 	ET_CREATION_EXPRESSION
@@ -48,7 +52,9 @@ inherit
 			name,
 			arguments,
 			reset,
-			is_never_void
+			is_never_void,
+			is_false_expression,
+			is_true_expression
 		end
 
 create
@@ -76,6 +82,40 @@ feature -- Status report
 		do
 			if is_once_creation_call then
 				Result := True
+			end
+		end
+
+	is_false_expression (a_context: ET_TYPE_CONTEXT; a_no_call: BOOLEAN): BOOLEAN
+			-- Can current expression be proven to be False statically when viewed from `a_context'?
+			-- If `a_no_call` is True, then return False if some calls could be executed
+			-- even if current expression can be proven to be False statically.
+		local
+			l_base_class: ET_CLASS
+			l_seed: INTEGER
+		do
+			l_seed := name.seed
+			if l_seed /= 0 and arguments_count = 0 then
+				l_base_class := type.adapted_base_class_with_seeded_feature (l_seed, a_context).base_class
+				if attached {ET_CONSTANT_ATTRIBUTE} l_base_class.seeded_query (l_seed) as l_context_attribute then
+					Result := l_context_attribute.constant.is_false
+				end
+			end
+		end
+
+	is_true_expression (a_context: ET_TYPE_CONTEXT; a_no_call: BOOLEAN): BOOLEAN
+			-- Can current expression be proven to be True statically when viewed from `a_context'?
+			-- If `a_no_call` is True, then return False if some calls could be executed
+			-- even if current expression can be proven to be True statically.
+		local
+			l_base_class: ET_CLASS
+			l_seed: INTEGER
+		do
+			l_seed := name.seed
+			if l_seed /= 0 and arguments_count = 0 then
+				l_base_class := type.adapted_base_class_with_seeded_feature (l_seed, a_context).base_class
+				if attached {ET_CONSTANT_ATTRIBUTE} l_base_class.seeded_query (l_seed) as l_context_attribute then
+					Result := l_context_attribute.constant.is_true
+				end
 			end
 		end
 

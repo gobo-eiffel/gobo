@@ -18,6 +18,8 @@ inherit
 			arguments as right
 		undefine
 			reset,
+			is_false_expression,
+			is_true_expression,
 			is_instance_free,
 			has_result,
 			has_address_expression,
@@ -31,7 +33,10 @@ inherit
 		undefine
 			add_separate_arguments
 		redefine
-			reset
+			reset,
+			is_false_expression,
+			is_true_expression,
+			add_old_expressions
 		end
 
 create
@@ -88,6 +93,65 @@ feature -- Status report
 			-- Is current infix expression a boolean operator
 			-- between two boolean expressions?
 
+	is_false_expression (a_context: ET_TYPE_CONTEXT; a_no_call: BOOLEAN): BOOLEAN
+			-- Can current expression be proven to be False statically when viewed from `a_context'?
+			-- If `a_no_call` is True, then return False if some calls could be executed
+			-- even if current expression can be proven to be False statically.
+		do
+			if name.is_infix_and_then or name.is_infix_and_then_symbol then
+				Result := left.is_false_expression (a_context, a_no_call) or
+					(left.is_true_expression (a_context, a_no_call) and right.is_false_expression (a_context, a_no_call))
+			elseif name.is_infix_and or name.is_infix_and_symbol then
+				if left.is_false_expression (a_context, a_no_call) then
+					Result := a_no_call implies (right.is_false_expression (a_context, a_no_call) or right.is_true_expression (a_context, a_no_call))
+				elseif left.is_true_expression (a_context, a_no_call) then
+					Result := right.is_false_expression (a_context, a_no_call)
+				end
+			elseif name.is_infix_implies or name.is_infix_implies_symbol then
+				Result := left.is_true_expression (a_context, a_no_call) and right.is_false_expression (a_context, a_no_call)
+			elseif name.is_infix_or_else or name.is_infix_or_else_symbol then
+				Result := left.is_false_expression (a_context, a_no_call) and right.is_false_expression (a_context, a_no_call)
+			elseif name.is_infix_or or name.is_infix_or_symbol then
+				Result := left.is_false_expression (a_context, a_no_call) and right.is_false_expression (a_context, a_no_call)
+			elseif name.is_infix_xor or name.is_infix_xor_symbol then
+				if left.is_true_expression (a_context, a_no_call) then
+					Result := right.is_true_expression (a_context, a_no_call)
+				elseif left.is_false_expression (a_context, a_no_call) then
+					Result := right.is_false_expression (a_context, a_no_call)
+				end
+			end
+		end
+
+	is_true_expression (a_context: ET_TYPE_CONTEXT; a_no_call: BOOLEAN): BOOLEAN
+			-- Can current expression be proven to be True statically when viewed from `a_context'?
+			-- If `a_no_call` is True, then return False if some calls could be executed
+			-- even if current expression can be proven to be True statically.
+		do
+			if name.is_infix_implies or name.is_infix_implies_symbol then
+				Result := left.is_false_expression (a_context, a_no_call) or
+					(left.is_true_expression (a_context, a_no_call) and right.is_true_expression (a_context, a_no_call))
+			elseif name.is_infix_or_else or name.is_infix_or_else_symbol then
+				Result := left.is_true_expression (a_context, a_no_call) or
+					(left.is_false_expression (a_context, a_no_call) and right.is_true_expression (a_context, a_no_call))
+			elseif name.is_infix_and_then or name.is_infix_and_then_symbol then
+				Result := left.is_true_expression (a_context, a_no_call) and right.is_true_expression (a_context, a_no_call)
+			elseif name.is_infix_and or name.is_infix_and_symbol then
+				Result := left.is_true_expression (a_context, a_no_call) and right.is_true_expression (a_context, a_no_call)
+			elseif name.is_infix_or or name.is_infix_or_symbol then
+				if left.is_true_expression (a_context, a_no_call) then
+					Result := a_no_call implies (right.is_false_expression (a_context, a_no_call) or right.is_true_expression (a_context, a_no_call))
+				elseif left.is_false_expression (a_context, a_no_call) then
+					Result := right.is_true_expression (a_context, a_no_call)
+				end
+			elseif name.is_infix_xor or name.is_infix_xor_symbol then
+				if left.is_true_expression (a_context, a_no_call) then
+					Result := right.is_false_expression (a_context, a_no_call)
+				elseif left.is_false_expression (a_context, a_no_call) then
+					Result := right.is_true_expression (a_context, a_no_call)
+				end
+			end
+		end
+
 feature -- Status setting
 
 	set_boolean_operator (b: BOOLEAN)
@@ -96,6 +160,24 @@ feature -- Status setting
 			is_boolean_operator := b
 		ensure
 			boolean_operator_set: is_boolean_operator = b
+		end
+
+feature -- Assertions
+
+	add_old_expressions (a_list: DS_ARRAYED_LIST [ET_OLD_EXPRESSION]; a_context: ET_TYPE_CONTEXT)
+			-- Add to `a_list' all old expressions appearing in current expression
+			-- and (recursively) in its subexpressions when viewed from `a_context'.
+		do
+			left.add_old_expressions (a_list, a_context)
+			if (name.is_infix_implies or name.is_infix_implies_symbol) and left.is_false_expression (a_context, False) then
+				-- Ignore right-hand side.
+			elseif (name.is_infix_and_then or name.is_infix_and_then_symbol) and left.is_false_expression (a_context, False) then
+				-- Ignore right-hand side.
+			elseif (name.is_infix_or_else or name.is_infix_or_else_symbol) and left.is_true_expression (a_context, False) then
+				-- Ignore right-hand side.
+			else
+				right.add_old_expressions (a_list, a_context)
+			end
 		end
 
 feature -- Processing
