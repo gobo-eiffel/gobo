@@ -109,6 +109,11 @@ jobs:
         eiffel_compiler: [ge, debug_ge, ise, debug_ise]
         system_under_test: [library, tool]
         os: [ubuntu-26.04, ubuntu-24.04, ubuntu-22.04, ubuntu-26.04-arm, ubuntu-24.04-arm, ubuntu-22.04-arm]
+        exclude:
+          - os: ubuntu-22.04
+            eiffel_compiler: ise
+          - os: ubuntu-22.04
+            eiffel_compiler: debug_ise
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v6
@@ -133,19 +138,6 @@ jobs:
         eiffel_compiler: [ge, debug_ge, ise, debug_ise]
         system_under_test: [library, tool]
         os: [xcode-27, macos-26, macos-15, macos-26-intel, macos-15-intel]
-        exclude:
-          - os: macos-15
-            eiffel_compiler: ise
-          - os: macos-15
-            eiffel_compiler: debug_ise
-          - os: macos-26
-            eiffel_compiler: ise
-          - os: macos-26
-            eiffel_compiler: debug_ise
-          - os: xcode-27
-            eiffel_compiler: ise
-          - os: xcode-27
-            eiffel_compiler: debug_ise
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v6
@@ -174,10 +166,6 @@ jobs:
           - os: windows-11-arm
             eiffel_compiler: ise
           - os: windows-11-arm
-            eiffel_compiler: debug_ise
-          - os: windows-2025
-            eiffel_compiler: ise
-          - os: windows-2025
             eiffel_compiler: debug_ise
     runs-on: ${{ matrix.os }}
     steps:

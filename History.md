@@ -57,6 +57,7 @@
   anymore but a real `uint16` id. As a consequence an exception
   is raised when the number of SCOOP regions is greater than
   65535.
+* Synchronized with version in EiffelStudio 26.09.9.9100.
 
 ### Gobo Eiffel Regexp Library
 
@@ -65,6 +66,10 @@
   which means no limit. When exceeding this limit, the match fails
   (i.e. `has_matched` is set to False) and `match_limit_exceeded` is set
   to True.
+
+### Miscellaneous
+
+* Upgraded ISE Eiffel to version 26.09.9.9100.
 
 ## Version 26.09.03 - 3 September 2026
 
