@@ -85,7 +85,7 @@ feature -- Encoding
 		once
 			Result := {SYSTEM_ENCODINGS}.console_encoding
 		end
-		
+
 	detect_encoding
 			-- <Precursor/>
 		do
@@ -279,12 +279,10 @@ feature -- Output
 			-- Write `s' at end of default output.
 		local
 			n: like {READABLE_STRING_8}.count
-			external_s: ANY
 		do
 			n := s.count
 			if n > 0 then
-				external_s := s.area
-				console_ps (file_pointer, $external_s, n)
+				console_ps (file_pointer, s.area.item_address (s.area_lower), n)
 			end
 		end
 
@@ -483,7 +481,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2026, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
