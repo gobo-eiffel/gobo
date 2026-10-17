@@ -238,9 +238,9 @@ feature -- Formal arguments
 
 feature -- Assertions
 
-	add_old_expressions (a_list: DS_ARRAYED_LIST [ET_OLD_EXPRESSION])
+	add_old_expressions (a_list: DS_ARRAYED_LIST [ET_OLD_EXPRESSION]; a_context: ET_TYPE_CONTEXT)
 			-- Add to `a_list' all old expressions appearing in current operands
-			-- and (recursively) in their subexpressions.
+			-- and (recursively) in their subexpressions when viewed from `a_context'.
 		local
 			l_actual: ET_AGENT_ARGUMENT_OPERAND_ITEM
 			l_operand: ET_AGENT_ARGUMENT_OPERAND
@@ -250,7 +250,7 @@ feature -- Assertions
 			from i := 0 until i > nb loop
 				l_actual := storage.item (i)
 				l_operand := l_actual.agent_actual_argument
-				l_operand.add_old_expressions (a_list)
+				l_operand.add_old_expressions (a_list, a_context)
 				i := i + 1
 			end
 		end

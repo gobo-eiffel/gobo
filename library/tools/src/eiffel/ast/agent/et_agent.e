@@ -141,15 +141,15 @@ feature -- Formal arguments
 
 feature -- Assertions
 
-	add_old_expressions (a_list: DS_ARRAYED_LIST [ET_OLD_EXPRESSION])
+	add_old_expressions (a_list: DS_ARRAYED_LIST [ET_OLD_EXPRESSION]; a_context: ET_TYPE_CONTEXT)
 			-- Add to `a_list' all old expressions appearing in current expression
-			-- and (recursively) in its subexpressions.
+			-- and (recursively) in its subexpressions when viewed from `a_context'.
 			-- Do not take into account the code inside inline agent,
 			-- just the target and arguments of the agent.
 		do
-			target.add_old_expressions (a_list)
+			target.add_old_expressions (a_list, a_context)
 			if attached arguments as l_arguments then
-				l_arguments.add_old_expressions (a_list)
+				l_arguments.add_old_expressions (a_list, a_context)
 			end
 		end
 

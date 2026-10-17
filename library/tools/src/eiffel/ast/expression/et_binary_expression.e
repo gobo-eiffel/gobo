@@ -126,12 +126,12 @@ feature -- Formal arguments
 
 feature -- Assertions
 
-	add_old_expressions (a_list: DS_ARRAYED_LIST [ET_OLD_EXPRESSION])
+	add_old_expressions (a_list: DS_ARRAYED_LIST [ET_OLD_EXPRESSION]; a_context: ET_TYPE_CONTEXT)
 			-- Add to `a_list' all old expressions appearing in current expression
 			-- and (recursively) in its subexpressions.
 		do
-			left.add_old_expressions (a_list)
-			right.add_old_expressions (a_list)
+			left.add_old_expressions (a_list, a_context)
+			right.add_old_expressions (a_list, a_context)
 		end
 
 invariant

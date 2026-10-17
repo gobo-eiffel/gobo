@@ -22,6 +22,10 @@
 * Avoid possible infinite loops when inheritance cycles or type
   anchor cycles have been detected during a previous Degree but
   the compiler proceeds further in fault tolerant mode.
+* Optimized semi-strict boolean infix expressions so that assertions
+  of the form `elks_checking implies f (old twin)` do not trigger
+  a call to `twin` on routine entry when `elks_checking` is a constant
+  attribute of value `False`.
 * Upgraded Zig toolchain to version 0.17.0.
 
 ### gedoc

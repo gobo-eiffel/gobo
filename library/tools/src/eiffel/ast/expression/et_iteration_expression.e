@@ -130,20 +130,20 @@ feature -- Formal arguments
 
 feature -- Assertions
 
-	add_old_expressions (a_list: DS_ARRAYED_LIST [ET_OLD_EXPRESSION])
+	add_old_expressions (a_list: DS_ARRAYED_LIST [ET_OLD_EXPRESSION]; a_context: ET_TYPE_CONTEXT)
 			-- Add to `a_list' all old expressions appearing in current expression
-			-- and (recursively) in its subexpressions.
+			-- and (recursively) in its subexpressions when viewed from `a_context'.
 		do
-			iteration_expression.add_old_expressions (a_list)
-			iterable_expression.add_old_expressions (a_list)
+			iteration_expression.add_old_expressions (a_list, a_context)
+			iterable_expression.add_old_expressions (a_list, a_context)
 			if attached until_conditional as l_until_conditional then
-				l_until_conditional.expression.add_old_expressions (a_list)
+				l_until_conditional.expression.add_old_expressions (a_list, a_context)
 			end
 			if attached invariant_part as l_invariant_part then
-				l_invariant_part.add_old_expressions (a_list)
+				l_invariant_part.add_old_expressions (a_list, a_context)
 			end
 			if attached variant_part as l_variant_part then
-				l_variant_part.expression.add_old_expressions (a_list)
+				l_variant_part.expression.add_old_expressions (a_list, a_context)
 			end
 		end
 

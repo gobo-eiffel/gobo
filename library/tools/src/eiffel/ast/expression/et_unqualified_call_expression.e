@@ -27,6 +27,8 @@ inherit
 
 	ET_CALL_EXPRESSION
 		undefine
+			is_false_expression,
+			is_true_expression,
 			is_qualified_call,
 			has_result,
 			has_address_expression,

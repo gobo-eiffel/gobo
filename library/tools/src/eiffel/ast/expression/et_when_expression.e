@@ -127,14 +127,17 @@ feature -- Formal arguments
 
 feature -- Assertions
 
-	add_old_expressions (a_list: DS_ARRAYED_LIST [ET_OLD_EXPRESSION])
+	add_old_expressions (a_list: DS_ARRAYED_LIST [ET_OLD_EXPRESSION]; a_context: ET_TYPE_CONTEXT)
 			-- Add to `a_list' all old expressions appearing in current when part
-			-- and (recursively) in its subexpressions.
+			-- and (recursively) in its subexpressions when viewed from `a_context'.
 		require
 			a_list_not_void: a_list /= Void
 			no_void_item: not a_list.has_void
+			a_context_not_void: a_context /= Void
+			a_context_valid: a_context.is_valid_context
+			-- no_cycle: no cycle in anchored types involved.
 		do
-			then_expression.add_old_expressions (a_list)
+			then_expression.add_old_expressions (a_list, a_context)
 		ensure
 			no_void_item: not a_list.has_void
 		end
