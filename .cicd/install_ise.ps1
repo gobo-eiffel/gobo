@@ -39,7 +39,7 @@ if ($LastExitCode -ne 0) {
 }
 
 $GOBO_CI_ISE_VERSION = "26.09"
-$GOBO_CI_ISE_REVISION = "rev_99800"
+$GOBO_CI_ISE_REVISION = "rev_99100"
 
 switch ($GOBO_CI_OS) {
 	"linux" {
