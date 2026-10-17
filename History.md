@@ -66,6 +66,10 @@
   (i.e. `has_matched` is set to False) and `match_limit_exceeded` is set
   to True.
 
+### Miscellaneous
+
+* Upgraded ISE Eiffel to version 26.09.9.9100.
+
 ## Version 26.09.03 - 3 September 2026
 
 ### gec

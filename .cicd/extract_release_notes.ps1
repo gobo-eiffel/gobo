@@ -52,7 +52,7 @@ Gobo Eiffel is an open-source collection of compilers, tools and libraries for t
 
 ### Compatibility
 
-- Gobo Eiffel works with EiffelStudio 25.12 and with Gobo Eiffel $Version itself.
+- Gobo Eiffel works with EiffelStudio 26.09 and with Gobo Eiffel $Version itself.
 
 Happy Eiffel coding!
 "@

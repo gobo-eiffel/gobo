@@ -188,7 +188,7 @@ jobs:
       fail-fast: false
       matrix:
         c_compiler: [zig, clang]
-        eiffel_compiler: [ge, debug_ge]
+        eiffel_compiler: [ge, debug_ge, ise, debug_ise]
         system_under_test: [library, tool]
         exclude:
           - c_compiler: zig
