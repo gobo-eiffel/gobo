@@ -154,17 +154,25 @@ feature -- Handling 'textDocument/prepareCallHierarchy' requests
 			l_browsable_name_finder: ET_BROWSABLE_NAME_FINDER
 			l_request_position: LS_POSITION
 			l_position: ET_POSITION
+			l_uri: LS_DOCUMENT_URI
 			l_call_hierarchy_builder: GELSP_CALL_HIERARCHY_BUILDER
+			l_browsable_name: detachable ET_BROWSABLE_NAME
 		do
-			if attached class_from_uri (a_request.text_document.uri) as l_class then
-				l_request_position := a_request.position
-				l_position := position_from_lsp (l_request_position)
+			l_uri := a_request.text_document.uri
+			l_request_position := a_request.position
+			l_position := position_from_lsp (l_request_position)
+			if attached contract_view (l_uri, Void, Void) as l_contract_view then
+				l_browsable_name := l_contract_view.browsable_name (l_position)
+			elseif attached flat_contract_view (l_uri, Void, Void) as l_flat_contract_view then
+				l_browsable_name := l_flat_contract_view.browsable_name (l_position)
+			elseif attached class_from_uri (l_uri) as l_class then
 				create l_browsable_name_finder.make (system_processor)
 				l_browsable_name_finder.find_browsable_name (l_position, l_class)
-				if attached l_browsable_name_finder.last_browsable_name as l_last_browsable_name then
-					create l_call_hierarchy_builder.make (a_response, Current)
-					l_last_browsable_name.process (l_call_hierarchy_builder)
-				end
+				l_browsable_name := l_browsable_name_finder.last_browsable_name
+			end
+			if l_browsable_name /= Void then
+				create l_call_hierarchy_builder.make (a_response, Current)
+				l_browsable_name.process (l_call_hierarchy_builder)
 			end
 		end
 
@@ -747,17 +755,25 @@ feature -- Handling 'textDocument/implementation' requests
 			l_browsable_name_finder: ET_BROWSABLE_NAME_FINDER
 			l_request_position: LS_POSITION
 			l_position: ET_POSITION
+			l_uri: LS_DOCUMENT_URI
+			l_browsable_name: detachable ET_BROWSABLE_NAME
 			l_implementation_builder: GELSP_IMPLEMENTATION_BUILDER
 		do
-			if attached class_from_uri (a_request.text_document.uri) as l_class then
-				l_request_position := a_request.position
-				l_position := position_from_lsp (l_request_position)
+			l_uri := a_request.text_document.uri
+			l_request_position := a_request.position
+			l_position := position_from_lsp (l_request_position)
+			if attached contract_view (l_uri, Void, Void) as l_contract_view then
+				l_browsable_name := l_contract_view.browsable_name (l_position)
+			elseif attached flat_contract_view (l_uri, Void, Void) as l_flat_contract_view then
+				l_browsable_name := l_flat_contract_view.browsable_name (l_position)
+			elseif attached class_from_uri (l_uri) as l_class then
 				create l_browsable_name_finder.make (system_processor)
 				l_browsable_name_finder.find_browsable_name (l_position, l_class)
-				if attached l_browsable_name_finder.last_browsable_name as l_last_browsable_name then
-					create l_implementation_builder.make (a_response, Current)
-					l_last_browsable_name.process (l_implementation_builder)
-				end
+				l_browsable_name := l_browsable_name_finder.last_browsable_name
+			end
+			if l_browsable_name /= Void then
+				create l_implementation_builder.make (a_response, Current)
+				l_browsable_name.process (l_implementation_builder)
 			end
 		end
 
@@ -802,18 +818,32 @@ feature -- Handling 'textDocument/typeDefinition' requests
 			-- Handle 'textDocument/typeDefinition' request `a_request`.
 			-- Build `a_response` accordingly.
 		local
+			l_uri: LS_DOCUMENT_URI
 			l_browsable_name_finder: ET_BROWSABLE_NAME_FINDER
 			l_request_position: LS_POSITION
 			l_position: ET_POSITION
 			l_type_definition_builder: GELSP_TYPE_DEFINITION_BUILDER
+			l_contract_view_type_definition_builder: GELSP_CONTRACT_VIEW_TYPE_DEFINITION_BUILDER
+			l_flat_contract_view_type_definition_builder: GELSP_FLAT_CONTRACT_VIEW_TYPE_DEFINITION_BUILDER
 		do
-			if attached class_from_uri (a_request.text_document.uri) as l_class then
-				l_request_position := a_request.position
-				l_position := position_from_lsp (l_request_position)
+			l_uri := a_request.text_document.uri
+			l_request_position := a_request.position
+			l_position := position_from_lsp (l_request_position)
+			if attached contract_view (l_uri, Void, Void) as l_contract_view then
+				if attached l_contract_view.browsable_name (l_position) as l_browsable_name then
+					create l_contract_view_type_definition_builder.make (a_response, l_uri, l_position, Current)
+					l_browsable_name.process (l_contract_view_type_definition_builder)
+				end
+			elseif attached flat_contract_view (l_uri, Void, Void) as l_flat_contract_view then
+				if attached l_flat_contract_view.browsable_name (l_position) as l_browsable_name then
+					create l_flat_contract_view_type_definition_builder.make (a_response, l_uri, l_position, Current)
+					l_browsable_name.process (l_flat_contract_view_type_definition_builder)
+				end
+			elseif attached class_from_uri (l_uri) as l_class then
 				create l_browsable_name_finder.make (system_processor)
 				l_browsable_name_finder.find_browsable_name (l_position, l_class)
 				if attached l_browsable_name_finder.last_browsable_name as l_last_browsable_name then
-					create l_type_definition_builder.make (a_response, l_position, Current)
+					create l_type_definition_builder.make (a_response, l_uri, l_position, Current)
 					l_last_browsable_name.process (l_type_definition_builder)
 				end
 			end
@@ -834,17 +864,25 @@ feature -- Handling 'textDocument/prepareTypeHierarchy' requests
 			l_browsable_name_finder: ET_BROWSABLE_NAME_FINDER
 			l_request_position: LS_POSITION
 			l_position: ET_POSITION
+			l_uri: LS_DOCUMENT_URI
 			l_type_hierarchy_builder: GELSP_TYPE_HIERARCHY_BUILDER
+			l_browsable_name: detachable ET_BROWSABLE_NAME
 		do
-			if attached class_from_uri (a_request.text_document.uri) as l_class then
-				l_request_position := a_request.position
-				l_position := position_from_lsp (l_request_position)
+			l_uri := a_request.text_document.uri
+			l_request_position := a_request.position
+			l_position := position_from_lsp (l_request_position)
+			if attached contract_view (l_uri, Void, Void) as l_contract_view then
+				l_browsable_name := l_contract_view.browsable_name (l_position)
+			elseif attached flat_contract_view (l_uri, Void, Void) as l_flat_contract_view then
+				l_browsable_name := l_flat_contract_view.browsable_name (l_position)
+			elseif attached class_from_uri (l_uri) as l_class then
 				create l_browsable_name_finder.make (system_processor)
 				l_browsable_name_finder.find_browsable_name (l_position, l_class)
-				if attached l_browsable_name_finder.last_browsable_name as l_last_browsable_name then
-					create l_type_hierarchy_builder.make (a_response, Current)
-					l_last_browsable_name.process (l_type_hierarchy_builder)
-				end
+				l_browsable_name := l_browsable_name_finder.last_browsable_name
+			end
+			if l_browsable_name /= Void then
+				create l_type_hierarchy_builder.make (a_response, Current)
+				l_browsable_name.process (l_type_hierarchy_builder)
 			end
 		end
 
@@ -1277,6 +1315,45 @@ feature -- Handling '$/goboEiffel/formatView' requests
 			format_view_request_handler_not_void: Result /= Void
 		end
 
+feature -- Handling '$/goboEiffel/sourceDefinition' requests
+
+	on_source_definition_request (a_request: GELSP_SOURCE_DEFINITION_REQUEST; a_response: LS_DEFINITION_RESPONSE)
+			-- Handle '$/goboEiffel/sourceDefinition' request `a_request`.
+			-- Build `a_response` accordingly.
+		local
+			l_uri: LS_DOCUMENT_URI
+			l_browsable_name_finder: ET_BROWSABLE_NAME_FINDER
+			l_request_position: LS_POSITION
+			l_position: ET_POSITION
+			l_definition_builder: GELSP_DEFINITION_BUILDER
+			l_browsable_name: detachable ET_BROWSABLE_NAME
+		do
+			l_uri := a_request.params.text_document.uri
+			l_request_position := a_request.params.position
+			l_position := position_from_lsp (l_request_position)
+			if attached contract_view (l_uri, Void, Void) as l_contract_view then
+				l_browsable_name := l_contract_view.browsable_name (l_position)
+			elseif attached flat_contract_view (l_uri, Void, Void) as l_flat_contract_view then
+				l_browsable_name := l_flat_contract_view.browsable_name (l_position)
+			elseif attached class_from_uri (l_uri) as l_class then
+				create l_browsable_name_finder.make (system_processor)
+				l_browsable_name_finder.find_browsable_name (l_position, l_class)
+				l_browsable_name := l_browsable_name_finder.last_browsable_name
+			end
+			if l_browsable_name /= Void then
+				create l_definition_builder.make (a_response, l_uri, l_position, Current)
+				l_browsable_name.process (l_definition_builder)
+			end
+		end
+
+	source_definition_request_handler: GELSP_SOURCE_DEFINITION_REQUEST_HANDLER
+			-- Handler for '$/goboEiffel/sourceDefinition' requests
+		once ("OBJECT")
+			create Result.make
+		ensure
+			source_definition_request_handler_not_void: Result /= Void
+		end
+
 feature {LS_RESPONSE_HANDLER, LS_REQUEST_HANDLER} -- Implementation
 
 	message_factories: DS_HASH_TABLE [LS_MESSAGE_FACTORY, LS_STRING]
@@ -1284,6 +1361,7 @@ feature {LS_RESPONSE_HANDLER, LS_REQUEST_HANDLER} -- Implementation
 		once ("OBJECT")
 			Result := precursor
 			Result.force (create {GELSP_FORMAT_VIEW_REQUEST_FACTORY}.make, {GELSP_FORMAT_VIEW_REQUEST}.method)
+			Result.force (create {GELSP_SOURCE_DEFINITION_REQUEST_FACTORY}.make, {GELSP_SOURCE_DEFINITION_REQUEST}.method)
 		end
 
 feature {NONE} -- Eiffel processing

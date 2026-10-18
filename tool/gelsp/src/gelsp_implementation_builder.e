@@ -16,9 +16,10 @@ inherit
 		rename
 			make as make_null_processor
 		redefine
-				process_precursor_name,
-				process_qualified_call_name,
-				process_unqualified_call_name
+			process_class_name,
+			process_precursor_name,
+			process_qualified_call_name,
+			process_unqualified_call_name
 		end
 
 create
@@ -49,6 +50,17 @@ feature -- Access
 			-- Message manager
 
 feature {ET_BROWSABLE_NAME} -- Processing
+
+	process_class_name (a_name: ET_BROWSABLE_CLASS_NAME)
+			-- Process `a_name`.
+		local
+			l_class: ET_CLASS
+		do
+			l_class := a_name.actual_class
+			if attached message_manager.location (l_class.name, l_class) as l_location then
+				response.add_location (l_location)
+			end
+		end
 
 	process_precursor_name (a_name: ET_BROWSABLE_PRECURSOR_NAME)
 			-- Process `a_name`.

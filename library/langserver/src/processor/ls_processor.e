@@ -398,6 +398,13 @@ feature {LS_ANY} -- Processing
 		deferred
 		end
 
+	process_definition_params (a_value: LS_DEFINITION_PARAMS)
+			-- Process `a_value`.
+		require
+			a_value_not_void: a_value /= Void
+		deferred
+		end
+
 	process_definition_registration_options (a_value: LS_DEFINITION_REGISTRATION_OPTIONS)
 			-- Process `a_value`.
 		require
