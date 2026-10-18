@@ -1382,8 +1382,6 @@ feature {LS_ANY} -- Processing
 
 	process_definition_params (a_value: LS_DEFINITION_PARAMS)
 			-- Process `a_value`.
-		require
-			a_value_not_void: a_value /= Void
 		do
 			utf8_string.append_character ('{')
 			process_text_document_location_params (a_value)

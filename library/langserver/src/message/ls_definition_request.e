@@ -5,7 +5,7 @@
 		"LSP 'textDocument/definition' requests"
 
 	library: "Gobo Eiffel Language Server Protocol Library"
-	copyright: "Copyright (c) 2025, Eric Bezault and others"
+	copyright: "Copyright (c) 2025-2026, Eric Bezault and others"
 	license: "MIT License"
 
 class LS_DEFINITION_REQUEST
@@ -15,6 +15,11 @@ inherit
 	LS_REQUEST
 
 	LS_DEFINITION_PARAMS
+		rename
+			make as make_params
+		redefine
+			process
+		end
 
 create
 
@@ -30,10 +35,7 @@ feature {NONE} -- Initialization
 			a_position_not_void: a_position /= Void
 		do
 			id := a_id
-			text_document := a_text_document
-			position := a_position
-			work_done_token := a_work_done_token
-			partial_result_token := a_partial_result_token
+			make_params (a_text_document, a_position, a_work_done_token, a_partial_result_token)
 		ensure
 			id_set: id = a_id
 			text_document_set: text_document = a_text_document

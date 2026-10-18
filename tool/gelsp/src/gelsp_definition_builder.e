@@ -59,7 +59,7 @@ feature {ET_BROWSABLE_NAME} -- Processing
 			-- Process `a_name`.
 		do
 			if attached a_name.formal_argument as l_formal_argument then
-				add_location (l_formal_argument.name, a_name.current_class)
+				add_declaration_location (l_formal_argument.name, a_name.current_class)
 			end
 		end
 
@@ -74,7 +74,7 @@ feature {ET_BROWSABLE_NAME} -- Processing
 			l_class: ET_CLASS
 		do
 			l_class := a_name.actual_class
-			add_location (l_class.name, l_class)
+			add_class_location (l_class)
 		end
 
 	process_current_keyword (a_name: ET_BROWSABLE_CURRENT_KEYWORD)
@@ -85,14 +85,14 @@ feature {ET_BROWSABLE_NAME} -- Processing
 	process_formal_parameter_name (a_name: ET_BROWSABLE_FORMAL_PARAMETER_NAME)
 			-- Process `a_name`.
 		do
-			add_location (a_name.formal_parameter.name, a_name.current_class)
+			add_declaration_location (a_name.formal_parameter.name, a_name.current_class)
 		end
 
 	process_inline_separate_argument_name (a_name: ET_BROWSABLE_INLINE_SEPARATE_ARGUMENT_NAME)
 			-- Process `a_name`.
 		do
 			if attached a_name.inline_separate_argument as l_inline_separate_argument then
-				add_location (l_inline_separate_argument.name, a_name.current_class)
+				add_declaration_location (l_inline_separate_argument.name, a_name.current_class)
 			end
 		end
 
@@ -100,7 +100,7 @@ feature {ET_BROWSABLE_NAME} -- Processing
 			-- Process `a_name`.
 		do
 			if attached a_name.iteration_component as l_iteration_component then
-				add_location (l_iteration_component.item_name, a_name.current_class)
+				add_declaration_location (l_iteration_component.item_name, a_name.current_class)
 			end
 		end
 
@@ -113,7 +113,7 @@ feature {ET_BROWSABLE_NAME} -- Processing
 			-- Process `a_name`.
 		do
 			if attached a_name.local_variable as l_local_variable then
-				add_location (l_local_variable.name, a_name.current_class)
+				add_declaration_location (l_local_variable.name, a_name.current_class)
 			end
 		end
 
@@ -121,7 +121,7 @@ feature {ET_BROWSABLE_NAME} -- Processing
 			-- Process `a_name`.
 		do
 			if attached a_name.object_test as l_object_test then
-				add_location (l_object_test.name, a_name.current_class)
+				add_declaration_location (l_object_test.name, a_name.current_class)
 			end
 		end
 
@@ -132,7 +132,7 @@ feature {ET_BROWSABLE_NAME} -- Processing
 		do
 			if attached a_name.call_feature as l_feature then
 				l_feature_impl := l_feature.implementation_feature
-				add_location (l_feature_impl.name, l_feature_impl.implementation_class)
+				add_feature_location (l_feature_impl, l_feature_impl.implementation_class)
 			end
 		end
 
@@ -143,15 +143,15 @@ feature {ET_BROWSABLE_NAME} -- Processing
 		do
 			if attached a_name.call_feature as l_feature then
 				l_feature_impl := l_feature.implementation_feature
-				add_location (l_feature_impl.name, l_feature_impl.implementation_class)
+				add_feature_location (l_feature_impl, l_feature_impl.implementation_class)
 			end
 		end
 
 	process_result (a_name: ET_BROWSABLE_RESULT)
 			-- Process `a_name`.
 		do
-			if attached a_name.current_closure as l_closure and then attached l_closure.type as l_type then
-				add_location (l_type, a_name.current_class)
+			if attached a_name.current_closure as l_closure then
+				add_query_type_location (l_closure, a_name.current_class)
 			end
 		end
 
@@ -159,7 +159,7 @@ feature {ET_BROWSABLE_NAME} -- Processing
 			-- Process `a_name`.
 		do
 			if attached a_name.labeled_parameter as l_labeled_parameter then
-				add_location (l_labeled_parameter.label, l_labeled_parameter.implementation_class)
+				add_declaration_location (l_labeled_parameter.label, l_labeled_parameter.implementation_class)
 			end
 		end
 
@@ -170,8 +170,9 @@ feature {ET_BROWSABLE_NAME} -- Processing
 		do
 			if attached {ET_FEATURE} a_name.current_closure as l_feature then
 				l_feature_impl := l_feature.implementation_feature
-				add_location (l_feature_impl.name, l_feature_impl.implementation_class)
+				add_feature_location (l_feature_impl, l_feature_impl.implementation_class)
 			end
+
 		end
 
 	process_unqualified_call_name (a_name: ET_BROWSABLE_UNQUALIFIED_CALL_NAME)
@@ -181,7 +182,7 @@ feature {ET_BROWSABLE_NAME} -- Processing
 		do
 			if attached a_name.call_feature as l_feature then
 				l_feature_impl := l_feature.implementation_feature
-				add_location (l_feature_impl.name, l_feature_impl.implementation_class)
+				add_feature_location (l_feature_impl, l_feature_impl.implementation_class)
 			end
 		end
 
@@ -191,6 +192,43 @@ feature {ET_BROWSABLE_NAME} -- Processing
 		end
 
 feature {NONE} -- Implementation
+
+	add_class_location (a_class: ET_CLASS)
+			-- Add location corresponding to the class name of `a_class` to `response`. 
+		require
+			a_class_not_void: a_class /= Void
+		do
+			add_location (a_class.name, a_class)
+		end
+
+	add_declaration_location (a_identifier: ET_IDENTIFIER; a_class: ET_CLASS)
+			-- Add location corresponding to the class name of `a_class` to `response`. 
+		require
+			a_identifier_not_void: a_identifier /= Void
+			a_class_not_void: a_class /= Void
+		do
+			add_location (a_identifier, a_class)
+		end
+
+	add_feature_location (a_feature: ET_FEATURE; a_class: ET_CLASS)
+			-- Add location corresponding to `a_feature` in `a_class` to `response`. 
+		require
+			a_feature_not_void: a_feature /= Void
+			a_class_not_void: a_class /= Void
+		do
+			add_location (a_feature.name, a_class)
+		end
+
+	add_query_type_location (a_query: ET_CLOSURE; a_class: ET_CLASS)
+			-- Add location corresponding to the type of `a_query` to `response`. 
+		require
+			a_query_not_void: a_query /= Void
+			a_class_not_void: a_class /= Void
+		do
+			if attached a_query.type as l_type then
+				add_location (l_type, a_class)
+			end
+		end
 
 	add_location (a_node: ET_AST_NODE; a_class: ET_CLASS)
 			-- Add location corresponding to `a_node` in `a_class` to `response`.
