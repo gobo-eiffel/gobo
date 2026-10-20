@@ -168,7 +168,7 @@ if ("$GOBO_CI_C_COMPILER" -eq "") {
 		}
 		"gitlab" {
 			$env:GOBO = $env:CI_PROJECT_DIR
-			if ($env:CI_RUNNER_EXECUTABLE_ARCH -match '^([^/]+)/.*') {
+			if ($env:CI_RUNNER_DESCRIPTION -match '^[^-]+\-([^-]+)\-.*') {
 				switch ($matches[1]) {
 					"linux" {
 						$GOBO_CI_OS = "linux"
