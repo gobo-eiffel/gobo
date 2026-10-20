@@ -31,7 +31,7 @@ linux_gcc_build_ge:
       when: never
     - if: $CI_MERGE_REQUEST_ID
       when: never
-    - if: $GOBO_CUSTOM_PIPELINE == null || $GOBO_CUSTOM_PIPELINE == "linux_test_ise"
+    - if: $GOBO_CUSTOM_PIPELINE == "disabled" || $GOBO_CUSTOM_PIPELINE == "linux_test_ise"
       when: on_success
   artifacts:
     when: always
@@ -76,7 +76,7 @@ windows_zig_build_ge:
       when: never
     - if: $CI_MERGE_REQUEST_ID
       when: never
-    - if: $GOBO_CUSTOM_PIPELINE == null || $GOBO_CUSTOM_PIPELINE == "windows_test_ise"
+    - if: $GOBO_CUSTOM_PIPELINE == "disabled" || $GOBO_CUSTOM_PIPELINE == "windows_test_ise"
       when: on_success
   artifacts:
     when: always
@@ -382,5 +382,5 @@ tool_windows_zig_test_ise:
 #
 
 stages:
-#  - build_ge
-#  - test_ge
+  - build_ge
+  - test_ge
