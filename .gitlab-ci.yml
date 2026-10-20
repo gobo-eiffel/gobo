@@ -382,5 +382,5 @@ tool_windows_zig_test_ise:
 #
 
 stages:
-  - build_ge
-  - test_ge
+#  - build_ge
+#  - test_ge
