@@ -113,7 +113,7 @@ library_linux_gcc_test_ge:
       when: never
     - if: $CI_MERGE_REQUEST_ID
       when: never
-    - if: $GOBO_CUSTOM_PIPELINE == null
+    - if: $GOBO_CUSTOM_PIPELINE == "disabled"
       when: on_success
 
 tool_linux_gcc_test_ge:
@@ -132,7 +132,7 @@ tool_linux_gcc_test_ge:
       when: never
     - if: $CI_MERGE_REQUEST_ID
       when: never
-    - if: $GOBO_CUSTOM_PIPELINE == null
+    - if: $GOBO_CUSTOM_PIPELINE == "disabled"
       when: on_success
 
 library_macos_clang_test_ge:
@@ -188,7 +188,7 @@ library_windows_zig_test_ge:
       when: never
     - if: $CI_MERGE_REQUEST_ID
       when: never
-    - if: $GOBO_CUSTOM_PIPELINE == null
+    - if: $GOBO_CUSTOM_PIPELINE == "disabled"
       when: on_success
 
 # We have `tool_no_gec_windows_zig_test_ge` and `tool_gec_windows_zig_test_ge`,
@@ -210,7 +210,7 @@ tool_no_gec_windows_zig_test_ge:
       when: never
     - if: $CI_MERGE_REQUEST_ID
       when: never
-    - if: $GOBO_CUSTOM_PIPELINE == null
+    - if: $GOBO_CUSTOM_PIPELINE == "disabled"
       when: on_success
 
 # Even 2 hours is not enough to run this job.
