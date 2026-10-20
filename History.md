@@ -1,5 +1,12 @@
 # Release History
 
+## Version xx.xx.xx - xxxx
+
+### gelsp
+
+* Added option to ignore validity errors in classes which
+  are not reachable from the root class.
+
 ## Version 26.10.18 - 18 October 2026
 
 ### gec
