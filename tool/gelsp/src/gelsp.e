@@ -985,14 +985,17 @@ feature -- Handling 'workspace/configuration' requests
 			l_value: STRING_8
 			l_old_config_ecf_filename: STRING_8
 			l_old_config_ecf_target: STRING_8
+			l_old_ignore_classes_not_in_system: BOOLEAN
 		do
 			l_old_config_ecf_filename := config_ecf_filename
 			l_old_config_ecf_target := config_ecf_target
+			l_old_ignore_classes_not_in_system := ignore_classes_not_in_system
 			config_ecf_filename := Void
 			config_ecf_target := Void
+			ignore_classes_not_in_system := False
 			if a_result /= Void then
 				l_configurations := a_result.to_array
-				if l_configurations.count = 2 then
+				if l_configurations.count = 3 then
 					if attached {LS_STRING} l_configurations.value (1) as l_config_ecf_filename then
 						l_value := l_config_ecf_filename.utf8_value
 						l_value.right_adjust
@@ -1007,6 +1010,9 @@ feature -- Handling 'workspace/configuration' requests
 							config_ecf_target := l_value
 						end
 					end
+					if attached {LS_BOOLEAN} l_configurations.value (3) as l_ignore_classes_not_in_system then
+						ignore_classes_not_in_system := l_ignore_classes_not_in_system.value
+					end
 				end
 			end
 			if not is_configured then
@@ -1019,7 +1025,11 @@ feature -- Handling 'workspace/configuration' requests
 				end
 					-- First Eiffel code analysis.
 				build_eiffel_system
-			elseif config_ecf_filename /~ l_old_config_ecf_filename or config_ecf_target /~ l_old_config_ecf_target then
+			elseif
+				config_ecf_filename /~ l_old_config_ecf_filename or
+				config_ecf_target /~ l_old_config_ecf_target or
+				ignore_classes_not_in_system /= l_old_ignore_classes_not_in_system
+			then
 					-- Settings have been changed.
 				set_system_processor
 				build_eiffel_system
@@ -1032,7 +1042,10 @@ feature -- Handling 'workspace/didChangeConfiguration' notifications
 			-- Handle 'workspace/didChangeConfiguration' notification `a_notification`.
 			-- Actions to be executed when watched files are changed.
 		do
-			send_configuration_request (<<[Void, "gobo-eiffel.workspaceEcfFile"], [Void, "gobo-eiffel.workspaceEcfTarget"]>>)
+			send_configuration_request (<<
+				[Void, "gobo-eiffel.workspaceEcfFile"],
+				[Void, "gobo-eiffel.workspaceEcfTarget"],
+				[Void, "gobo-eiffel.ignoreClassesNotInSystem"]>>)
 		end
 
 	did_change_configuration_notification_handler: LS_SERVER_DID_CHANGE_CONFIGURATION_NOTIFICATION_HANDLER
@@ -1268,7 +1281,10 @@ feature -- Handling 'initialized' notifications
 			if did_change_configuration_notification_handler.is_dynamic_registration_supported then
 				register_did_change_configuration_options ("zzz")
 			end
-			send_configuration_request (<<[Void, "gobo-eiffel.workspaceEcfFile"], [Void, "gobo-eiffel.workspaceEcfTarget"]>>)
+			send_configuration_request (<<
+				[Void, "gobo-eiffel.workspaceEcfFile"],
+				[Void, "gobo-eiffel.workspaceEcfTarget"],
+				[Void, "gobo-eiffel.ignoreClassesNotInSystem"]>>)
 		end
 
 feature -- Handling 'shutdown' requests
@@ -1424,7 +1440,7 @@ feature {NONE} -- Eiffel processing
 					build_class_mapping (l_system)
 					create l_classes.make (l_system.class_count_recursive)
 					l_system.classes_do_recursive (agent l_classes.force_last)
-					system_processor.compile_classes (l_classes)
+					compile_classes (l_classes, l_system)
 					send_diagnostics
 					full_compilation_count := full_compilation_count + 1
 					incremental_compilation_count := 0
@@ -1490,7 +1506,7 @@ feature {NONE} -- Eiffel processing
 					end
 					create l_classes.make (l_system.class_count_recursive)
 					l_system.classes_do_recursive (agent l_classes.force_last)
-					system_processor.compile_classes (l_classes)
+					compile_classes (l_classes, l_system)
 					send_diagnostics
 					incremental_compilation_count := incremental_compilation_count + 1
 					total_compilation_count := total_compilation_count + 1
@@ -1644,6 +1660,29 @@ feature {NONE} -- Eiffel processing
 			edited_classes_reset: across edited_classes as l_edited_class all l_edited_class.current_class.is_unknown end
 		end
 
+	compile_classes (a_classes: DS_ARRAYED_LIST [ET_CLASS]; a_system: ET_SYSTEM)
+			-- Compile all classes in `a_classes'.
+		require
+			a_classes_not_void: a_classes /= Void
+			no_void_class: not a_classes.has_void
+			a_system_not_void: a_system /= Void
+		local
+			l_system_marker: ET_SYSTEM_MARKER
+		do
+			system_processor.compile_degree_5 (a_classes, False)
+			if ignore_classes_not_in_system then
+				system_processor.set_root_type (a_system)
+				if attached a_system.root_type as l_root_type then
+					create l_system_marker.make (a_system)
+					l_system_marker.mark_system (l_root_type.base_class)
+				else
+					a_system.classes_do_recursive (agent {ET_CLASS}.set_marked (True))
+				end
+			end
+			system_processor.compile_degree_4 (a_classes)
+			system_processor.compile_degree_3 (a_classes)
+		end
+
 	refresh_format_views
 			-- Refresh format views current open in the client.
 		local
@@ -1737,9 +1776,13 @@ feature {NONE} -- Eiffel processing
 			l_message: STRING
 			l_error_message: LS_STRING
 			l_index: INTEGER
+			l_filename: STRING
 		do
 			l_class_impl := a_error.class_impl
-			if attached l_class_impl.filename as l_filename then
+			if not ignore_classes_not_in_system or else a_error.current_class.is_marked then
+				l_filename := l_class_impl.filename
+			end
+			if l_filename /= Void then
 				l_diagnostic_list := diagnostics.value (l_filename)
 				if l_diagnostic_list = Void then
 					create l_diagnostic_list.make_with_capacity (10)
@@ -2064,6 +2107,10 @@ feature -- Eiffel system
 
 	restart_requested: BOOLEAN
 			-- Has restart of the server been requested?
+
+	ignore_classes_not_in_system: BOOLEAN
+			-- Should validity errors not be reported for classes
+			-- which are not reachable from the root class?
 
 feature -- Helper
 
