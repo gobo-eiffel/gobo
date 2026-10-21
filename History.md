@@ -12,6 +12,7 @@
   the mouse over the text of a class which contains errors.
 * Stop reporting validity errors in a class whose file has
   just been deleted.
+* Added option to ignore unused local variable warnings.
 
 ## Version 26.10.18 - 18 October 2026
 
