@@ -10,6 +10,8 @@
   of other errors in previous Degrees.
 * Indicate `*UNKNOWN*` instead of a wrong type when hoverring
   the mouse over the text of a class which contains errors.
+* Stop reporting validity errors in a class whose file has
+  just been deleted.
 
 ## Version 26.10.18 - 18 October 2026
 

@@ -1160,7 +1160,7 @@ feature -- Handling 'workspace/didChangeWatchedFiles' notifications
 						-- Class not in system.
 						-- Ignore this event.
 					i := i + 1
-				elseif edited_classes.has (l_pathname) then
+				elseif edited_classes.has (l_pathname) and l_file_event.type.value = {LS_FILE_CHANGE_TYPES}.deleted.value then
 						-- Class being edited in the client.
 						-- Ignore this event. Modifications to this class
 						-- are handled by `on_did_change_text_document_notification`.
