@@ -986,16 +986,20 @@ feature -- Handling 'workspace/configuration' requests
 			l_old_config_ecf_filename: STRING_8
 			l_old_config_ecf_target: STRING_8
 			l_old_ignore_classes_not_in_system: BOOLEAN
+			l_old_ignore_unused_local_variables: BOOLEAN
+			l_ignore_unused_local_variables: BOOLEAN
 		do
 			l_old_config_ecf_filename := config_ecf_filename
 			l_old_config_ecf_target := config_ecf_target
 			l_old_ignore_classes_not_in_system := ignore_classes_not_in_system
+			l_old_ignore_unused_local_variables := not system_processor.unused_local_variable_check_enabled
 			config_ecf_filename := Void
 			config_ecf_target := Void
 			ignore_classes_not_in_system := False
+			l_ignore_unused_local_variables := False
 			if a_result /= Void then
 				l_configurations := a_result.to_array
-				if l_configurations.count = 3 then
+				if l_configurations.count = 4 then
 					if attached {LS_STRING} l_configurations.value (1) as l_config_ecf_filename then
 						l_value := l_config_ecf_filename.utf8_value
 						l_value.right_adjust
@@ -1013,6 +1017,10 @@ feature -- Handling 'workspace/configuration' requests
 					if attached {LS_BOOLEAN} l_configurations.value (3) as l_ignore_classes_not_in_system then
 						ignore_classes_not_in_system := l_ignore_classes_not_in_system.value
 					end
+					if attached {LS_BOOLEAN} l_configurations.value (4) as l_config_ignore_unused_local_variables then
+						l_ignore_unused_local_variables := l_config_ignore_unused_local_variables.value
+						system_processor.set_unused_local_variable_check_enabled (not l_ignore_unused_local_variables)
+					end
 				end
 			end
 			if not is_configured then
@@ -1028,7 +1036,8 @@ feature -- Handling 'workspace/configuration' requests
 			elseif
 				config_ecf_filename /~ l_old_config_ecf_filename or
 				config_ecf_target /~ l_old_config_ecf_target or
-				ignore_classes_not_in_system /= l_old_ignore_classes_not_in_system
+				ignore_classes_not_in_system /= l_old_ignore_classes_not_in_system or
+				l_ignore_unused_local_variables /= l_old_ignore_unused_local_variables
 			then
 					-- Settings have been changed.
 				set_system_processor
@@ -1045,7 +1054,8 @@ feature -- Handling 'workspace/didChangeConfiguration' notifications
 			send_configuration_request (<<
 				[Void, "gobo-eiffel.workspaceEcfFile"],
 				[Void, "gobo-eiffel.workspaceEcfTarget"],
-				[Void, "gobo-eiffel.ignoreClassesNotInSystem"]>>)
+				[Void, "gobo-eiffel.ignoreClassesNotInSystem"],
+				[Void, "gobo-eiffel.ignoreUnusedLocalVariables"]>>)
 		end
 
 	did_change_configuration_notification_handler: LS_SERVER_DID_CHANGE_CONFIGURATION_NOTIFICATION_HANDLER
@@ -1284,7 +1294,8 @@ feature -- Handling 'initialized' notifications
 			send_configuration_request (<<
 				[Void, "gobo-eiffel.workspaceEcfFile"],
 				[Void, "gobo-eiffel.workspaceEcfTarget"],
-				[Void, "gobo-eiffel.ignoreClassesNotInSystem"]>>)
+				[Void, "gobo-eiffel.ignoreClassesNotInSystem"],
+				[Void, "gobo-eiffel.ignoreUnusedLocalVariables"]>>)
 		end
 
 feature -- Handling 'shutdown' requests
