@@ -586,6 +586,7 @@ feature {NONE} -- Expression processing
 				if internal_error_enabled or not current_class.has_implementation_error then
 					error_handler.report_giaac_error (generator, "find_feature_address_type", 1, "unknown feature.")
 				end
+				a_context.force_last (current_universe_impl.pointer_type)
 			elseif
 				l_name.is_argument or
 				l_name.is_local or
@@ -638,6 +639,7 @@ feature {NONE} -- Expression processing
 				if internal_error_enabled or not current_class.has_implementation_error then
 					error_handler.report_giaac_error (generator, "find_feature_address_type", 2, "unknown feature.")
 				end
+				a_context.force_last (current_universe_impl.pointer_type)
 			end
 		end
 
@@ -686,6 +688,7 @@ feature {NONE} -- Expression processing
 				if internal_error_enabled or not current_class.has_implementation_error then
 					error_handler.report_giaac_error (generator, "find_formal_argument_type", 1, "unknown arguments.")
 				end
+				a_context.force_last (tokens.unknown_class)
 			elseif l_seed < 1 or l_seed > l_arguments.count then
 					-- Internal error.
 					-- This error should have already been reported when checking
@@ -694,6 +697,7 @@ feature {NONE} -- Expression processing
 				if internal_error_enabled or not current_class.has_implementation_error then
 					error_handler.report_giaac_error (generator, "find_formal_argument_type", 2, "unknown argument.")
 				end
+				a_context.force_last (tokens.unknown_class)
 			else
 				l_formal := l_arguments.formal_argument (l_seed)
 				l_type := l_formal.type
@@ -802,6 +806,7 @@ feature {NONE} -- Expression processing
 			end
 			if had_error then
 				set_fatal_error
+				a_context.force_last (tokens.unknown_class)
 			else
 				if l_result_context_list.count /= l_old_result_context_list_count + 1 then
 						-- There is no expression such as the types of all other
@@ -860,6 +865,7 @@ feature {NONE} -- Expression processing
 				if internal_error_enabled or not current_class.has_implementation_error then
 					error_handler.report_giaac_error (generator, "find_inline_separate_argument_type", 1, "unknown inline separate arguments.")
 				end
+				a_context.force_last (tokens.unknown_class)
 			elseif l_seed < 1 or l_seed > l_inline_separate_arguments.count then
 					-- Internal error.
 					-- This error should have already been reported when checking
@@ -868,6 +874,7 @@ feature {NONE} -- Expression processing
 				if internal_error_enabled or not current_class.has_implementation_error then
 					error_handler.report_giaac_error (generator, "find_inline_separate_argument_type", 2, "unknown inline separate argument.")
 				end
+				a_context.force_last (tokens.unknown_class)
 			else
 				l_inline_separate_argument := l_inline_separate_arguments.argument (l_seed)
 				find_expression_type (l_inline_separate_argument.expression, a_context, current_system.detachable_separate_any_type)
@@ -946,6 +953,7 @@ feature {NONE} -- Expression processing
 			end
 			if had_error then
 				set_fatal_error
+				a_context.force_last (tokens.unknown_class)
 			else
 				if l_result_context_list.count = l_old_result_context_list_count then
 						-- Empty list of types. Use "NONE".
@@ -990,6 +998,7 @@ feature {NONE} -- Expression processing
 				if internal_error_enabled or not current_class.has_implementation_error then
 					error_handler.report_giaac_error (generator, "find_iteration_cursor_type", 1, "unknown iteration components.")
 				end
+				a_context.force_last (tokens.unknown_class)
 			elseif l_seed < 1 or l_seed > l_iteration_components.count then
 					-- Internal error.
 					-- This error should have already been reported when checking
@@ -998,6 +1007,7 @@ feature {NONE} -- Expression processing
 				if internal_error_enabled or not current_class.has_implementation_error then
 					error_handler.report_giaac_error (generator, "find_iteration_cursor_type", 2, "unknown iteration component.")
 				end
+				a_context.force_last (tokens.unknown_class)
 			else
 				l_iteration_component := l_iteration_components.iteration_component (l_seed)
 				find_expression_type (l_iteration_component.new_cursor_expression, a_context, current_system.detachable_separate_any_type)
@@ -1026,6 +1036,7 @@ feature {NONE} -- Expression processing
 				if internal_error_enabled or not current_class.has_implementation_error then
 					error_handler.report_giaac_error (generator, "find_iteration_item_type", 1, "unknown iteration components.")
 				end
+				a_context.force_last (tokens.unknown_class)
 			elseif l_seed < 1 or l_seed > l_iteration_components.count then
 					-- Internal error.
 					-- This error should have already been reported when checking
@@ -1034,6 +1045,7 @@ feature {NONE} -- Expression processing
 				if internal_error_enabled or not current_class.has_implementation_error then
 					error_handler.report_giaac_error (generator, "find_iteration_item_type", 2, "unknown iteration component.")
 				end
+				a_context.force_last (tokens.unknown_class)
 			else
 				l_iteration_component := l_iteration_components.iteration_component (l_seed)
 				if a_name = l_iteration_component.unfolded_cursor_name or l_iteration_component.has_cursor_name then
@@ -1067,6 +1079,7 @@ feature {NONE} -- Expression processing
 				if internal_error_enabled or not current_class.has_implementation_error then
 					error_handler.report_giaac_error (generator, "find_local_variable_type", 1, "unknown local variables.")
 				end
+				a_context.force_last (tokens.unknown_class)
 			elseif l_seed < 1 or l_seed > l_locals.count then
 					-- Internal error.
 					-- This error should have already been reported when checking
@@ -1075,6 +1088,7 @@ feature {NONE} -- Expression processing
 				if internal_error_enabled or not current_class.has_implementation_error then
 					error_handler.report_giaac_error (generator, "find_local_variable_type", 2, "unknown local variable.")
 				end
+				a_context.force_last (tokens.unknown_class)
 			else
 				l_local := l_locals.local_variable (l_seed)
 				l_type := l_local.type
@@ -1250,6 +1264,7 @@ feature {NONE} -- Expression processing
 				end
 				if l_had_error then
 					set_fatal_error
+					a_context.force_last (tokens.unknown_class)
 				else
 					if l_use_target_type and then l_parameter_context /= Void and then not l_item_conversion_aborted then
 						if l_result_context_list.count = l_old_result_context_list_count + 1 and then l_result_context_list.last.conforms_to_context (l_parameter_context, system_processor) then
@@ -1408,6 +1423,7 @@ feature {NONE} -- Expression processing
 				free_context (l_expression_context)
 				if had_error then
 					set_fatal_error
+					a_context.force_last (tokens.unknown_class)
 				else
 					create l_tuple_type.make (tokens.implicit_attached_type_mark, l_actuals, current_universe_impl.tuple_type.named_base_class)
 					a_context.force_last (l_tuple_type)
@@ -1475,6 +1491,7 @@ feature {NONE} -- Expression processing
 				if internal_error_enabled or not current_class.has_implementation_error then
 					error_handler.report_giaac_error (generator, "find_object_test_local_type", 1, "unknown object tests.")
 				end
+				a_context.force_last (tokens.unknown_class)
 			elseif l_seed < 1 or l_seed > l_object_tests.count then
 					-- Internal error.
 					-- This error should have already been reported when checking
@@ -1483,6 +1500,7 @@ feature {NONE} -- Expression processing
 				if internal_error_enabled or not current_class.has_implementation_error then
 					error_handler.report_giaac_error (generator, "find_object_test_local_type", 2, "unknown object test local.")
 				end
+				a_context.force_last (tokens.unknown_class)
 			else
 				l_object_test := l_object_tests.object_test (l_seed)
 				l_type := l_object_test.type
@@ -1572,6 +1590,7 @@ feature {NONE} -- Expression processing
 				if internal_error_enabled or not current_class.has_implementation_error then
 					error_handler.report_giaac_error (generator, "find_precursor_expression_type", 1, "unknown parent type.")
 				end
+				a_context.force_last (tokens.unknown_class)
 			elseif not attached l_parent_type.base_class.seeded_query (l_seed) as l_query then
 					-- Internal error: the Precursor construct should already have been
 					-- resolved when flattening the features of `current_class_impl'.
@@ -1581,6 +1600,7 @@ feature {NONE} -- Expression processing
 				if internal_error_enabled or not current_class.has_implementation_error then
 					error_handler.report_giaac_error (generator, "find_precursor_expression_type", 2, "unknown query.")
 				end
+				a_context.force_last (tokens.unknown_class)
 			else
 -- TODO: like argument.
 				l_type := l_query.type
@@ -1631,6 +1651,7 @@ feature {NONE} -- Expression processing
 				if internal_error_enabled or not current_class.has_implementation_error then
 					error_handler.report_giaac_error (generator, "find_qualified_call_expression_type", 1, "unknown seed.")
 				end
+				a_context.force_last (tokens.unknown_class)
 			elseif l_name.is_tuple_label then
 				if l_seed > a_context.base_type_actual_count then
 						-- Internal error: the index of the labeled
@@ -1643,6 +1664,7 @@ feature {NONE} -- Expression processing
 					if internal_error_enabled or not current_class.has_implementation_error then
 						error_handler.report_giaac_error (generator, "find_qualified_call_expression_type", 2, "unknown tuple label.")
 					end
+					a_context.force_last (tokens.unknown_class)
 				else
 					l_class := a_context.base_class
 					l_type := l_class.formal_parameter_type (l_seed)
@@ -1658,6 +1680,7 @@ feature {NONE} -- Expression processing
 					if internal_error_enabled or not current_class.has_implementation_error then
 						error_handler.report_giaac_error (generator, "find_qualified_call_expression_type", 3, "unknown query.")
 					end
+					a_context.force_last (tokens.unknown_class)
 				else
 					l_type := l_query.type
 -- TODO: like argument (the following is just a workaround
@@ -1799,6 +1822,7 @@ feature {NONE} -- Expression processing
 				if internal_error_enabled or not current_class.has_implementation_error then
 					error_handler.report_giaac_error (generator, "find_result_type", 1, "Result not in query.")
 				end
+				a_context.force_last (tokens.unknown_class)
 			else
 				a_context.force_last (l_type)
 				if current_system.attachment_type_conformance_mode then
@@ -1865,6 +1889,7 @@ feature {NONE} -- Expression processing
 				if internal_error_enabled or not current_class.has_implementation_error then
 					error_handler.report_giaac_error (generator, "find_result_address_type", 1, "Result not in query.")
 				end
+				a_context.force_last (current_universe_impl.pointer_type)
 			else
 				l_typed_pointer_type := current_universe_impl.typed_pointer_identity_type
 				l_typed_pointer_class := l_typed_pointer_type.named_base_class
@@ -1916,6 +1941,7 @@ feature {NONE} -- Expression processing
 				if internal_error_enabled or not current_class.has_implementation_error then
 					error_handler.report_giaac_error (generator, "find_static_call_expression_type", 1, "unknown seed.")
 				end
+				a_context.force_last (tokens.unknown_class)
 			else
 				a_context.force_last (l_type)
 				l_class := a_context.adapted_base_class_with_seeded_feature (l_seed).base_class
@@ -1927,6 +1953,7 @@ feature {NONE} -- Expression processing
 					if internal_error_enabled or not current_class.has_implementation_error then
 						error_handler.report_giaac_error (generator, "find_static_call_expression_type", 2, "unknown query.")
 					end
+					a_context.force_last (tokens.unknown_class)
 				else
 -- TODO: check that `l_query' is a constant attribute or an external function.
 -- TODO: like argument.
@@ -2008,6 +2035,7 @@ feature {NONE} -- Expression processing
 				if internal_error_enabled or not current_class.has_implementation_error then
 					error_handler.report_giaac_error (generator, "find_unqualified_call_expression_type", 1, "unknown seed.")
 				end
+				a_context.force_last (tokens.unknown_class)
 			elseif not attached current_class.seeded_query (l_seed) as l_query  then
 					-- Internal error: if we got a seed, `l_query' should not be void.
 					-- This error should have already been reported when checking
@@ -2016,6 +2044,7 @@ feature {NONE} -- Expression processing
 				if internal_error_enabled or not current_class.has_implementation_error then
 					error_handler.report_giaac_error (generator, "find_unqualified_call_expression_type", 2, "unknown query.")
 				end
+				a_context.force_last (tokens.unknown_class)
 			else
 				l_type := l_query.type
 -- TODO: like argument (the following is just a workaround
@@ -2134,6 +2163,7 @@ feature {NONE} -- Agent validity
 					if internal_error_enabled or not current_class.has_implementation_error then
 						error_handler.report_giaac_error (generator, "find_call_agent_type", 1, "unknown agent target type.")
 					end
+					a_context.force_last (tokens.unknown_class)
 				end
 			end
 		end
@@ -2160,6 +2190,7 @@ feature {NONE} -- Agent validity
 				if internal_error_enabled or not current_class.has_implementation_error then
 					error_handler.report_giaac_error (generator, "find_unqualified_call_agent_type", 1, "unknown seed.")
 				end
+				a_context.force_last (tokens.unknown_class)
 			elseif an_expression.is_procedure then
 				if not attached current_class.seeded_procedure (a_seed) as l_procedure then
 						-- Internal error: if we got a seed, `l_procedure' should not be void.
@@ -2169,6 +2200,7 @@ feature {NONE} -- Agent validity
 					if internal_error_enabled or not current_class.has_implementation_error then
 						error_handler.report_giaac_error (generator, "find_unqualified_call_agent_type", 2, "unknown procedure.")
 					end
+					a_context.force_last (tokens.unknown_class)
 				else
 					find_unqualified_procedure_call_agent_type (an_expression, l_procedure, a_context)
 				end
@@ -2180,6 +2212,7 @@ feature {NONE} -- Agent validity
 				if internal_error_enabled or not current_class.has_implementation_error then
 					error_handler.report_giaac_error (generator, "find_unqualified_call_agent_type", 3, "unknown query.")
 				end
+				a_context.force_last (tokens.unknown_class)
 			else
 				find_unqualified_query_call_agent_type (an_expression, l_query, a_context)
 			end
@@ -2232,6 +2265,8 @@ feature {NONE} -- Agent validity
 					create an_agent_type.make_generic (tokens.implicit_attached_type_mark, an_agent_class.name, a_parameters, an_agent_class)
 				end
 				a_context.force_last (an_agent_type)
+			else
+				a_context.force_last (tokens.unknown_class)
 			end
 		end
 
@@ -2272,6 +2307,8 @@ feature {NONE} -- Agent validity
 				a_context.force_last (a_tuple_type)
 				an_agent_type := current_universe_impl.procedure_identity_type
 				a_context.force_last (an_agent_type)
+			else
+				a_context.force_last (tokens.unknown_class)
 			end
 		end
 
@@ -2303,6 +2340,7 @@ feature {NONE} -- Agent validity
 				if internal_error_enabled or not current_class.has_implementation_error then
 					error_handler.report_giaac_error (generator, "find_qualified_call_agent_type", 1, "unknown seed.")
 				end
+				a_context.force_last (tokens.unknown_class)
 			elseif a_name.is_tuple_label then
 -- TODO: when `a_target' is an identifier, check whether it is either
 -- a local variable, a formal argument or the name of an attribute.
@@ -2319,6 +2357,7 @@ feature {NONE} -- Agent validity
 					if internal_error_enabled or not current_class.has_implementation_error then
 						error_handler.report_giaac_error (generator, "find_qualified_call_agent_type", 2, "unknown procedure.")
 					end
+					a_context.force_last (tokens.unknown_class)
 				else
 					find_qualified_procedure_call_agent_type (an_expression, l_procedure, a_context)
 				end
@@ -2334,6 +2373,7 @@ feature {NONE} -- Agent validity
 					if internal_error_enabled or not current_class.has_implementation_error then
 						error_handler.report_giaac_error (generator, "find_qualified_call_agent_type", 3, "unknown query.")
 					end
+					a_context.force_last (tokens.unknown_class)
 				else
 					find_qualified_query_call_agent_type (an_expression, l_query, a_context)
 				end
@@ -2389,6 +2429,8 @@ feature {NONE} -- Agent validity
 					create an_agent_type.make_generic (tokens.implicit_attached_type_mark, an_agent_class.name, a_parameters, an_agent_class)
 				end
 				a_context.force_last (an_agent_type)
+			else
+				a_context.force_last (tokens.unknown_class)
 			end
 		end
 
@@ -2431,6 +2473,8 @@ feature {NONE} -- Agent validity
 				a_context.force_last (a_tuple_type)
 				an_agent_type := current_universe_impl.procedure_identity_type
 				a_context.force_last (an_agent_type)
+			else
+				a_context.force_last (tokens.unknown_class)
 			end
 		end
 
@@ -2497,6 +2541,7 @@ feature {NONE} -- Agent validity
 				if internal_error_enabled or not current_class.has_implementation_error then
 					error_handler.report_giaac_error (generator, "find_typed_call_agent_type", 1, "unknown seed.")
 				end
+				a_context.force_last (tokens.unknown_class)
 			elseif a_name.is_tuple_label then
 				a_context.force_last (a_target_type)
 				find_typed_tuple_label_call_agent_type (an_expression, a_context)
@@ -2511,6 +2556,7 @@ feature {NONE} -- Agent validity
 					if internal_error_enabled or not current_class.has_implementation_error then
 						error_handler.report_giaac_error (generator, "find_typed_call_agent_type", 2, "unknown procedure.")
 					end
+					a_context.force_last (tokens.unknown_class)
 				else
 					find_typed_procedure_call_agent_type (an_expression, l_procedure, a_context)
 				end
@@ -2525,6 +2571,7 @@ feature {NONE} -- Agent validity
 					if internal_error_enabled or not current_class.has_implementation_error then
 						error_handler.report_giaac_error (generator, "find_typed_call_agent_type", 3, "unknown query.")
 					end
+					a_context.force_last (tokens.unknown_class)
 				else
 					find_typed_query_call_agent_type (an_expression, l_query, a_context)
 				end
@@ -2583,6 +2630,8 @@ feature {NONE} -- Agent validity
 					create an_agent_type.make_generic (tokens.implicit_attached_type_mark, an_agent_class.name, a_parameters, an_agent_class)
 				end
 				a_context.force_last (an_agent_type)
+			else
+				a_context.force_last (tokens.unknown_class)
 			end
 		end
 
@@ -2625,6 +2674,8 @@ feature {NONE} -- Agent validity
 				a_context.force_last (a_tuple_type)
 				an_agent_type := current_universe_impl.procedure_identity_type
 				a_context.force_last (an_agent_type)
+			else
+				a_context.force_last (tokens.unknown_class)
 			end
 		end
 
@@ -2773,6 +2824,8 @@ feature {NONE} -- Agent validity
 					create an_agent_type.make_generic (tokens.implicit_attached_type_mark, an_agent_class.name, a_parameters, an_agent_class)
 				end
 				a_context.force_last (an_agent_type)
+			else
+				a_context.force_last (tokens.unknown_class)
 			end
 		end
 
@@ -2807,6 +2860,8 @@ feature {NONE} -- Agent validity
 				a_context.force_last (a_tuple_type)
 				an_agent_type := current_universe_impl.procedure_identity_type
 				a_context.force_last (an_agent_type)
+			else
+				a_context.force_last (tokens.unknown_class)
 			end
 		end
 

@@ -372,7 +372,7 @@ feature {NONE} -- Processing
 			if attached l_current_system.executable_name as l_name then
 				l_system_name := l_name
 			else
-				l_system_name := l_current_system.system_name 
+				l_system_name := l_current_system.system_name
 			end
 			l_generator.generate (l_system_name)
 			if is_metrics and not is_silent then
@@ -772,13 +772,13 @@ feature -- Arguments
 	is_run: BOOLEAN
 			-- Should the Eiffel system be executed?
 		do
-			Result := run_flag.was_found 
+			Result := run_flag.was_found
 		end
 
 	is_init: BOOLEAN
 			-- Should the Eiffel system be initialized?
 		do
-			Result := init_flag.was_found 
+			Result := init_flag.was_found
 		end
 
 	is_finalize: BOOLEAN

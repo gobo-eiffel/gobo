@@ -5,7 +5,7 @@
 		"Eiffel object-test expressions with a local name"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2009-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2009-2026, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_NAMED_OBJECT_TEST
@@ -50,9 +50,13 @@ feature -- Initialization
 
 	reset
 			-- Reset expression as it was just after it was last parsed.
+		local
+			l_seed: INTEGER
 		do
 			precursor
+			l_seed := name.seed
 			name.reset
+			name.set_seed (l_seed)
 		end
 
 feature -- Access
