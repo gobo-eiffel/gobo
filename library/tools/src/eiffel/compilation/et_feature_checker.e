@@ -1154,59 +1154,57 @@ feature {NONE} -- Feature validity
 				check_locals_validity (l_locals, a_feature)
 				had_error := had_error or has_fatal_error
 			end
-			if not had_error then
-				l_compound := a_feature.compound
-				l_rescue_compound := a_feature.rescue_clause
+			l_compound := a_feature.compound
+			l_rescue_compound := a_feature.rescue_clause
+			if current_system.attachment_type_conformance_mode then
+				if l_rescue_compound /= Void and l_compound /= Void then
+					l_rescue_initialization_scope := current_initialization_scope
+					current_initialization_scope := new_attachment_scope
+					current_initialization_scope.copy_scope (l_rescue_initialization_scope)
+					l_rescue_attachment_scope := current_attachment_scope
+					current_attachment_scope := new_attachment_scope
+					current_attachment_scope.copy_scope (l_rescue_attachment_scope)
+				end
+			end
+			if l_compound /= Void then
+				check_instructions_validity (l_compound)
+				had_error := had_error or has_fatal_error
+			end
+			if current_system.attachment_type_conformance_mode then
+				if not l_type.is_type_detachable (current_type) and not l_type.is_type_expanded (current_type) then
+					if system_processor.is_ise and then current_attachment_scope.has_result then
+							-- In ISE Eiffel, local variables (including 'Result') are considered
+							-- as 'detachable' (even when the 'attached' keyword is explicitly specified).
+							-- Here we know that 'Result' is attached anyway.
+					elseif current_initialization_scope.has_result then
+							-- 'Result' entity declared as attached is correctly initialized
+							-- at the end of the body the function.
+					elseif not current_initialization_scope.is_code_unreachable then
+							-- Starting with ISE 7.0.8.7345, void-safety errors in
+							-- unreachable code are not reported.
+						had_error := True
+						set_fatal_error
+						error_handler.report_vevi0c_error (current_class, current_class_impl, a_feature)
+					end
+				end
+			end
+			if l_rescue_compound /= Void then
 				if current_system.attachment_type_conformance_mode then
-					if l_rescue_compound /= Void and l_compound /= Void then
-						l_rescue_initialization_scope := current_initialization_scope
-						current_initialization_scope := new_attachment_scope
-						current_initialization_scope.copy_scope (l_rescue_initialization_scope)
-						l_rescue_attachment_scope := current_attachment_scope
-						current_attachment_scope := new_attachment_scope
-						current_attachment_scope.copy_scope (l_rescue_attachment_scope)
+					if l_rescue_attachment_scope /= Void and l_rescue_initialization_scope /= Void then
+						l_main_attachment_scope := current_attachment_scope
+						l_main_initialization_scope := current_initialization_scope
+						current_attachment_scope := l_rescue_attachment_scope
+						current_initialization_scope := l_rescue_initialization_scope
 					end
 				end
-				if l_compound /= Void then
-					check_instructions_validity (l_compound)
-					had_error := had_error or has_fatal_error
-				end
+				check_rescue_validity (l_rescue_compound)
+				had_error := had_error or has_fatal_error
 				if current_system.attachment_type_conformance_mode then
-					if not l_type.is_type_detachable (current_type) and not l_type.is_type_expanded (current_type) then
-						if system_processor.is_ise and then current_attachment_scope.has_result then
-								-- In ISE Eiffel, local variables (including 'Result') are considered
-								-- as 'detachable' (even when the 'attached' keyword is explicitly specified).
-								-- Here we know that 'Result' is attached anyway.
-						elseif current_initialization_scope.has_result then
-								-- 'Result' entity declared as attached is correctly initialized
-								-- at the end of the body the function.
-						elseif not current_initialization_scope.is_code_unreachable then
-								-- Starting with ISE 7.0.8.7345, void-safety errors in
-								-- unreachable code are not reported.
-							had_error := True
-							set_fatal_error
-							error_handler.report_vevi0c_error (current_class, current_class_impl, a_feature)
-						end
-					end
-				end
-				if l_rescue_compound /= Void then
-					if current_system.attachment_type_conformance_mode then
-						if l_rescue_attachment_scope /= Void and l_rescue_initialization_scope /= Void then
-							l_main_attachment_scope := current_attachment_scope
-							l_main_initialization_scope := current_initialization_scope
-							current_attachment_scope := l_rescue_attachment_scope
-							current_initialization_scope := l_rescue_initialization_scope
-						end
-					end
-					check_rescue_validity (l_rescue_compound)
-					had_error := had_error or has_fatal_error
-					if current_system.attachment_type_conformance_mode then
-						if l_main_attachment_scope /= Void and l_main_initialization_scope /= Void then
-							free_attachment_scope (current_attachment_scope)
-							free_attachment_scope (current_initialization_scope)
-							current_attachment_scope := l_main_attachment_scope
-							current_initialization_scope := l_main_initialization_scope
-						end
+					if l_main_attachment_scope /= Void and l_main_initialization_scope /= Void then
+						free_attachment_scope (current_attachment_scope)
+						free_attachment_scope (current_initialization_scope)
+						current_attachment_scope := l_main_attachment_scope
+						current_initialization_scope := l_main_initialization_scope
 					end
 				end
 			end
@@ -1245,41 +1243,39 @@ feature {NONE} -- Feature validity
 				check_locals_validity (l_locals, a_feature)
 				had_error := had_error or has_fatal_error
 			end
-			if not had_error then
-				l_compound := a_feature.compound
-				l_rescue_compound := a_feature.rescue_clause
+			l_compound := a_feature.compound
+			l_rescue_compound := a_feature.rescue_clause
+			if current_system.attachment_type_conformance_mode then
+				if l_rescue_compound /= Void and l_compound /= Void then
+					l_rescue_initialization_scope := current_initialization_scope
+					current_initialization_scope := new_attachment_scope
+					current_initialization_scope.copy_scope (l_rescue_initialization_scope)
+					l_rescue_attachment_scope := current_attachment_scope
+					current_attachment_scope := new_attachment_scope
+					current_attachment_scope.copy_scope (l_rescue_attachment_scope)
+				end
+			end
+			if l_compound /= Void then
+				check_instructions_validity (l_compound)
+				had_error := had_error or has_fatal_error
+			end
+			if l_rescue_compound /= Void then
 				if current_system.attachment_type_conformance_mode then
-					if l_rescue_compound /= Void and l_compound /= Void then
-						l_rescue_initialization_scope := current_initialization_scope
-						current_initialization_scope := new_attachment_scope
-						current_initialization_scope.copy_scope (l_rescue_initialization_scope)
-						l_rescue_attachment_scope := current_attachment_scope
-						current_attachment_scope := new_attachment_scope
-						current_attachment_scope.copy_scope (l_rescue_attachment_scope)
+					if l_rescue_attachment_scope /= Void and l_rescue_initialization_scope /= Void then
+						l_main_attachment_scope := current_attachment_scope
+						l_main_initialization_scope := current_initialization_scope
+						current_attachment_scope := l_rescue_attachment_scope
+						current_initialization_scope := l_rescue_initialization_scope
 					end
 				end
-				if l_compound /= Void then
-					check_instructions_validity (l_compound)
-					had_error := had_error or has_fatal_error
-				end
-				if l_rescue_compound /= Void then
-					if current_system.attachment_type_conformance_mode then
-						if l_rescue_attachment_scope /= Void and l_rescue_initialization_scope /= Void then
-							l_main_attachment_scope := current_attachment_scope
-							l_main_initialization_scope := current_initialization_scope
-							current_attachment_scope := l_rescue_attachment_scope
-							current_initialization_scope := l_rescue_initialization_scope
-						end
-					end
-					check_rescue_validity (l_rescue_compound)
-					had_error := had_error or has_fatal_error
-					if current_system.attachment_type_conformance_mode then
-						if l_main_attachment_scope /= Void and l_main_initialization_scope /= Void then
-							free_attachment_scope (current_attachment_scope)
-							free_attachment_scope (current_initialization_scope)
-							current_attachment_scope := l_main_attachment_scope
-							current_initialization_scope := l_main_initialization_scope
-						end
+				check_rescue_validity (l_rescue_compound)
+				had_error := had_error or has_fatal_error
+				if current_system.attachment_type_conformance_mode then
+					if l_main_attachment_scope /= Void and l_main_initialization_scope /= Void then
+						free_attachment_scope (current_attachment_scope)
+						free_attachment_scope (current_initialization_scope)
+						current_attachment_scope := l_main_attachment_scope
+						current_initialization_scope := l_main_initialization_scope
 					end
 				end
 			end
@@ -1410,75 +1406,73 @@ feature {NONE} -- Feature validity
 				check_locals_validity (l_locals, a_feature)
 				had_error := had_error or has_fatal_error
 			end
-			if not had_error then
-				l_compound := a_feature.compound
-				l_rescue_compound := a_feature.rescue_clause
+			l_compound := a_feature.compound
+			l_rescue_compound := a_feature.rescue_clause
+			if current_system.attachment_type_conformance_mode then
+				if l_rescue_compound /= Void and l_compound /= Void then
+					l_rescue_initialization_scope := current_initialization_scope
+					current_initialization_scope := new_attachment_scope
+					current_initialization_scope.copy_scope (l_rescue_initialization_scope)
+					l_rescue_attachment_scope := current_attachment_scope
+					current_attachment_scope := new_attachment_scope
+					current_attachment_scope.copy_scope (l_rescue_attachment_scope)
+				end
+			end
+			if l_compound /= Void then
+				check_instructions_validity (l_compound)
+				had_error := had_error or has_fatal_error
+			end
+			if current_system.attachment_type_conformance_mode then
+				if a_feature.has_self_initializing_code then
+						-- Check that the 'Result' entity has been initialized when
+						-- declared as attached only when it has code (other than
+						-- just pre- and postcondition). Otherwise we consider that
+						-- it is not an initialization declaration.
+					if not l_type.is_type_detachable (current_type) and not l_type.is_type_expanded (current_type) then
+						if system_processor.is_ise and then current_attachment_scope.has_result then
+								-- In ISE Eiffel, local variables (including 'Result') are considered
+								-- as 'detachable' (even when the 'attached' keyword is explicitly specified).
+								-- Here we know that 'Result' is attached anyway.
+						elseif not current_initialization_scope.has_result then
+								-- Error: 'Result' entity declared as attached is not initialized
+								-- at the end of the body of the attribute.
+							had_error := True
+							set_fatal_error
+							error_handler.report_vevi0e_error (current_class, current_class_impl, a_feature)
+						end
+					end
+					if l_type.is_type_self_initializing (current_type) then
+							-- The self-initializing code will never be executed
+							-- because the type of the attribute type is self-initializing
+							-- (see semantics rule MEVS, in ECMA-367 3-36, section 8.19.20).
+							-- This is not considered as a fatal error.
+						error_handler.report_vwab0a_error (current_class, current_class_impl, a_feature)
+					end
+				end
+			elseif a_feature.has_self_initializing_code and l_type.is_type_self_initializing (current_type) then
+					-- The self-initializing code will never be executed
+					-- because the type of the attribute type is self-initializing
+					-- (see semantics rule MEVS, in ECMA-367 3-36, section 8.19.20).
+					-- This is not considered as a fatal error.
+				error_handler.report_vwab0a_error (current_class, current_class_impl, a_feature)
+			end
+			if l_rescue_compound /= Void then
 				if current_system.attachment_type_conformance_mode then
-					if l_rescue_compound /= Void and l_compound /= Void then
-						l_rescue_initialization_scope := current_initialization_scope
-						current_initialization_scope := new_attachment_scope
-						current_initialization_scope.copy_scope (l_rescue_initialization_scope)
-						l_rescue_attachment_scope := current_attachment_scope
-						current_attachment_scope := new_attachment_scope
-						current_attachment_scope.copy_scope (l_rescue_attachment_scope)
+					if l_rescue_attachment_scope /= Void and l_rescue_initialization_scope /= Void then
+						l_main_attachment_scope := current_attachment_scope
+						l_main_initialization_scope := current_initialization_scope
+						current_attachment_scope := l_rescue_attachment_scope
+						current_initialization_scope := l_rescue_initialization_scope
 					end
 				end
-				if l_compound /= Void then
-					check_instructions_validity (l_compound)
-					had_error := had_error or has_fatal_error
-				end
+				check_rescue_validity (l_rescue_compound)
+				had_error := had_error or has_fatal_error
 				if current_system.attachment_type_conformance_mode then
-					if a_feature.has_self_initializing_code then
-							-- Check that the 'Result' entity has been initialized when
-							-- declared as attached only when it has code (other than
-							-- just pre- and postcondition). Otherwise we consider that
-							-- it is not an initialization declaration.
-						if not l_type.is_type_detachable (current_type) and not l_type.is_type_expanded (current_type) then
-							if system_processor.is_ise and then current_attachment_scope.has_result then
-									-- In ISE Eiffel, local variables (including 'Result') are considered
-									-- as 'detachable' (even when the 'attached' keyword is explicitly specified).
-									-- Here we know that 'Result' is attached anyway.
-							elseif not current_initialization_scope.has_result then
-									-- Error: 'Result' entity declared as attached is not initialized
-									-- at the end of the body of the attribute.
-								had_error := True
-								set_fatal_error
-								error_handler.report_vevi0e_error (current_class, current_class_impl, a_feature)
-							end
-						end
-						if l_type.is_type_self_initializing (current_type) then
-								-- The self-initializing code will never be executed
-								-- because the type of the attribute type is self-initializing
-								-- (see semantics rule MEVS, in ECMA-367 3-36, section 8.19.20).
-								-- This is not considered as a fatal error.
-							error_handler.report_vwab0a_error (current_class, current_class_impl, a_feature)
-						end
-					end
-				elseif a_feature.has_self_initializing_code and l_type.is_type_self_initializing (current_type) then
-						-- The self-initializing code will never be executed
-						-- because the type of the attribute type is self-initializing
-						-- (see semantics rule MEVS, in ECMA-367 3-36, section 8.19.20).
-						-- This is not considered as a fatal error.
-					error_handler.report_vwab0a_error (current_class, current_class_impl, a_feature)
-				end
-				if l_rescue_compound /= Void then
-					if current_system.attachment_type_conformance_mode then
-						if l_rescue_attachment_scope /= Void and l_rescue_initialization_scope /= Void then
-							l_main_attachment_scope := current_attachment_scope
-							l_main_initialization_scope := current_initialization_scope
-							current_attachment_scope := l_rescue_attachment_scope
-							current_initialization_scope := l_rescue_initialization_scope
-						end
-					end
-					check_rescue_validity (l_rescue_compound)
-					had_error := had_error or has_fatal_error
-					if current_system.attachment_type_conformance_mode then
-						if l_main_attachment_scope /= Void and l_main_initialization_scope /= Void then
-							free_attachment_scope (current_attachment_scope)
-							free_attachment_scope (current_initialization_scope)
-							current_attachment_scope := l_main_attachment_scope
-							current_initialization_scope := l_main_initialization_scope
-						end
+					if l_main_attachment_scope /= Void and l_main_initialization_scope /= Void then
+						free_attachment_scope (current_attachment_scope)
+						free_attachment_scope (current_initialization_scope)
+						current_attachment_scope := l_main_attachment_scope
+						current_initialization_scope := l_main_initialization_scope
 					end
 				end
 			end
@@ -1643,59 +1637,57 @@ feature {NONE} -- Feature validity
 			end
 			check_once_keys_validity (a_feature.keys, a_feature.first_note)
 			had_key_error := has_fatal_error
-			if not had_error then
-				l_compound := a_feature.compound
-				l_rescue_compound := a_feature.rescue_clause
+			l_compound := a_feature.compound
+			l_rescue_compound := a_feature.rescue_clause
+			if current_system.attachment_type_conformance_mode then
+				if l_rescue_compound /= Void and l_compound /= Void then
+					l_rescue_initialization_scope := current_initialization_scope
+					current_initialization_scope := new_attachment_scope
+					current_initialization_scope.copy_scope (l_rescue_initialization_scope)
+					l_rescue_attachment_scope := current_attachment_scope
+					current_attachment_scope := new_attachment_scope
+					current_attachment_scope.copy_scope (l_rescue_attachment_scope)
+				end
+			end
+			if l_compound /= Void then
+				check_instructions_validity (l_compound)
+				had_error := had_error or has_fatal_error
+			end
+			if current_system.attachment_type_conformance_mode then
+				if not l_type.is_type_detachable (current_type) and not l_type.is_type_expanded (current_type) then
+					if system_processor.is_ise and then current_attachment_scope.has_result then
+							-- In ISE Eiffel, local variables (including 'Result') are considered
+							-- as 'detachable' (even when the 'attached' keyword is explicitly specified).
+							-- Here we know that 'Result' is attached anyway.
+					elseif current_initialization_scope.has_result then
+							-- 'Result' entity declared as attached is correctly initialized
+							-- at the end of the body the function.
+					elseif not current_initialization_scope.is_code_unreachable then
+							-- Starting with ISE 7.0.8.7345, void-safety errors in
+							-- unreachable code are not reported.
+						had_error := True
+						set_fatal_error
+						error_handler.report_vevi0c_error (current_class, current_class_impl, a_feature)
+					end
+				end
+			end
+			if l_rescue_compound /= Void then
 				if current_system.attachment_type_conformance_mode then
-					if l_rescue_compound /= Void and l_compound /= Void then
-						l_rescue_initialization_scope := current_initialization_scope
-						current_initialization_scope := new_attachment_scope
-						current_initialization_scope.copy_scope (l_rescue_initialization_scope)
-						l_rescue_attachment_scope := current_attachment_scope
-						current_attachment_scope := new_attachment_scope
-						current_attachment_scope.copy_scope (l_rescue_attachment_scope)
+					if l_rescue_attachment_scope /= Void and l_rescue_initialization_scope /= Void then
+						l_main_attachment_scope := current_attachment_scope
+						l_main_initialization_scope := current_initialization_scope
+						current_attachment_scope := l_rescue_attachment_scope
+						current_initialization_scope := l_rescue_initialization_scope
 					end
 				end
-				if l_compound /= Void then
-					check_instructions_validity (l_compound)
-					had_error := had_error or has_fatal_error
-				end
+				check_rescue_validity (l_rescue_compound)
+				had_error := had_error or has_fatal_error
 				if current_system.attachment_type_conformance_mode then
-					if not l_type.is_type_detachable (current_type) and not l_type.is_type_expanded (current_type) then
-						if system_processor.is_ise and then current_attachment_scope.has_result then
-								-- In ISE Eiffel, local variables (including 'Result') are considered
-								-- as 'detachable' (even when the 'attached' keyword is explicitly specified).
-								-- Here we know that 'Result' is attached anyway.
-						elseif current_initialization_scope.has_result then
-								-- 'Result' entity declared as attached is correctly initialized
-								-- at the end of the body the function.
-						elseif not current_initialization_scope.is_code_unreachable then
-								-- Starting with ISE 7.0.8.7345, void-safety errors in
-								-- unreachable code are not reported.
-							had_error := True
-							set_fatal_error
-							error_handler.report_vevi0c_error (current_class, current_class_impl, a_feature)
-						end
-					end
-				end
-				if l_rescue_compound /= Void then
-					if current_system.attachment_type_conformance_mode then
-						if l_rescue_attachment_scope /= Void and l_rescue_initialization_scope /= Void then
-							l_main_attachment_scope := current_attachment_scope
-							l_main_initialization_scope := current_initialization_scope
-							current_attachment_scope := l_rescue_attachment_scope
-							current_initialization_scope := l_rescue_initialization_scope
-						end
-					end
-					check_rescue_validity (l_rescue_compound)
-					had_error := had_error or has_fatal_error
-					if current_system.attachment_type_conformance_mode then
-						if l_main_attachment_scope /= Void and l_main_initialization_scope /= Void then
-							free_attachment_scope (current_attachment_scope)
-							free_attachment_scope (current_initialization_scope)
-							current_attachment_scope := l_main_attachment_scope
-							current_initialization_scope := l_main_initialization_scope
-						end
+					if l_main_attachment_scope /= Void and l_main_initialization_scope /= Void then
+						free_attachment_scope (current_attachment_scope)
+						free_attachment_scope (current_initialization_scope)
+						current_attachment_scope := l_main_attachment_scope
+						current_initialization_scope := l_main_initialization_scope
 					end
 				end
 			end
@@ -1755,41 +1747,39 @@ feature {NONE} -- Feature validity
 			end
 			check_once_keys_validity (a_feature.keys, a_feature.first_note)
 			had_key_error := has_fatal_error
-			if not had_error then
-				l_compound := a_feature.compound
-				l_rescue_compound := a_feature.rescue_clause
+			l_compound := a_feature.compound
+			l_rescue_compound := a_feature.rescue_clause
+			if current_system.attachment_type_conformance_mode then
+				if l_rescue_compound /= Void and l_compound /= Void then
+					l_rescue_initialization_scope := current_initialization_scope
+					current_initialization_scope := new_attachment_scope
+					current_initialization_scope.copy_scope (l_rescue_initialization_scope)
+					l_rescue_attachment_scope := current_attachment_scope
+					current_attachment_scope := new_attachment_scope
+					current_attachment_scope.copy_scope (l_rescue_attachment_scope)
+				end
+			end
+			if l_compound /= Void then
+				check_instructions_validity (l_compound)
+				had_error := had_error or has_fatal_error
+			end
+			if l_rescue_compound /= Void then
 				if current_system.attachment_type_conformance_mode then
-					if l_rescue_compound /= Void and l_compound /= Void then
-						l_rescue_initialization_scope := current_initialization_scope
-						current_initialization_scope := new_attachment_scope
-						current_initialization_scope.copy_scope (l_rescue_initialization_scope)
-						l_rescue_attachment_scope := current_attachment_scope
-						current_attachment_scope := new_attachment_scope
-						current_attachment_scope.copy_scope (l_rescue_attachment_scope)
+					if l_rescue_attachment_scope /= Void and l_rescue_initialization_scope /= Void then
+						l_main_attachment_scope := current_attachment_scope
+						l_main_initialization_scope := current_initialization_scope
+						current_attachment_scope := l_rescue_attachment_scope
+						current_initialization_scope := l_rescue_initialization_scope
 					end
 				end
-				if l_compound /= Void then
-					check_instructions_validity (l_compound)
-					had_error := had_error or has_fatal_error
-				end
-				if l_rescue_compound /= Void then
-					if current_system.attachment_type_conformance_mode then
-						if l_rescue_attachment_scope /= Void and l_rescue_initialization_scope /= Void then
-							l_main_attachment_scope := current_attachment_scope
-							l_main_initialization_scope := current_initialization_scope
-							current_attachment_scope := l_rescue_attachment_scope
-							current_initialization_scope := l_rescue_initialization_scope
-						end
-					end
-					check_rescue_validity (l_rescue_compound)
-					had_error := had_error or has_fatal_error
-					if current_system.attachment_type_conformance_mode then
-						if l_main_attachment_scope /= Void and l_main_initialization_scope /= Void then
-							free_attachment_scope (current_attachment_scope)
-							free_attachment_scope (current_initialization_scope)
-							current_attachment_scope := l_main_attachment_scope
-							current_initialization_scope := l_main_initialization_scope
-						end
+				check_rescue_validity (l_rescue_compound)
+				had_error := had_error or has_fatal_error
+				if current_system.attachment_type_conformance_mode then
+					if l_main_attachment_scope /= Void and l_main_initialization_scope /= Void then
+						free_attachment_scope (current_attachment_scope)
+						free_attachment_scope (current_initialization_scope)
+						current_attachment_scope := l_main_attachment_scope
+						current_initialization_scope := l_main_initialization_scope
 					end
 				end
 			end
@@ -10178,7 +10168,22 @@ feature {NONE} -- Expression validity
 				check_adapted_base_classes_validity (l_name, l_adapted_base_classes, a_context)
 			end
 			if has_fatal_error then
-				check_orphan_actual_arguments_validity (a_call)
+				l_class := a_context.base_class
+				if
+					attached {ET_INFIX_EXPRESSION} a_call as l_infix_expression and then
+					l_class.is_boolean_class and then
+					(l_name.is_infix_and_then or l_name.is_infix_and_then_symbol or 
+					l_name.is_infix_implies or l_name.is_infix_implies_symbol or
+					l_name.is_infix_or_else or l_name.is_infix_or_else_symbol)
+				then
+						-- Try to build object-test scope despite the error.
+					l_infix_expression.set_boolean_operator (True)
+					l_right_context := new_context (current_type)
+					check_actual_argument_validity (l_infix_expression.right, l_right_context, l_class, a_call, l_class)
+					free_context (l_right_context)
+				else
+					check_orphan_actual_arguments_validity (a_call)
+				end
 			elseif l_seed = 0 then
 				l_adapted_base_class := l_adapted_base_classes.first
 				l_class := l_adapted_base_class.base_class

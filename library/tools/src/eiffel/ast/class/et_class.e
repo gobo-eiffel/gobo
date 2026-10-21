@@ -2979,6 +2979,22 @@ feature -- Feature flattening status
 			status_mutex.unlock
 		end
 
+	has_flattening_warning: BOOLEAN
+			-- Has a non-fatal error occurred during feature flattening?
+		do
+			status_mutex.lock
+			Result := unprotected_has_flattening_warning
+			status_mutex.unlock
+		end
+
+	has_flattening_error_or_warning: BOOLEAN
+			-- Has a error, fatal or not, occurred during feature flattening?
+		do
+			status_mutex.lock
+			Result := unprotected_has_flattening_error or unprotected_has_flattening_warning
+			status_mutex.unlock
+		end
+
 	set_features_flattened
 			-- Set `features_flattened' to True.
 		do
@@ -3001,6 +3017,18 @@ feature -- Feature flattening status
 			has_flattening_error: has_flattening_error
 		end
 
+	set_flattening_warning
+			-- Set `has_flattening_warning' to True.
+		do
+			status_mutex.lock
+			unprotected_features_flattened := True
+			unprotected_has_flattening_warning := True
+			status_mutex.unlock
+		ensure
+			features_flattened: features_flattened
+			has_flattening_warning: has_flattening_warning
+		end
+
 	unset_flattening_error
 			-- Set `has_flattening_error' to False.
 		do
@@ -3011,11 +3039,22 @@ feature -- Feature flattening status
 			not_has_flattening_error: not has_flattening_error
 		end
 
+	unset_flattening_warning
+			-- Set `has_flattening_warning' to False.
+		do
+			status_mutex.lock
+			unprotected_has_flattening_warning := False
+			status_mutex.unlock
+		ensure
+			not_has_flattening_warning: not has_flattening_warning
+		end
+
 	reset_features_flattened
 			-- Set `features_flattened' to False.
 		do
 			status_mutex.lock
 			unprotected_has_flattening_error := False
+			unprotected_has_flattening_warning := False
 			unprotected_features_flattened := False
 			has_deferred_features := False
 			redeclared_signatures_checked := False
@@ -3035,6 +3074,11 @@ feature {NONE} -- Feature flattening status
 
 	unprotected_has_flattening_error: BOOLEAN
 			-- Has a fatal error occurred during feature flattening?
+			--
+			-- This is not protected by a mutex in case of multi-threading.
+
+	unprotected_has_flattening_warning: BOOLEAN
+			-- Has a non-fatal error occurred during feature flattening?
 			--
 			-- This is not protected by a mutex in case of multi-threading.
 

@@ -570,7 +570,7 @@ feature {NONE} -- Feature adaptation
 						nb2 := a_feature_export.count
 						new_count := new_count + nb2
 						if export_table.capacity < new_count then
-							 export_table.resize (new_count)
+							export_table.resize (new_count)
 						end
 						from j := 1 until j > nb2 loop
 							a_name := a_feature_export.feature_name (j)

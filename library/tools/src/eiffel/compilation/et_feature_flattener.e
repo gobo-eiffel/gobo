@@ -80,6 +80,17 @@ feature -- Error handling
 			has_flattening_error: a_class.has_flattening_error
 		end
 
+	set_warning (a_class: ET_CLASS)
+			-- Report a non-fatal error to `a_class'.
+		require
+			a_class_not_void: a_class /= Void
+		do
+			a_class.set_flattening_warning
+		ensure
+			features_flattened: a_class.features_flattened
+			has_flattening_warning: a_class.has_flattening_warning
+		end
+
 feature -- Processing
 
 	process_class (a_class: ET_CLASS)
@@ -726,6 +737,7 @@ feature {NONE} -- Feature flattening
 							-- not considered as a fatal error here.
 							-- We just consider the class as deferred
 							-- from now on.
+						set_warning (current_class)
 						if a_deferred_feature.is_inherited then
 								-- Try to find a deferred feature which is not inherited.
 							from named_features.start until named_features.after loop
@@ -751,7 +763,10 @@ feature {NONE} -- Feature flattening
 							-- has no deferred feature. This is not
 							-- considered as a fatal error here. We just
 							-- consider the class as deferred from now on.
-						error_handler.report_vcch2a_error (current_class)
+						if not error_handler.is_ise then
+							set_warning (current_class)
+							error_handler.report_vcch2a_error (current_class)
+						end
 					end
 				end
 				check_kernel_features_validity
@@ -1474,6 +1489,7 @@ feature {NONE} -- Feature adaptation validity
 								-- Need to use 'undefine' to redeclare an
 								-- effective feature to a deferred feature.
 								-- (Not considered as a fatal error by gelint.)
+							set_warning (current_class)
 							error_handler.report_vdrd5a_error (current_class, a_parent_feature, a_redeclared_feature)
 						end
 					else
@@ -1483,6 +1499,7 @@ feature {NONE} -- Feature adaptation validity
 								-- (Not considered as a fatal error by gelint.)
 							if not system_processor.older_ise_version (ise_19_01_0) then
 									-- ISE Eiffel did not report this error before 19.01.
+								set_warning (current_class)
 								error_handler.report_vdrs4b_error (current_class, a_parent_feature, a_redeclared_feature)
 							end
 						end
@@ -1494,7 +1511,10 @@ feature {NONE} -- Feature adaptation validity
 							-- Error: Need 'redefine' to redeclare a
 							-- deferred feature to a deferred feature.
 							-- (Not considered as a fatal error by gelint.)
-						error_handler.report_vdrd4a_error (current_class, a_parent_feature, a_redeclared_feature)
+						if not error_handler.is_ise then
+							set_warning (current_class)
+							error_handler.report_vdrd4a_error (current_class, a_parent_feature, a_redeclared_feature)
+						end
 					end
 				else
 						-- Error: need 'undefine' and 'redefine' to
@@ -2182,6 +2202,7 @@ feature {NONE} -- Creators validity
 							if other_name.same_feature_name (a_name) then
 									-- Feature name appears twice in Creation clause.
 									-- This is not considered as a fatal error.
+								set_warning (current_class)
 								error_handler.report_vgcp3a_error (current_class, other_name, a_name)
 							end
 							h := h + 1
@@ -2197,6 +2218,7 @@ feature {NONE} -- Creators validity
 										-- This case is not covered by ETL2 but ISE reports
 										-- this error anyway.
 										-- This is not considered as a fatal error.
+									set_warning (current_class)
 									error_handler.report_vgcp3b_error (current_class, other_name, a_name)
 								end
 								h := h + 1

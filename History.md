@@ -6,6 +6,10 @@
 
 * Added option to ignore validity errors in classes which
   are not reachable from the root class.
+* Avoid reporting validity errors which are the consequence
+  of other errors in previous Degrees.
+* Indicate `*UNKNOWN*` instead of a wrong type when hoverring
+  the mouse over the text of a class which contains errors.
 
 ## Version 26.10.18 - 18 October 2026
 

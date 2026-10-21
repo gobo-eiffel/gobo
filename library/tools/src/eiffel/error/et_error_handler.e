@@ -175,13 +175,13 @@ feature -- Compilation report
 					info_file.put_line (a_class.upper_name)
 				elseif a_processor = a_system_processor.implementation_checker then
 					if a_system_processor.flat_mode then
-						info_file.put_string ("Degree 3.1 (flat) class ")
+						info_file.put_string ("Degree 3.2 (flat) class ")
 					else
-						info_file.put_string ("Degree 3.1 class ")
+						info_file.put_string ("Degree 3.2 class ")
 					end
 					info_file.put_line (a_class.upper_name)
 				elseif a_processor = a_system_processor.attached_attribute_initialization_checker then
-					info_file.put_string ("Degree 3.2 class ")
+					info_file.put_string ("Degree 3.1 class ")
 					info_file.put_line (a_class.upper_name)
 				end
 				mutex.unlock

@@ -16,7 +16,7 @@
 	]"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2025, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2026, Eric Bezault and others"
 	license: "MIT License"
 
 deferred class ET_UNIVERSE
@@ -146,7 +146,7 @@ feature -- Initialization
 				-- flag will be cleared.
 			classes_do_if_recursive (agent {ET_CLASS}.set_ancestors_error, agent {ET_CLASS}.ancestors_built)
 				-- Classes that had a flattening error need to be reprocessed.
-			classes_do_if_recursive (agent {ET_CLASS}.reset_after_ancestors_built, agent {ET_CLASS}.has_flattening_error)
+			classes_do_if_recursive (agent {ET_CLASS}.reset_after_ancestors_built, agent {ET_CLASS}.has_flattening_error_or_warning)
 				-- We mark classes with a flattening error here to indicate that
 				-- we need to check whether they are still correct. If the error
 				-- is confirmed (because the class processing has become

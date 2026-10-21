@@ -5,7 +5,7 @@
 		"Eiffel identifiers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2024, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2026, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_IDENTIFIER
@@ -199,7 +199,7 @@ feature -- Initialization
 			-- Reset identifier as it was just after it was last parsed.
 		do
 			index := 0
-			if not is_local and not is_argument and not is_object_test_local and not is_inline_separate_argument then
+			if not is_local and not is_argument and not is_inline_separate_argument then
 				seed := 0
 				if is_tuple_label then
 					set_feature_name (True)
