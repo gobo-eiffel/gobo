@@ -11,8 +11,8 @@ feature
 			b: BB
 			c: CC
 		do
-			create b
-			c := b
+			create c
+			b := c
 			print ("Failed")
 		end
 

@@ -3120,6 +3120,9 @@ feature {NONE} -- Instruction validity
 						(current_class.is_basic or current_class.is_typed_pointer_class)
 					then
 						-- Compatibility with ISE 5.6.0610.
+					elseif not l_source_context.base_class.interface_checked_successfully or not l_target_context.base_class.interface_checked_successfully then
+							-- Error already reported elsewhere.
+						set_fatal_error
 					else
 							-- The type of the source does not conform nor convert to the type of the target.
 						set_fatal_error
@@ -3511,6 +3514,32 @@ feature {NONE} -- Instruction validity
 					i := i + 1
 				end
 			end
+			if current_system.attachment_type_conformance_mode then
+				if attached {ET_RESULT} l_target then
+					if not l_target_context.is_type_detachable then
+						current_initialization_scope.add_result
+					elseif attached current_closure_impl.type as l_result_type and then not l_result_type.is_type_detachable (current_type) then
+						current_initialization_scope.add_result
+					end
+					if not l_target_context.is_type_attached then
+						current_attachment_scope.add_result
+					end
+				elseif attached {ET_IDENTIFIER} l_target as l_identifier then
+					if
+						l_identifier.is_feature_name and then
+						attached current_class.seeded_query (l_identifier.seed) as l_attribute and then
+						attached {ET_IDENTIFIER} l_attribute.name as l_attribute_name
+					then
+						l_name := l_attribute_name
+					end
+					if not l_target_context.is_type_detachable then
+						current_initialization_scope.add_name (l_identifier)
+					end
+					if not l_target_context.is_type_attached then
+						current_attachment_scope.add_name (l_identifier)
+					end
+				end
+			end
 			free_context (l_creation_context)
 			free_context (l_target_context)
 			free_adapted_base_classes (l_adapted_base_classes)
@@ -3609,7 +3638,6 @@ feature {NONE} -- Instruction validity
 			l_explicit_creation_type: detachable ET_TYPE
 			l_type_position: ET_POSITION
 			l_creation_context: ET_NESTED_TYPE_CONTEXT
-			l_name: ET_IDENTIFIER
 			had_error: BOOLEAN
 		do
 			has_fatal_error := False
@@ -3669,31 +3697,6 @@ feature {NONE} -- Instruction validity
 				end
 			end
 			if current_system.attachment_type_conformance_mode then
-				if attached {ET_RESULT} l_target then
-					if not a_target_context.is_type_detachable then
-						current_initialization_scope.add_result
-					elseif attached current_closure_impl.type as l_result_type and then not l_result_type.is_type_detachable (current_type) then
-						current_initialization_scope.add_result
-					end
-					if not a_target_context.is_type_attached then
-						current_attachment_scope.add_result
-					end
-				elseif attached {ET_IDENTIFIER} l_target as l_identifier then
-					l_name := l_identifier
-					if
-						l_identifier.is_feature_name and then
-						attached current_class.seeded_query (l_identifier.seed) as l_attribute and then
-						attached {ET_IDENTIFIER} l_attribute.name as l_attribute_name
-					then
-						l_name := l_attribute_name
-					end
-					if not a_target_context.is_type_detachable then
-						current_initialization_scope.add_name (l_name)
-					end
-					if not a_target_context.is_type_attached then
-						current_attachment_scope.add_name (l_name)
-					end
-				end
 					-- When we have:
 					--   local
 					--      v: detachable FOO
@@ -6426,6 +6429,17 @@ feature {NONE} -- Expression validity
 					i := i + 1
 				end
 			end
+			if current_system.attachment_type_conformance_mode then
+					-- When we have:
+					--
+					--   create {detachable FOO}.make
+					--
+					-- even if 'detachable FOO' is detachable, the type of
+					-- the creation expression is attached.
+				if not a_context.is_type_attached then
+					a_context.force_last (tokens.attached_like_current)
+				end
+			end
 			free_adapted_base_classes (l_adapted_base_classes)
 		end
 
@@ -6559,7 +6573,6 @@ feature {NONE} -- Expression validity
 					-- even if 'detachable FOO' is detachable, the type of
 					-- the creation expression is attached.
 				if not a_context.is_type_attached then
-					a_context.force_last (tokens.attached_like_current)
 					l_creation_named_type := l_creation_named_type.type_with_type_mark (tokens.implicit_attached_type_mark)
 				end
 			end
@@ -10172,7 +10185,7 @@ feature {NONE} -- Expression validity
 				if
 					attached {ET_INFIX_EXPRESSION} a_call as l_infix_expression and then
 					l_class.is_boolean_class and then
-					(l_name.is_infix_and_then or l_name.is_infix_and_then_symbol or 
+					(l_name.is_infix_and_then or l_name.is_infix_and_then_symbol or
 					l_name.is_infix_implies or l_name.is_infix_implies_symbol or
 					l_name.is_infix_or_else or l_name.is_infix_or_else_symbol)
 				then
@@ -15717,7 +15730,12 @@ feature {NONE} -- Conversion
 										-- The procedure is not a creation procedure exported to `current_class',
 										-- and it is not the implicit creation procedure 'default_create'.
 									set_fatal_error
-									error_handler.report_vgcc6c_error (current_class, current_class_impl, l_convert_from_expression.name, l_conversion_procedure, l_convert_class)
+									if not attached l_convert_class.creators as l_creators or else not l_creators.has_feature (l_conversion_procedure) then
+										-- The procedure is not a creation procedure.
+										-- Error already reported when processing the convert clause.
+									else
+										error_handler.report_vgcc6c_error (current_class, current_class_impl, l_convert_from_expression.name, l_conversion_procedure, l_convert_class)
+									end
 								end
 								l_had_error := has_fatal_error
 								check_creation_vape_validity (l_convert_from_expression.name, l_conversion_procedure, l_convert_class)
@@ -15734,10 +15752,9 @@ feature {NONE} -- Conversion
 									Result := l_convert_from_expression
 								end
 							else
-									-- Internal error: the seed of the convert feature should correspond
-									-- to a procedure of `l_convert_class'.
+									-- The seed of the convert feature should correspond to a procedure of `l_convert_class'.
+									-- Error already reported when processing the convert clause.
 								set_fatal_error
-								error_handler.report_giaaa_error
 							end
 						end
 					elseif l_convert_feature.is_convert_to then
@@ -15772,10 +15789,9 @@ feature {NONE} -- Conversion
 									Result := l_convert_to_expression
 								end
 							else
-									-- Internal error: the seed of the convert feature should correspond
-									-- to a query of `l_convert_class'.
+									-- The seed of the convert feature should correspond to a query of `l_convert_class'.
+									-- Error already reported when processing the convert clause.
 								set_fatal_error
-								error_handler.report_giaaa_error
 							end
 						end
 					else
