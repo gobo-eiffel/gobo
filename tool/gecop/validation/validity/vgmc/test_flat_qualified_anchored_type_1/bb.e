@@ -6,7 +6,7 @@ feature
 		local
 			c: like a.fc
 		do
-			c := create {CC}
+			c := create {EE}
 		end
 
 end

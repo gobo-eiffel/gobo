@@ -5,7 +5,7 @@
 		"Eiffel lists of creation clauses"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2026, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_CREATOR_LIST
@@ -93,6 +93,24 @@ feature -- Status report
 			nb := count - 1
 			from i := 0 until i > nb loop
 				if storage.item (i).has_feature_name (a_name) then
+					Result := True
+					i := nb + 1 -- Jump out of the loop.
+				else
+					i := i + 1
+				end
+			end
+		end
+
+	has_feature (a_feature: ET_FEATURE): BOOLEAN
+			-- Is feature `a_feature' listed in current creation clauses?
+		require
+			a_feature_not_void: a_feature /= Void
+		local
+			i, nb: INTEGER
+		do
+			nb := count - 1
+			from i := 0 until i > nb loop
+				if storage.item (i).has_feature (a_feature) then
 					Result := True
 					i := nb + 1 -- Jump out of the loop.
 				else
