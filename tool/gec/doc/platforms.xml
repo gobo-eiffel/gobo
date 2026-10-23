@@ -6,21 +6,21 @@
 		"Supported Platforms"
 
 	tool: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2006-2025, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2026, Eric Bezault and others"
 	license: "MIT License"
 -->
 
 <chapter xmlns="http://gobo-eiffel.gobosoft.com/documentation" id="gec/platforms">
 <chapterinfo>
 	<copyright>
-		<year>2006-2025</year>
+		<year>2006-2026</year>
 		<holder>Eric Bezault</holder>
 	</copyright>
 	<author>
 		<firstname>Eric</firstname><surname>Bezault</surname>
 	</author>
 	<email>ericb@gobosoft.com</email>
-	<date>2 September 2025</date>
+	<date>23 October 2026</date>
 </chapterinfo>
 
 <title>Supported Platforms</title>
@@ -51,6 +51,34 @@ has already been used successfully:
 	</thead>
 	<tbody>
 		<row>
+			<entry>Linux Ubuntu 26.04</entry>
+			<entry>x86_64</entry>
+			<entry>gcc 15.2.0</entry>
+			<entry>
+				Using <ulink url="https://github.com/gobo-eiffel/gobo/actions?query=branch%3Amaster+">GitHub Actions</ulink>
+			</entry>
+		</row>
+		<row>
+			<entry>Linux Ubuntu 26.04</entry>
+			<entry>x86_64</entry>
+			<entry>zig toolchain 0.17.0 (clang 22.1.8)</entry>
+			<entry>
+				Using <ulink url="https://github.com/gobo-eiffel/gobo/actions?query=branch%3Amaster+">GitHub Actions</ulink>
+			</entry>
+		</row>
+		<row>
+			<entry>Linux Ubuntu 26.04</entry>
+			<entry>arm64</entry>
+			<entry>gcc 15.2.0</entry>
+			<entry>Using <ulink url="https://github.com/gobo-eiffel/gobo/actions?query=branch%3Amaster+">GitHub Actions</ulink></entry>
+		</row>
+		<row>
+			<entry>Linux Ubuntu 26.04</entry>
+			<entry>arm64</entry>
+			<entry>zig toolchain 0.17.0 (clang 22.1.8)</entry>
+			<entry>Using <ulink url="https://github.com/gobo-eiffel/gobo/actions?query=branch%3Amaster+">GitHub Actions</ulink></entry>
+		</row>
+		<row>
 			<entry>Linux Ubuntu 24.04</entry>
 			<entry>x86_64</entry>
 			<entry>gcc 13.3.0</entry>
@@ -62,7 +90,7 @@ has already been used successfully:
 		<row>
 			<entry>Linux Ubuntu 24.04</entry>
 			<entry>x86_64</entry>
-			<entry>zig toolchain 0.15.1 (clang 20.1.2)</entry>
+			<entry>zig toolchain 0.17.0 (clang 22.1.8)</entry>
 			<entry>
 				Using <ulink url="https://github.com/gobo-eiffel/gobo/actions?query=branch%3Amaster+">GitHub Actions</ulink>
 				and <ulink url="https://dev.azure.com/ericb0733/gobo/_build?definitionId=1">Azure DevOps</ulink>
@@ -77,7 +105,7 @@ has already been used successfully:
 		<row>
 			<entry>Linux Ubuntu 24.04</entry>
 			<entry>arm64</entry>
-			<entry>zig toolchain 0.15.1 (clang 20.1.2)</entry>
+			<entry>zig toolchain 0.17.0 (clang 22.1.8)</entry>
 			<entry>Using <ulink url="https://github.com/gobo-eiffel/gobo/actions?query=branch%3Amaster+">GitHub Actions</ulink></entry>
 		</row>
 		<row>
@@ -86,14 +114,17 @@ has already been used successfully:
 			<entry>gcc 11.4.0</entry>
 			<entry>
 				Using <ulink url="https://github.com/gobo-eiffel/gobo/actions?query=branch%3Amaster+">GitHub Actions</ulink>
-				and <ulink url="https://gitlab.com/ebezault/gobo/-/pipelines">GitLab Pipelines</ulink>
+				and <ulink url="https://dev.azure.com/ericb0733/gobo/_build?definitionId=1">Azure DevOps</ulink>
 			</entry>
 		</row>
 		<row>
 			<entry>Linux Ubuntu 22.04</entry>
 			<entry>x86_64</entry>
-			<entry>zig toolchain 0.15.1 (clang 20.1.2)</entry>
-			<entry>Using <ulink url="https://github.com/gobo-eiffel/gobo/actions?query=branch%3Amaster+">GitHub Actions</ulink></entry>
+			<entry>zig toolchain 0.17.0 (clang 22.1.8)</entry>
+			<entry>
+				Using <ulink url="https://github.com/gobo-eiffel/gobo/actions?query=branch%3Amaster+">GitHub Actions</ulink>
+				and <ulink url="https://dev.azure.com/ericb0733/gobo/_build?definitionId=1">Azure DevOps</ulink>
+			</entry>
 		</row>
 		<row>
 			<entry>Linux Ubuntu 22.04</entry>
@@ -101,82 +132,100 @@ has already been used successfully:
 			<entry>gcc 11.4.0</entry>
 			<entry>
 				Using <ulink url="https://github.com/gobo-eiffel/gobo/actions?query=branch%3Amaster+">GitHub Actions</ulink>
-				and <ulink url="https://dev.azure.com/ericb0733/gobo/_build?definitionId=1">Azure DevOps</ulink>
 			</entry>
 		</row>
 		<row>
 			<entry>Linux Ubuntu 22.04</entry>
 			<entry>arm64</entry>
-			<entry>zig toolchain 0.15.1 (clang 20.1.2)</entry>
+			<entry>zig toolchain 0.17.0 (clang 22.1.8)</entry>
+			<entry>
+				Using <ulink url="https://github.com/gobo-eiffel/gobo/actions?query=branch%3Amaster+">GitHub Actions</ulink>
+			</entry>
+		</row>
+		<row>
+			<entry>MacOS 27.0.1</entry>
+			<entry>arm64</entry>
+			<entry>clang 21.0.0</entry>
+			<entry>Using <ulink url="https://github.com/gobo-eiffel/gobo/actions?query=branch%3Amaster+">GitHub Actions</ulink></entry>
+		</row>
+		<row>
+			<entry>MacOS 27.0.1</entry>
+			<entry>arm64</entry>
+			<entry>zig toolchain 0.17.0 (clang 22.1.8)</entry>
+			<entry>Using <ulink url="https://github.com/gobo-eiffel/gobo/actions?query=branch%3Amaster+">GitHub Actions</ulink></entry>
+		</row>
+		<row>
+			<entry>MacOS 26.6.1</entry>
+			<entry>x86_64</entry>
+			<entry>clang 21.0.0</entry>
+			<entry>Using <ulink url="https://dev.azure.com/ericb0733/gobo/_build?definitionId=1">Azure DevOps</ulink></entry>
+		</row>
+		<row>
+			<entry>MacOS 26.6.1</entry>
+			<entry>x86_64</entry>
+			<entry>zig toolchain 0.17.0 (clang 22.1.8)</entry>
+			<entry>Using <ulink url="https://dev.azure.com/ericb0733/gobo/_build?definitionId=1">Azure DevOps</ulink></entry>
+		</row>
+		<row>
+			<entry>MacOS 26.6.2</entry>
+			<entry>arm64</entry>
+			<entry>clang 21.0.0</entry>
+			<entry>Using <ulink url="https://github.com/gobo-eiffel/gobo/actions?query=branch%3Amaster+">GitHub Actions</ulink></entry>
+		</row>
+		<row>
+			<entry>MacOS 26.6.2</entry>
+			<entry>arm64</entry>
+			<entry>zig toolchain 0.17.0 (clang 22.1.8)</entry>
+			<entry>Using <ulink url="https://github.com/gobo-eiffel/gobo/actions?query=branch%3Amaster+">GitHub Actions</ulink></entry>
+		</row>
+		<row>
+			<entry>MacOS 15.7.9</entry>
+			<entry>x86_64</entry>
+			<entry>clang 17.0.0</entry>
 			<entry>
 				Using <ulink url="https://github.com/gobo-eiffel/gobo/actions?query=branch%3Amaster+">GitHub Actions</ulink>
 				and <ulink url="https://dev.azure.com/ericb0733/gobo/_build?definitionId=1">Azure DevOps</ulink>
 			</entry>
 		</row>
 		<row>
-			<entry>MacOS 15.5</entry>
+			<entry>MacOS 15.7.9</entry>
 			<entry>x86_64</entry>
-			<entry>clang 17.0.0</entry>
-			<entry>Using <ulink url="https://dev.azure.com/ericb0733/gobo/_build?definitionId=1">Azure DevOps</ulink></entry>
-		</row>
-		<row>
-			<entry>MacOS 15.5</entry>
-			<entry>x86_64</entry>
-			<entry>zig toolchain 0.15.1 (clang 20.1.2)</entry>
-			<entry>Using <ulink url="https://dev.azure.com/ericb0733/gobo/_build?definitionId=1">Azure DevOps</ulink></entry>
-		</row>
-		<row>
-			<entry>MacOS 15.5</entry>
-			<entry>arm64</entry>
-			<entry>clang 17.0.0</entry>
-			<entry>Using <ulink url="https://github.com/gobo-eiffel/gobo/actions?query=branch%3Amaster+">GitHub Actions</ulink></entry>
-		</row>
-		<row>
-			<entry>MacOS 15.5</entry>
-			<entry>arm64</entry>
-			<entry>zig toolchain 0.15.1 (clang 20.1.2)</entry>
-			<entry>Using <ulink url="https://github.com/gobo-eiffel/gobo/actions?query=branch%3Amaster+">GitHub Actions</ulink></entry>
-		</row>
-		<row>
-			<entry>MacOS 14.7.6</entry>
-			<entry>x86_64</entry>
-			<entry>clang 15.0.0</entry>
-			<entry>Using <ulink url="https://dev.azure.com/ericb0733/gobo/_build?definitionId=1">Azure DevOps</ulink></entry>
-		</row>
-		<row>
-			<entry>MacOS 14.7.6</entry>
-			<entry>x86_64</entry>
-			<entry>zig toolchain 0.15.1 (clang 20.1.2)</entry>
-			<entry>Using <ulink url="https://dev.azure.com/ericb0733/gobo/_build?definitionId=1">Azure DevOps</ulink></entry>
-		</row>
-		<row>
-			<entry>MacOS 14.7.6</entry>
-			<entry>arm64</entry>
-			<entry>clang 15.0.0</entry>
-			<entry>Using <ulink url="https://github.com/gobo-eiffel/gobo/actions?query=branch%3Amaster+">GitHub Actions</ulink></entry>
-		</row>
-		<row>
-			<entry>MacOS 14.7.6</entry>
-			<entry>arm64</entry>
-			<entry>zig toolchain 0.15.1 (clang 20.1.2)</entry>
-			<entry>Using <ulink url="https://github.com/gobo-eiffel/gobo/actions?query=branch%3Amaster+">GitHub Actions</ulink></entry>
-		</row>
-		<row>
-			<entry>MacOS 13.7.6</entry>
-			<entry>x86_64</entry>
-			<entry>clang 15.0.0</entry>
+			<entry>zig toolchain 0.17.0 (clang 22.1.8)</entry>
 			<entry>
 				Using <ulink url="https://github.com/gobo-eiffel/gobo/actions?query=branch%3Amaster+">GitHub Actions</ulink>
 				and <ulink url="https://dev.azure.com/ericb0733/gobo/_build?definitionId=1">Azure DevOps</ulink>
 			</entry>
 		</row>
 		<row>
-			<entry>MacOS 13.7.6</entry>
+			<entry>MacOS 15.7.9</entry>
+			<entry>arm64</entry>
+			<entry>clang 17.0.0</entry>
+			<entry>Using <ulink url="https://github.com/gobo-eiffel/gobo/actions?query=branch%3Amaster+">GitHub Actions</ulink></entry>
+		</row>
+		<row>
+			<entry>MacOS 15.7.9</entry>
+			<entry>arm64</entry>
+			<entry>zig toolchain 0.17.0 (clang 22.1.8)</entry>
+			<entry>Using <ulink url="https://github.com/gobo-eiffel/gobo/actions?query=branch%3Amaster+">GitHub Actions</ulink></entry>
+		</row>
+		<row>
+			<entry>MacOS 14.8.7</entry>
 			<entry>x86_64</entry>
-			<entry>zig toolchain 0.15.1 (clang 20.1.2)</entry>
+			<entry>clang 15.0.0</entry>
+			<entry>Using <ulink url="https://dev.azure.com/ericb0733/gobo/_build?definitionId=1">Azure DevOps</ulink></entry>
+		</row>
+		<row>
+			<entry>MacOS 14.8.7</entry>
+			<entry>x86_64</entry>
+			<entry>zig toolchain 0.17.0 (clang 22.1.8)</entry>
+			<entry>Using <ulink url="https://dev.azure.com/ericb0733/gobo/_build?definitionId=1">Azure DevOps</ulink></entry>
+		</row>
+		<row>
+			<entry>Windows 2025</entry>
+			<entry>x86_64</entry>
+			<entry>msc 18 (Visual Studio 2026)</entry>
 			<entry>
 				Using <ulink url="https://github.com/gobo-eiffel/gobo/actions?query=branch%3Amaster+">GitHub Actions</ulink>
-				<ulink url="https://dev.azure.com/ericb0733/gobo/_build?definitionId=1">Azure DevOps</ulink>
 			</entry>
 		</row>
 		<row>
@@ -184,14 +233,13 @@ has already been used successfully:
 			<entry>x86_64</entry>
 			<entry>msc 17 (Visual Studio 2022)</entry>
 			<entry>
-				Using <ulink url="https://github.com/gobo-eiffel/gobo/actions?query=branch%3Amaster+">GitHub Actions</ulink>
-				and <ulink url="https://dev.azure.com/ericb0733/gobo/_build?definitionId=1">Azure DevOps</ulink>
+				Using <ulink url="https://dev.azure.com/ericb0733/gobo/_build?definitionId=1">Azure DevOps</ulink>
 			</entry>
 		</row>
 		<row>
 			<entry>Windows 2025</entry>
 			<entry>x86_64</entry>
-			<entry>zig toolchain 0.15.1 (clang 20.1.2)</entry>
+			<entry>zig toolchain 0.17.0 (clang 22.1.8)</entry>
 			<entry>
 				Using <ulink url="https://github.com/gobo-eiffel/gobo/actions?query=branch%3Amaster+">GitHub Actions</ulink>
 				and <ulink url="https://dev.azure.com/ericb0733/gobo/_build?definitionId=1">Azure DevOps</ulink>
@@ -210,35 +258,34 @@ has already been used successfully:
 		<row>
 			<entry>Windows 2022</entry>
 			<entry>x86_64</entry>
-			<entry>zig toolchain 0.15.1 (clang 20.1.2)</entry>
+			<entry>zig toolchain 0.17.0 (clang 22.1.8)</entry>
 			<entry>
 				Using <ulink url="https://github.com/gobo-eiffel/gobo/actions?query=branch%3Amaster+">GitHub Actions</ulink>,
-				<ulink url="https://dev.azure.com/ericb0733/gobo/_build?definitionId=1">Azure DevOps</ulink>
-				and <ulink url="https://gitlab.com/ebezault/gobo/-/pipelines">GitLab Pipelines</ulink>
+				and <ulink url="https://dev.azure.com/ericb0733/gobo/_build?definitionId=1">Azure DevOps</ulink>
 			</entry>
 		</row>
 		<row>
 			<entry>Windows 11</entry>
 			<entry>x86_64</entry>
-			<entry>msc 17 (Visual Studio 2022)</entry>
+			<entry>msc 18 (Visual Studio 2026)</entry>
 			<entry>On personal computer</entry>
 		</row>
 		<row>
 			<entry>Windows 11</entry>
 			<entry>x86_64</entry>
-			<entry>zig toolchain 0.15.1 (clang 20.1.2)</entry>
+			<entry>zig toolchain 0.17.0 (clang 22.1.8)</entry>
 			<entry>On personal computer</entry>
 		</row>
 		<row>
 			<entry>Windows 11</entry>
 			<entry>arm64</entry>
-			<entry>msc 17 (Visual Studio 2022)</entry>
+			<entry>msc 18 (Visual Studio 2026)</entry>
 			<entry>Using <ulink url="https://github.com/gobo-eiffel/gobo/actions?query=branch%3Amaster+">GitHub Actions</ulink></entry>
 		</row>
 		<row>
 			<entry>Windows 11</entry>
 			<entry>arm64</entry>
-			<entry>zig toolchain 0.15.1 (clang 20.1.2)</entry>
+			<entry>zig toolchain 0.17.0 (clang 22.1.8)</entry>
 			<entry>Using <ulink url="https://github.com/gobo-eiffel/gobo/actions?query=branch%3Amaster+">GitHub Actions</ulink></entry>
 		</row>
 	</tbody>
