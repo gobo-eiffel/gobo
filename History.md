@@ -2,6 +2,11 @@
 
 ## Version xx.xx.xx - xxxx
 
+### gec
+
+* Downgraded Zig toolchain to version 0.16.0 because the
+  caching mechanism is broken in version 0.17.0.
+
 ### gelsp
 
 * Added option to ignore validity errors in classes which
