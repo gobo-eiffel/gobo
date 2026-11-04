@@ -32,7 +32,7 @@ if ($LastExitCode -ne 0) {
 	exit $LastExitCode
 }
 
-$GOBO_CI_ZIG_VERSION = "0.17.0"
+$GOBO_CI_ZIG_VERSION = "0.16.0"
 $GOBO_CI_ZIG_PATH = "https://ziglang.org/download/$GOBO_CI_ZIG_VERSION"
 # $GOBO_CI_ZIG_PATH = "https://ziglang.org/builds"
 
