@@ -134,6 +134,11 @@
 #define EIF_IS_VXWORKS EIF_FALSE
 #endif
 
+#ifndef __BIONIC__
+/* Avoid using signals on Android, otherwise `setjmp` is too slow. */
+#define GE_USE_SIGNAL 1
+#endif
+
 #ifdef __cplusplus
 extern "C" {
 #endif
