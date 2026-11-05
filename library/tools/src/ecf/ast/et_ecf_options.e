@@ -175,6 +175,24 @@ feature -- Status report
 				description = Void
 		end
 
+	has_assertion_monitored: BOOLEAN
+			-- Is there at least one defined assertion whose value is true? 
+		do
+			Result :=
+				attached assertion_value ({ET_ECF_OPTION_NAMES}.assertions_check_option_name) as l_value and then 
+					l_value.is_boolean and then l_value.to_boolean or
+				attached assertion_value ({ET_ECF_OPTION_NAMES}.assertions_invariant_option_name) as l_value and then 
+					l_value.is_boolean and then l_value.to_boolean or
+				attached assertion_value ({ET_ECF_OPTION_NAMES}.assertions_loop_option_name) as l_value and then 
+					l_value.is_boolean and then l_value.to_boolean or
+				attached assertion_value ({ET_ECF_OPTION_NAMES}.assertions_postcondition_option_name) as l_value and then 
+					l_value.is_boolean and then l_value.to_boolean or
+				attached assertion_value ({ET_ECF_OPTION_NAMES}.assertions_precondition_option_name) as l_value and then 
+					l_value.is_boolean and then l_value.to_boolean or
+				attached assertion_value ({ET_ECF_OPTION_NAMES}.assertions_supplier_precondition_option_name) as l_value and then 
+					l_value.is_boolean and then l_value.to_boolean
+		end
+
 feature -- Setting
 
 	set_primary_value (a_name, a_value: STRING)

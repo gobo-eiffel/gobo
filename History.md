@@ -6,6 +6,9 @@
 
 * Downgraded Zig toolchain to version 0.16.0 because the
   caching mechanism is broken in version 0.17.0.
+* The default value for `exception_trace` in ECF files is
+  `True` unless no assertions are monitored at the target
+  level in finalize mode.
 
 ### gelsp
 
