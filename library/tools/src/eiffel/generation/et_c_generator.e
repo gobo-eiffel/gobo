@@ -1406,7 +1406,7 @@ feature {NONE} -- Generate external C files
 
 #if defined(__clang__) || defined(__GNUC__) || defined(__MINGW32__) || defined(__MINGW64__)
 #	define GC_BUILTIN_ATOMIC
-#	if defined(GE_WINDOWS)
+#	if defined(GE_WINDOWS) || defined(__BIONIC__)
 #		define NO_WRAP_MARK_SOME
 #	endif
 #endif
