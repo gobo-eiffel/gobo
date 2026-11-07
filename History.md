@@ -9,6 +9,8 @@
 * The default value for `exception_trace` in ECF files is
   `True` unless no assertions are monitored at the target
   level in finalize mode.
+* Fixed implementation of unique attribute synonyms which
+  should have their own values.
 
 ### gelsp
 

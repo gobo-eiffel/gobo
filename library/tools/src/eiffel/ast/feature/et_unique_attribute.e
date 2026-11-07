@@ -188,7 +188,6 @@ feature -- Duplication
 			Result.set_object_tests (object_tests)
 			Result.set_iteration_components (iteration_components)
 			Result.set_inline_separate_arguments (inline_separate_arguments)
-			Result.set_constant (constant)
 			Result.set_synonym (Current)
 		end
 
