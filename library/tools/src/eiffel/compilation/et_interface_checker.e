@@ -315,6 +315,7 @@ feature {NONE} -- Convert validity
 			valid_convert_query: a_convert_features.convert_feature (a_index) = a_convert_query
 		local
 			l_name: ET_FEATURE_NAME
+			l_other_name: ET_FEATURE_NAME
 			l_query_type: detachable ET_TYPE
 			l_types: ET_TYPE_LIST
 			l_type: ET_TYPE
@@ -377,6 +378,7 @@ feature {NONE} -- Convert validity
 					from j := 1 until j > a_index loop
 						l_other_convert_feature := a_convert_features.convert_feature (j)
 						if l_other_convert_feature.is_convert_to then
+							l_other_name := l_other_convert_feature.name
 							l_other_types := l_other_convert_feature.types
 							if j = a_index then
 								nb2 := i - 1
@@ -385,11 +387,15 @@ feature {NONE} -- Convert validity
 							end
 							from k := 1 until k > nb2 loop
 								l_other_type := l_other_types.type (k)
-								if l_other_type.base_class (current_class) = l_base_class then
+								if
+									l_other_type.same_named_type (l_type, current_class, current_class) or
+									(l_other_type.base_class (current_class) = l_base_class and not l_other_name.same_feature_name (l_name))
+								then
 										-- Error: `l_type` should not have the same base class as
 										-- any other type of a convert query of `current_class`.
 									set_fatal_error (current_class)
 									error_handler.report_vycq4a_error (current_class, l_name, l_type, l_other_type)
+									k := nb2 + 1 -- Jump out of the loop.
 								end
 								k := k + 1
 							end
@@ -430,6 +436,7 @@ feature {NONE} -- Convert validity
 			valid_convert_procedure: a_convert_features.convert_feature (a_index) = a_convert_procedure
 		local
 			l_name: ET_FEATURE_NAME
+			l_other_name: ET_FEATURE_NAME
 			l_argument_type: detachable ET_TYPE
 			l_types: ET_TYPE_LIST
 			l_type: ET_TYPE
@@ -499,6 +506,7 @@ feature {NONE} -- Convert validity
 					from j := 1 until j > a_index loop
 						l_other_convert_feature := a_convert_features.convert_feature (j)
 						if l_other_convert_feature.is_convert_from then
+							l_other_name := l_other_convert_feature.name
 							l_other_types := l_other_convert_feature.types
 							if j = a_index then
 								nb2 := i - 1
@@ -507,11 +515,15 @@ feature {NONE} -- Convert validity
 							end
 							from k := 1 until k > nb2 loop
 								l_other_type := l_other_types.type (k)
-								if l_other_type.base_class (current_class) = l_base_class then
+								if
+									l_other_type.same_named_type (l_type, current_class, current_class) or
+									(l_other_type.base_class (current_class) = l_base_class and not l_other_name.same_feature_name (l_name))
+								then
 										-- Error: `l_type` should not have the same base class as
 										-- any other type of a convert procedure of `current_class`.
 									set_fatal_error (current_class)
 									error_handler.report_vycp4a_error (current_class, l_name, l_type, l_other_type)
+									k := nb2 + 1 -- Jump out of the loop.
 								end
 								k := k + 1
 							end

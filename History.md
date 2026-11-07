@@ -23,6 +23,23 @@
 * Stop reporting validity errors in a class whose file has
   just been deleted.
 * Added option to ignore unused local variable warnings.
+* Made sure that filenames are treated case-insensitive
+  on Windows.
+
+### Gobo Eiffel Tools Library
+
+* Validity rule `VYCP-4` is too strict to accept some existing classes
+  in ISE's libraries. ISE Eiffel and Gobo Eiffel (as of 26.11 and after)
+  both accept a relaxed version where the two conversion types can have
+  the same base class, provided that they are not the same type and they
+  are part of two *Conversion_procedure*s with the same feature name `fn`.
+  There is no ambiguity in that case.
+* Validity rule `VYCQ-4` is too strict to accept some existing classes
+  in ISE's libraries. ISE Eiffel and Gobo Eiffel (as of 26.11 and after)
+  both accept a relaxed version where the two conversion types can have
+  the same base class, provided that they are not the same type and they
+  are part of two *Conversion_query*s with the same feature name `fn`.
+  There is no ambiguity in that case.
 
 ## Version 26.10.18 - 18 October 2026
 
