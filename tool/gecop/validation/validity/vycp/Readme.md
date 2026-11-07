@@ -73,3 +73,10 @@ applicable to every type `SOURCE` listed in its *Type_list*:
   end
   ```
   type `CC` both conforms and converts to `BB [CC]`.
+
+* Condition 4 is too strict to accept some existing classes in ISE's libraries.
+  ISE Eiffel (as of 25.12.9.8922 and after) and Gobo Eiffel (as of 26.11 and after)
+  both accept a relaxed version where the two conversion types can have the same
+  base class, provided that they are not the same type and they are part of two
+  *Conversion_procedure*s with the same feature name `fn`. There is no ambiguity
+  in that case.

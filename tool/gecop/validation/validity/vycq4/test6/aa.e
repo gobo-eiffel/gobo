@@ -13,7 +13,7 @@ feature
 		do
 			create b
 			c := b
-			print ("Failed")
+			print ("Passed")
 		end
 
 end

@@ -1,2 +1,1 @@
-[VYCQ-4] class BB (5,16): convert type '[attached] CC [[attached] STRING]' of conversion query `f' has the same base class as another conversion query type.
-----
+Passed

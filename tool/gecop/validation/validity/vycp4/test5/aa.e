@@ -16,7 +16,7 @@ feature
 			b := c1
 			create c2
 			b := c2
-			print ("Failed")
+			print ("Passed")
 		end
 
 end
