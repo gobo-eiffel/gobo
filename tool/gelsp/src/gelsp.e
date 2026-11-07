@@ -89,6 +89,9 @@ inherit
 	KL_SHARED_FILE_SYSTEM
 		export {NONE} all end
 
+	KL_SHARED_STRING_EQUALITY_TESTER
+		export {NONE} all end
+
 	KL_IMPORTED_STRING_ROUTINES
 		export {NONE} all end
 
@@ -102,9 +105,21 @@ feature {NONE} -- Initialization
 
 	make (a_connection: like connection)
 			-- Create a new message manager.
+		local
+			l_hash_function: KL_AGENT_HASH_FUNCTION [STRING]
 		do
-			create class_mapping.make (10_000)
-			create edited_classes.make (500)
+			if operating_system.is_windows then
+				create l_hash_function.make (agent STRING_.case_insensitive_hash_code ({STRING} ?))
+				create class_mapping.make_map (10_000)
+				class_mapping.set_key_equality_tester (case_insensitive_string_equality_tester)
+				class_mapping.set_hash_function (l_hash_function)
+				create edited_classes.make_map (500)
+				edited_classes.set_key_equality_tester (case_insensitive_string_equality_tester)
+				edited_classes.set_hash_function (l_hash_function)
+			else
+				create class_mapping.make (10_000)
+				create edited_classes.make (500)
+			end
 			create contract_views.make (500)
 			create flat_contract_views.make (500)
 			create ecf_libraries.make (100)
