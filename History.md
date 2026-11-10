@@ -13,6 +13,8 @@
   should have their own values.
 * Implemented routines `collection_on`, `collection_off`
   and `collecting` in class `MEMORY`.
+* Use C flag `-O2` by default when using `gcc` as backend
+  C compiler.
 
 ### gelsp
 
