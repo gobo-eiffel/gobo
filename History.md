@@ -11,6 +11,8 @@
   level in finalize mode.
 * Fixed implementation of unique attribute synonyms which
   should have their own values.
+* Implemented routines `collection_on`, `collection_off`
+  and `collecting` in class `MEMORY`.
 
 ### gelsp
 
