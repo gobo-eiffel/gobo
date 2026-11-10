@@ -11,10 +11,11 @@
   level in finalize mode.
 * Fixed implementation of unique attribute synonyms which
   should have their own values.
-* Implemented routines `collection_on`, `collection_off`
-  and `collecting` in class `MEMORY`.
-* Use C flag `-O2` by default when using `gcc` as backend
-  C compiler.
+* Implemented routines `collection_on`, `collection_off` and
+  `collecting` in class `MEMORY`.
+* Use C flag `-O2` by default when using `gcc` as backend C compiler.
+* Fixed bug where `check` assertions were not checked even when
+  turned on in the ECF file.
 
 ### gelsp
 

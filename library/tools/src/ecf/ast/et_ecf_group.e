@@ -185,9 +185,9 @@ feature -- Setting
 				a_class.set_invariants_enabled (l_value.to_boolean)
 			end
 			if l_override_options /= Void and then attached l_override_options.assertion_value ({ET_ECF_OPTION_NAMES}.assertions_check_option_name) as l_value and then l_value.is_boolean then
-				a_class.set_invariants_enabled (l_value.to_boolean)
+				a_class.set_check_assertions_enabled (l_value.to_boolean)
 			elseif attached l_options.assertion_value ({ET_ECF_OPTION_NAMES}.assertions_check_option_name) as l_value and then l_value.is_boolean then
-				a_class.set_invariants_enabled (l_value.to_boolean)
+				a_class.set_check_assertions_enabled (l_value.to_boolean)
 			end
 			if l_override_options /= Void and then attached l_override_options.assertion_value ({ET_ECF_OPTION_NAMES}.assertions_loop_option_name) as l_value and then l_value.is_boolean then
 				a_class.set_loop_assertions_enabled (l_value.to_boolean)
