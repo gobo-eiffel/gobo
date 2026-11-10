@@ -16,6 +16,9 @@
 * Use C flag `-O2` by default when using `gcc` as backend C compiler.
 * Fixed bug where `check` assertions were not checked even when
   turned on in the ECF file.
+* Fixed bug where loop `variant` assertions were not correctly
+  checked (decreasing after each iteration) even when turned on
+  in the ECF file.
 
 ### gelsp
 

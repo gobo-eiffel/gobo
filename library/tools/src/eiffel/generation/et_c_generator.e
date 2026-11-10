@@ -40854,9 +40854,9 @@ feature {NONE} -- Assertion generation
 				current_file.put_character ('}')
 				current_file.put_new_line
 				print_indentation
-				print_temp_name (a_temp_var, current_file)
-				print_assign_to
 				print_temp_name (a_temp_old_var, current_file)
+				print_assign_to
+				print_temp_name (a_temp_var, current_file)
 				print_semicolon_newline
 			end
 			if a_repetition_component.invariant_part /= Void or a_repetition_component.variant_part /= Void then
