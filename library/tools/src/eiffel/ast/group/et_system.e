@@ -616,6 +616,30 @@ feature -- Compilation options setting
 			external_linker_flags_set: external_linker_flags = a_flags
 		end
 
+feature -- Assertions
+
+	assertions_enabled: BOOLEAN
+			-- Are some assertions monitored in some classes of current system?
+
+	supplier_preconditions_enabled: BOOLEAN
+			-- Are supplier preconditions monitored in some classes of current system?
+
+	set_assertions_enabled (b: BOOLEAN)
+			-- Set `assertions_enabled' to `b'.
+		do
+			assertions_enabled := b
+		ensure
+			assertions_enabled_set: assertions_enabled = b
+		end
+
+	set_supplier_preconditions_enabled (b: BOOLEAN)
+			-- Set `supplier_preconditions_enabled' to `b'.
+		do
+			supplier_preconditions_enabled := b
+		ensure
+			supplier_preconditions_enabled_set: supplier_preconditions_enabled = b
+		end
+
 feature -- Parsing
 
 	preparse_recursive (a_system_processor: ET_SYSTEM_PROCESSOR)

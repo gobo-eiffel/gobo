@@ -19,6 +19,8 @@
 * Fixed bug where loop `variant` assertions were not correctly
   checked (decreasing after each iteration) even when turned on
   in the ECF file.
+* Implemented support for `supplier_precondition` assertion
+  monitoring.
 
 ### gelsp
 

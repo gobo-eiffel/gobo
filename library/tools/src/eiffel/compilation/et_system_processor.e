@@ -1112,6 +1112,8 @@ feature -- Processing
 		do
 			dt1 := benchmark_start_time
 			a_system.preparse_recursive (Current)
+			a_system.set_assertions_enabled (a_system.classes_there_exists_recursive (agent {ET_CLASS}.assertions_enabled))
+			a_system.set_supplier_preconditions_enabled (a_system.classes_there_exists_recursive (agent {ET_CLASS}.supplier_preconditions_enabled))
 			record_end_time (dt1, "Degree 6")
 			report_degree_6_metrics (a_system)
 		end

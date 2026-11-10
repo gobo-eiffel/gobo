@@ -2830,6 +2830,7 @@ feature {NONE} -- Feature generation
 					current_file.put_character (';')
 					current_file.put_new_line
 				end
+				print_supplier_preconditions_declaration
 					-- Variable for 'Result' entity.
 				if l_result_type /= Void and (not l_is_inline or else l_need_distinct_inline) then
 					print_indentation
@@ -2856,6 +2857,7 @@ feature {NONE} -- Feature generation
 					current_file.put_string (c_tc_address)
 					print_semicolon_newline
 				end
+				print_set_supplier_preconditions
 				print_feature_trace_message_call (True)
 				if use_scoop then
 						-- Declaration of SCOOP sessions to register separate calls
@@ -2885,7 +2887,7 @@ feature {NONE} -- Feature generation
 					print_all_invariants (True)
 					l_print_body := True
 				end
-				l_preconditions_enabled := current_type.base_class.preconditions_enabled
+				l_preconditions_enabled := current_type.base_class.preconditions_enabled or supplier_preconditions_enabled
 				if l_preconditions_enabled or l_has_separate_formal_arguments then
 					print_all_preconditions (a_feature, l_preconditions_enabled)
 					l_print_body := True
@@ -3216,6 +3218,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 					current_file.put_string (c_caller)
 					print_semicolon_newline
 				end
+				print_reset_supplier_preconditions
 			end
 			if l_arguments /= Void and then l_has_reference_arguments then
 				from i := 1 until i > nb_args loop
@@ -3255,11 +3258,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 				-- Declarations of temporary variables.
 			current_file := current_function_header_buffer
 			print_temporary_variable_declarations
-			if
-				not a_inline and then
-				(current_type.base_class.preconditions_enabled or
-				current_type.base_class.postconditions_enabled)
-			then
+			if not a_inline and then (l_preconditions_enabled or current_type.base_class.postconditions_enabled) then
 				print_object_test_local_declarations
 				print_iteration_cursor_declarations
 			end
@@ -7112,6 +7111,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 					not current_feature.has_separate_argument and then
 					not (current_type.base_class.invariants_enabled and not current_closure.is_static) and then
 					not current_type.base_class.preconditions_enabled and then
+					not supplier_preconditions_enabled and then
 					not current_type.base_class.postconditions_enabled and then
 					(not attached a_feature.compound as l_compound or else l_compound.is_empty) and then
 					a_feature.rescue_clause = Void
@@ -7141,6 +7141,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 					print_semicolon_newline
 				end
 			end
+			print_supplier_preconditions_declaration
 				--
 				-- Print body to `current_file'.
 				--
@@ -7155,6 +7156,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 				current_file.put_string (c_tc_address)
 				print_semicolon_newline
 			end
+			print_set_supplier_preconditions
 			print_feature_trace_message_call (True)
 			l_is_once := a_feature.is_once
 			if l_is_once and a_creation then
@@ -7251,6 +7253,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 				current_file.put_string (c_caller)
 				print_semicolon_newline
 			end
+			print_reset_supplier_preconditions
 			if l_result_type /= Void then
 				print_return_statement (a_feature)
 			elseif a_creation then
@@ -7393,7 +7396,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 				print_all_invariants (True)
 				l_print_body := True
 			end
-			l_preconditions_enabled := current_type.base_class.preconditions_enabled
+			l_preconditions_enabled := current_type.base_class.preconditions_enabled or supplier_preconditions_enabled
 			if l_preconditions_enabled or l_has_separate_formal_arguments then
 				print_all_preconditions (a_feature, l_preconditions_enabled)
 				l_print_body := True
@@ -7457,14 +7460,17 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 				current_file.put_character ('{')
 				current_file.put_new_line
 				indent
-				if exception_trace_mode and then l_rescue /= Void then
-					print_indentation
-					current_file.put_string (c_ac)
-					current_file.put_string (c_arrow)
-					current_file.put_string (c_call)
-					print_assign_to
-					current_file.put_string (c_tc_address)
-					print_semicolon_newline
+				if l_rescue /= Void then
+					if exception_trace_mode then
+						print_indentation
+						current_file.put_string (c_ac)
+						current_file.put_string (c_arrow)
+						current_file.put_string (c_call)
+						print_assign_to
+						current_file.put_string (c_tc_address)
+						print_semicolon_newline
+					end
+					print_reset_supplier_preconditions
 				end
 				print_indentation
 				current_file.put_string (c_ac)
@@ -8089,6 +8095,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 			if
 				a_feature.has_self_initializing_code or
 				(current_type.base_class.preconditions_enabled and then not current_feature.preconditions.is_empty) or
+				(supplier_preconditions_enabled and then not current_feature.preconditions.is_empty) or
 				(current_type.base_class.postconditions_enabled and then not current_feature.postconditions.is_empty) or
 				current_type.base_class.invariants_enabled
 			then
@@ -8248,6 +8255,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 					current_file.put_character (';')
 					current_file.put_new_line
 				end
+				print_supplier_preconditions_declaration
 					-- Variable for 'Result' entity.
 				print_indentation
 				print_type_declaration (l_result_type, current_file)
@@ -8276,6 +8284,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 					current_file.put_character (';')
 					current_file.put_new_line
 				end
+				print_set_supplier_preconditions
 					--
 					-- Note that the precondition is True in attributes
 					-- (implicit 'require True' on immediate declarations
@@ -8334,6 +8343,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 					current_file.put_string (c_caller)
 					print_semicolon_newline
 				end
+				print_reset_supplier_preconditions
 					-- Return attribute value.
 				print_indentation
 				current_file.put_string (c_return)
@@ -19814,6 +19824,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_once_procedure_inlin
 				current_file.put_character (';')
 				current_file.put_new_line
 			end
+			print_supplier_preconditions_declaration
 				-- Make sure that `agent_target' is set correctly
 				-- before calling `print_agent_body_declaration'.
 			l_target := a_agent.target
@@ -19862,6 +19873,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_once_procedure_inlin
 				current_file.put_character (';')
 				current_file.put_new_line
 			end
+			print_set_supplier_preconditions
 			print_agent_body_declaration (a_agent)
 				-- Call stack.
 			if exception_trace_mode then
@@ -19875,6 +19887,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_once_procedure_inlin
 				current_file.put_string (c_caller)
 				print_semicolon_newline
 			end
+			print_reset_supplier_preconditions
 			if l_result_type /= Void then
 				print_indentation
 				current_file.put_string (c_return)
@@ -40361,6 +40374,18 @@ feature {NONE} -- Once feature generation
 
 feature {NONE} -- Assertion generation
 
+	assertions_enabled: BOOLEAN
+			-- Are some assertions monitored in some classes of `current_system`?
+		do
+			Result := current_system.assertions_enabled
+		end
+
+	supplier_preconditions_enabled: BOOLEAN
+			-- Are supplier preconditions monitored in some classes of `current_system`?
+		do
+			Result := current_system.supplier_preconditions_enabled
+		end
+
 	print_all_invariants (a_on_entry: BOOLEAN)
 			-- Print to `current_file' a call to procedure which checks all invariants
 			-- (even those inherited from ancestors) of `current_type'.
@@ -40452,7 +40477,33 @@ feature {NONE} -- Assertion generation
 				end
 				if l_count > 0 and l_preconditions /= Void then
 					print_preconditions_comment
-					print_before_assertions (l_all_preconditions_use_separate_formal_arguments)
+					print_indentation
+					current_file.put_string (c_uint32_t)
+					current_file.put_character (' ')
+					current_file.put_string (c_old_in_assertion)
+					print_assign_to
+					current_file.put_string (c_ac)
+					current_file.put_string (c_arrow)
+					current_file.put_string (c_in_assertion)
+					print_semicolon_newline
+					if not l_all_preconditions_use_separate_formal_arguments then
+						print_indentation
+						current_file.put_string (c_if)
+						current_file.put_character (' ')
+						current_file.put_character ('(')
+						current_file.put_character ('!')
+						current_file.put_string (c_old_in_assertion)
+						if supplier_preconditions_enabled and then not current_type.base_class.preconditions_enabled then
+							print_and_then
+							current_file.put_string (c_tprecond)
+						end
+						current_file.put_character (')')
+						current_file.put_character (' ')
+					end
+					current_file.put_character ('{')
+					current_file.put_new_line
+					indent
+					print_before_assertions_2
 					from k := 1 until k > l_count loop
 						if k /= 1 then
 							index_offset := l_all_preconditions.item_2 (k)
@@ -40506,6 +40557,10 @@ feature {NONE} -- Assertion generation
 											current_file.put_character ('(')
 											current_file.put_character ('!')
 											current_file.put_string (c_old_in_assertion)
+											if supplier_preconditions_enabled and then not current_type.base_class.preconditions_enabled then
+												print_and_then
+												current_file.put_string (c_tprecond)
+											end
 											current_file.put_character (')')
 											current_file.put_character (' ')
 											current_file.put_character ('{')
@@ -40912,6 +40967,59 @@ feature {NONE} -- Assertion generation
 			end
 		end
 
+	print_supplier_preconditions_declaration
+			-- Print to `current_file` the declaration of variables needed
+			-- to deal with the 'supplier_precondition' monitoring.
+		do
+			if supplier_preconditions_enabled then
+				print_indentation
+				current_file.put_string (c_volatile)
+				current_file.put_character (' ')
+				current_file.put_string (c_uint8_t)
+				current_file.put_character (' ')
+				current_file.put_string (c_tprecond)
+				print_assign_to
+				current_file.put_string (c_ac)
+				current_file.put_string (c_arrow)
+				current_file.put_string (c_preconditions_enabled)
+				print_semicolon_newline
+			end
+		end
+
+	print_set_supplier_preconditions
+			-- Print to `current_file` the code to set the variables needed
+			-- to deal with the 'supplier_precondition' monitoring.
+		do
+			if supplier_preconditions_enabled then
+				print_indentation
+				current_file.put_string (c_ac)
+				current_file.put_string (c_arrow)
+				current_file.put_string (c_preconditions_enabled)
+				print_assign_to
+				if current_type.base_class.supplier_preconditions_enabled then
+					current_file.put_character ('1')
+				else
+					current_file.put_character ('0')
+				end
+				print_semicolon_newline
+			end
+		end
+
+	print_reset_supplier_preconditions
+			-- Print to `current_file` the code to reset the variables needed
+			-- to deal with the 'supplier_precondition' monitoring.
+		do
+			if supplier_preconditions_enabled then
+				print_indentation
+				current_file.put_string (c_ac)
+				current_file.put_string (c_arrow)
+				current_file.put_string (c_preconditions_enabled)
+				print_assign_to
+				current_file.put_string (c_tprecond)
+				print_semicolon_newline
+			end
+		end
+
 	print_before_assertions (a_recursive: BOOLEAN)
 			-- Print code before assertions to `current_file'.
 			-- If `a_recursive` is False, then check whether we are already checking assertions.
@@ -40942,6 +41050,12 @@ feature {NONE} -- Assertion generation
 			current_file.put_string (c_arrow)
 			current_file.put_string (c_in_assertion)
 			print_semicolon_newline
+			print_before_assertions_2
+		end
+
+	print_before_assertions_2
+			-- Print code before assertions to `current_file'.
+		do
 			print_indentation
 			current_file.put_string (c_ge_rescue)
 			current_file.put_character (' ')
@@ -41021,7 +41135,7 @@ feature {NONE} -- Assertion generation
 		end
 
 	print_reset_assertions
-			-- Print code reset assertion status to `current_file'.
+			-- Print code to reset assertion status to `current_file'.
 		do
 			print_indentation
 			current_file.put_string (c_ac)
@@ -41365,6 +41479,8 @@ feature {NONE} -- Inlining
 				Result := False
 			elseif a_feature.target_type.base_class.preconditions_enabled and then not a_feature.preconditions.is_empty then
 				Result := False
+			elseif supplier_preconditions_enabled and then not a_feature.preconditions.is_empty then
+				Result := False
 			elseif a_feature.target_type.base_class.postconditions_enabled and then not a_feature.postconditions.is_empty then
 				Result := False
 			elseif
@@ -41422,6 +41538,8 @@ feature {NONE} -- Inlining
 			elseif use_scoop and then a_feature.has_separate_argument then
 				Result := False
 			elseif a_feature.target_type.base_class.preconditions_enabled and then not a_feature.preconditions.is_empty then
+				Result := False
+			elseif supplier_preconditions_enabled and then not a_feature.preconditions.is_empty then
 				Result := False
 			elseif a_feature.target_type.base_class.postconditions_enabled and then not a_feature.postconditions.is_empty then
 				Result := False
@@ -50198,6 +50316,7 @@ feature {NONE} -- Constants
 	c_onces: STRING = "onces"
 	c_or_else: STRING = "||"
 	c_pre_ecma_mapping_status: STRING = "pre_ecma_mapping_status"
+	c_preconditions_enabled: STRING = "preconditions_enabled"
 	c_previous: STRING = "previous"
 	c_process_onces: STRING = "process_onces"
 	c_r: STRING = "r"
@@ -50227,9 +50346,11 @@ feature {NONE} -- Constants
 	c_tc: STRING = "tc"
 	c_tc_address: STRING = "&tc"
 	c_thread_onces: STRING = "thread_onces"
+	c_tprecond: STRING = "tprecond"
 	c_tr: STRING = "tr"
 	c_type_id: STRING = "type_id"
 	c_typedef: STRING = "typedef"
+	c_uint8_t: STRING = "uint8_t"
 	c_uint16_t: STRING = "uint16_t"
 	c_uint32_t: STRING = "uint32_t"
 	c_undef: STRING = "#undef"
