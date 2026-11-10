@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # description: "Bootstrap Gobo Eiffel Compiler in $GOBO/bin"
-# copyright: "Copyright (c) 2016-2024, Eric Bezault and others"
+# copyright: "Copyright (c) 2016-2026, Eric Bezault and others"
 # license: "MIT License"
 
 
@@ -145,9 +145,8 @@ elif [ "$CC" = "lcc-win64" -o "$CC" = "lcc" ]; then
 elif [ "$CC" = "gcc" ]; then
 	CC=gcc
 	LD=gcc
-#	CFLAGS='-O2'
-	CFLAGS=''
-	LFLAGS=''
+	CFLAGS='-O2'
+	LFLAGS='-O2'
 	LFLAG_OUT='-o '
 	LLIBS='-lm -pthread'
 	echo gcc > "$GOBO/tool/gec/backend/c/config/default.cfg"
