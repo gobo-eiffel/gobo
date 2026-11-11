@@ -22,6 +22,9 @@
 * Implemented support for `supplier_precondition` assertion
   monitoring.
 * Do not call `setjmp/longjmp` anymore when checking assertions.
+* Do not propagate anymore assertion options (nor any other options)
+  from ECF targets to the libraries they use (interoperability with
+  ISE Eiffel).
 
 ### gelsp
 
