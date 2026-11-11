@@ -21,6 +21,7 @@
   in the ECF file.
 * Implemented support for `supplier_precondition` assertion
   monitoring.
+* Do not call `setjmp/longjmp` anymore when checking assertions.
 
 ### gelsp
 

@@ -2788,7 +2788,7 @@ feature {NONE} -- Feature generation
 			if not a_inline then
 				if current_type.base_class.invariants_enabled and then not current_feature.is_static then
 					print_indentation
-					current_file.put_string (c_uint32_t)
+					current_file.put_string (c_uint8_t)
 					current_file.put_character (' ')
 					current_file.put_string (c_in_qualified_call)
 					print_assign_to
@@ -2831,6 +2831,13 @@ feature {NONE} -- Feature generation
 					current_file.put_new_line
 				end
 				print_supplier_preconditions_declaration
+				if
+					current_type.base_class.preconditions_enabled or
+					supplier_preconditions_enabled or
+					current_type.base_class.postconditions_enabled
+				then
+					print_in_assertion_declaration
+				end
 					-- Variable for 'Result' entity.
 				if l_result_type /= Void and (not l_is_inline or else l_need_distinct_inline) then
 					print_indentation
@@ -7091,7 +7098,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 			indent
 			if current_type.base_class.invariants_enabled and not current_feature.is_static then
 				print_indentation
-				current_file.put_string (c_uint32_t)
+				current_file.put_string (c_uint8_t)
 				current_file.put_character (' ')
 				current_file.put_string (c_in_qualified_call)
 				print_assign_to
@@ -7368,6 +7375,14 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 				current_file.put_string (c_in_rescue)
 				print_semicolon_newline
 			end
+			if
+				l_rescue /= Void and assertions_enabled or
+				current_type.base_class.preconditions_enabled or
+				supplier_preconditions_enabled or
+				current_type.base_class.postconditions_enabled
+			then
+				print_in_assertion_declaration
+			end
 				--
 				-- Instructions.
 				--
@@ -7471,6 +7486,9 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 						print_semicolon_newline
 					end
 					print_reset_supplier_preconditions
+					if assertions_enabled then
+						print_reset_in_assertion
+					end
 				end
 				print_indentation
 				current_file.put_string (c_ac)
@@ -8221,7 +8239,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 					--
 				if current_type.base_class.invariants_enabled and not current_feature.is_static then
 					print_indentation
-					current_file.put_string (c_uint32_t)
+					current_file.put_string (c_uint8_t)
 					current_file.put_character (' ')
 					current_file.put_string (c_in_qualified_call)
 					print_assign_to
@@ -8256,6 +8274,9 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 					current_file.put_new_line
 				end
 				print_supplier_preconditions_declaration
+				if current_type.base_class.postconditions_enabled then
+					print_in_assertion_declaration
+				end
 					-- Variable for 'Result' entity.
 				print_indentation
 				print_type_declaration (l_result_type, current_file)
@@ -8436,6 +8457,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 			current_file.put_new_line
 			indent
 			current_file := current_function_body_buffer
+			print_in_assertion_declaration
 			l_old_index_offset := index_offset
 			if attached current_feature.invariants as l_all_invariants then
 				nb := l_all_invariants.count
@@ -19786,7 +19808,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_once_procedure_inlin
 				--
 			if a_agent.is_inline_agent and current_type.base_class.invariants_enabled then
 				print_indentation
-				current_file.put_string (c_uint32_t)
+				current_file.put_string (c_uint8_t)
 				current_file.put_character (' ')
 				current_file.put_string (c_in_qualified_call)
 				print_assign_to
@@ -25306,7 +25328,6 @@ feature {NONE} -- SCOOP
 				end
 				i := i + 1
 			end
-			print_reset_assertions
 			print_indentation
 			current_file.put_string (c_continue)
 			print_semicolon_newline
@@ -40477,33 +40498,14 @@ feature {NONE} -- Assertion generation
 				end
 				if l_count > 0 and l_preconditions /= Void then
 					print_preconditions_comment
-					print_indentation
-					current_file.put_string (c_uint32_t)
-					current_file.put_character (' ')
-					current_file.put_string (c_old_in_assertion)
-					print_assign_to
-					current_file.put_string (c_ac)
-					current_file.put_string (c_arrow)
-					current_file.put_string (c_in_assertion)
-					print_semicolon_newline
 					if not l_all_preconditions_use_separate_formal_arguments then
+						print_before_assertions (supplier_preconditions_enabled and then not current_type.base_class.preconditions_enabled)
+					else
 						print_indentation
-						current_file.put_string (c_if)
-						current_file.put_character (' ')
-						current_file.put_character ('(')
-						current_file.put_character ('!')
-						current_file.put_string (c_old_in_assertion)
-						if supplier_preconditions_enabled and then not current_type.base_class.preconditions_enabled then
-							print_and_then
-							current_file.put_string (c_tprecond)
-						end
-						current_file.put_character (')')
-						current_file.put_character (' ')
+						current_file.put_character ('{')
+						current_file.put_new_line
+						indent
 					end
-					current_file.put_character ('{')
-					current_file.put_new_line
-					indent
-					print_before_assertions_2
 					from k := 1 until k > l_count loop
 						if k /= 1 then
 							index_offset := l_all_preconditions.item_2 (k)
@@ -40551,21 +40553,7 @@ feature {NONE} -- Assertion generation
 											current_file.put_new_line
 											indent
 										elseif l_all_preconditions_use_separate_formal_arguments then
-											print_indentation
-											current_file.put_string (c_if)
-											current_file.put_character (' ')
-											current_file.put_character ('(')
-											current_file.put_character ('!')
-											current_file.put_string (c_old_in_assertion)
-											if supplier_preconditions_enabled and then not current_type.base_class.preconditions_enabled then
-												print_and_then
-												current_file.put_string (c_tprecond)
-											end
-											current_file.put_character (')')
-											current_file.put_character (' ')
-											current_file.put_character ('{')
-											current_file.put_new_line
-											indent
+											print_before_assertions (supplier_preconditions_enabled and then not current_type.base_class.preconditions_enabled)
 										end
 										print_operand (l_expression)
 										fill_call_operands (1)
@@ -40617,11 +40605,13 @@ feature {NONE} -- Assertion generation
 										print_indentation
 										current_file.put_character ('}')
 										current_file.put_new_line
-										if l_all_preconditions_use_separate_formal_arguments or l_expression_use_separate_formal_arguments then
+										if l_expression_use_separate_formal_arguments then
 											dedent
 											print_indentation
 											current_file.put_character ('}')
 											current_file.put_new_line
+										elseif l_all_preconditions_use_separate_formal_arguments then
+											print_after_assertions
 										end
 										dedent
 										print_indentation
@@ -40657,7 +40647,14 @@ feature {NONE} -- Assertion generation
 						current_file.put_character (':')
 						current_file.put_new_line
 					end
-					print_after_assertions
+					if a_correctness_enabled then
+						print_after_assertions
+					else
+						dedent
+						print_indentation
+						current_file.put_character ('}')
+						current_file.put_new_line
+					end
 				end
 				index_offset := l_old_index_offset
 			end
@@ -41020,101 +41017,27 @@ feature {NONE} -- Assertion generation
 			end
 		end
 
-	print_before_assertions (a_recursive: BOOLEAN)
-			-- Print code before assertions to `current_file'.
-			-- If `a_recursive` is False, then check whether we are already checking assertions.
+	print_in_assertion_declaration
+			-- Print to `current_file` the declaration of variables
+			-- needed to deal with the assertion status.
 		do
 			print_indentation
-			if not a_recursive then
-				current_file.put_string (c_if)
-				current_file.put_character (' ')
-				current_file.put_character ('(')
-				current_file.put_character ('!')
-				current_file.put_character ('(')
-				current_file.put_string (c_ac)
-				current_file.put_string (c_arrow)
-				current_file.put_string (c_in_assertion)
-				current_file.put_character (')')
-				current_file.put_character (')')
-				current_file.put_character (' ')
-			end
-			current_file.put_character ('{')
-			current_file.put_new_line
-			indent
-			print_indentation
-			current_file.put_string (c_uint32_t)
+			current_file.put_string (c_volatile)
 			current_file.put_character (' ')
-			current_file.put_string (c_old_in_assertion)
+			current_file.put_string (c_uint8_t)
+			current_file.put_character (' ')
+			current_file.put_string (c_tassert)
 			print_assign_to
 			current_file.put_string (c_ac)
 			current_file.put_string (c_arrow)
 			current_file.put_string (c_in_assertion)
 			print_semicolon_newline
-			print_before_assertions_2
 		end
 
-	print_before_assertions_2
-			-- Print code before assertions to `current_file'.
+	print_set_in_assertion
+			-- Print to `current_file` the code to set the variables needed
+			-- to deal with the assertion status.
 		do
-			print_indentation
-			current_file.put_string (c_ge_rescue)
-			current_file.put_character (' ')
-			current_file.put_string (c_ra)
-			print_semicolon_newline
-			print_indentation
-			current_file.put_string (c_ra)
-			current_file.put_character ('.')
-			current_file.put_string (c_previous)
-			print_assign_to
-			current_file.put_string (c_ac)
-			current_file.put_string (c_arrow)
-			current_file.put_string (c_last_rescue)
-			print_semicolon_newline
-			print_indentation
-			current_file.put_string (c_ac)
-			current_file.put_string (c_arrow)
-			current_file.put_string (c_last_rescue)
-			print_assign_to
-			current_file.put_character ('&')
-			current_file.put_string (c_ra)
-			print_semicolon_newline
-			print_indentation
-			current_file.put_string (c_if)
-			current_file.put_character (' ')
-			current_file.put_character ('(')
-			current_file.put_string (c_ge_setjmp)
-			current_file.put_character ('(')
-			current_file.put_string (c_ra)
-			current_file.put_character ('.')
-			current_file.put_character ('j')
-			current_file.put_character ('b')
-			current_file.put_character (')')
-			print_not_equal_to
-			current_file.put_character ('0')
-			current_file.put_character (')')
-			current_file.put_character (' ')
-			current_file.put_character ('{')
-			current_file.put_new_line
-			indent
-			print_indentation
-			current_file.put_string (c_ac)
-			current_file.put_string (c_arrow)
-			current_file.put_string (c_last_rescue)
-			print_assign_to
-			current_file.put_character ('&')
-			current_file.put_string (c_ra)
-			print_semicolon_newline
-			print_reset_assertions
-			print_indentation
-			current_file.put_string (c_ge_jump_to_last_rescue)
-			current_file.put_character ('(')
-			current_file.put_string (c_ac)
-			current_file.put_character (')')
-			print_semicolon_newline
-			dedent
-			print_indentation
-			current_file.put_character ('}')
-			current_file.put_new_line
 			print_indentation
 			current_file.put_string (c_ac)
 			current_file.put_string (c_arrow)
@@ -41124,35 +41047,50 @@ feature {NONE} -- Assertion generation
 			print_semicolon_newline
 		end
 
-	print_after_assertions
-			-- Print code after assertions to `current_file'.
-		do
-			print_reset_assertions
-			dedent
-			print_indentation
-			current_file.put_character ('}')
-			current_file.put_new_line
-		end
-
-	print_reset_assertions
-			-- Print code to reset assertion status to `current_file'.
+	print_reset_in_assertion
+			-- Print to `current_file` the code to reset the variables needed
+			-- to deal with the assertion status.
 		do
 			print_indentation
 			current_file.put_string (c_ac)
 			current_file.put_string (c_arrow)
 			current_file.put_string (c_in_assertion)
 			print_assign_to
-			current_file.put_string (c_old_in_assertion)
+			current_file.put_string (c_tassert)
 			print_semicolon_newline
+		end
+
+	print_before_assertions (a_supplier_preconditions: BOOLEAN)
+			-- Print code before assertions to `current_file'.
+			-- `a_supplier_precondition` indicates that these assertions should be
+			-- checked only when 'supplier_precondition' assertions are monitored.
+		do
 			print_indentation
-			current_file.put_string (c_ac)
-			current_file.put_string (c_arrow)
-			current_file.put_string (c_last_rescue)
-			print_assign_to
-			current_file.put_string (c_ra)
-			current_file.put_character ('.')
-			current_file.put_string (c_previous)
-			print_semicolon_newline
+			current_file.put_string (c_if)
+			current_file.put_character (' ')
+			current_file.put_character ('(')
+			current_file.put_character ('!')
+			current_file.put_string (c_tassert)
+			if a_supplier_preconditions then
+				print_and_then
+				current_file.put_string (c_tprecond)
+			end
+			current_file.put_character (')')
+			current_file.put_character (' ')
+			current_file.put_character ('{')
+			current_file.put_new_line
+			indent
+			print_set_in_assertion
+		end
+
+	print_after_assertions
+			-- Print code after assertions to `current_file'.
+		do
+			print_reset_in_assertion
+			dedent
+			print_indentation
+			current_file.put_character ('}')
+			current_file.put_new_line
 		end
 
 	print_before_old_expression (a_old_expression: ET_OLD_EXPRESSION)
@@ -41185,11 +41123,7 @@ feature {NONE} -- Assertion generation
 				current_file.put_character (' ')
 				current_file.put_character ('(')
 				current_file.put_character ('!')
-				current_file.put_character ('(')
-				current_file.put_string (c_ac)
-				current_file.put_string (c_arrow)
-				current_file.put_string (c_in_assertion)
-				current_file.put_character (')')
+				current_file.put_string (c_tassert)
 				current_file.put_character (')')
 				current_file.put_character (' ')
 				current_file.put_character ('{')
@@ -41198,13 +41132,10 @@ feature {NONE} -- Assertion generation
 				print_indentation
 				current_file.put_string (c_ge_rescue)
 				current_file.put_character (' ')
-				current_file.put_character ('r')
-				current_file.put_character ('a')
-				current_file.put_character (';')
-				current_file.put_new_line
+				current_file.put_string (c_ra)
+				print_semicolon_newline
 				print_indentation
-				current_file.put_character ('r')
-				current_file.put_character ('a')
+				current_file.put_string (c_ra)
 				current_file.put_character ('.')
 				current_file.put_string (c_previous)
 				print_assign_to
@@ -41218,8 +41149,7 @@ feature {NONE} -- Assertion generation
 				current_file.put_string (c_last_rescue)
 				print_assign_to
 				current_file.put_character ('&')
-				current_file.put_character ('r')
-				current_file.put_character ('a')
+				current_file.put_string (c_ra)
 				print_semicolon_newline
 				print_indentation
 				current_file.put_string (c_if)
@@ -41227,8 +41157,7 @@ feature {NONE} -- Assertion generation
 				current_file.put_character ('(')
 				current_file.put_string (c_ge_setjmp)
 				current_file.put_character ('(')
-				current_file.put_character ('r')
-				current_file.put_character ('a')
+				current_file.put_string (c_ra)
 				current_file.put_character ('.')
 				current_file.put_character ('j')
 				current_file.put_character ('b')
@@ -41246,16 +41175,9 @@ feature {NONE} -- Assertion generation
 				current_file.put_string (c_last_rescue)
 				print_assign_to
 				current_file.put_character ('&')
-				current_file.put_character ('r')
-				current_file.put_character ('a')
+				current_file.put_string (c_ra)
 				print_semicolon_newline
-				print_indentation
-				current_file.put_string (c_ac)
-				current_file.put_string (c_arrow)
-				current_file.put_string (c_in_assertion)
-				print_assign_to
-				current_file.put_character ('0')
-				print_semicolon_newline
+				print_reset_in_assertion
 				print_indentation
 				print_temp_name (l_exception_temp, current_file)
 				print_assign_to
@@ -41269,8 +41191,7 @@ feature {NONE} -- Assertion generation
 				current_file.put_string (c_arrow)
 				current_file.put_string (c_last_rescue)
 				print_assign_to
-				current_file.put_character ('r')
-				current_file.put_character ('a')
+				current_file.put_string (c_ra)
 				current_file.put_character ('.')
 				current_file.put_string (c_previous)
 				print_semicolon_newline
@@ -41279,12 +41200,9 @@ feature {NONE} -- Assertion generation
 					current_file.put_string (c_ac)
 					current_file.put_string (c_arrow)
 					current_file.put_string (c_call)
-					current_file.put_character (' ')
-					current_file.put_character ('=')
-					current_file.put_character (' ')
+					print_assign_to
 					current_file.put_string (c_tc_address)
-					current_file.put_character (';')
-					current_file.put_new_line
+					print_semicolon_newline
 				end
 				dedent
 				print_indentation
@@ -41295,33 +41213,20 @@ feature {NONE} -- Assertion generation
 				current_file.put_character ('{')
 				current_file.put_new_line
 				indent
-				print_indentation
-				current_file.put_string (c_ac)
-				current_file.put_string (c_arrow)
-				current_file.put_string (c_in_assertion)
-				print_assign_to
-				current_file.put_character ('1')
-				print_semicolon_newline
+				print_set_in_assertion
 			end
 		end
 
 	print_after_old_expression
 			-- Print code after evaluating an old expression, to `current_file'.
 		do
-			print_indentation
-			current_file.put_string (c_ac)
-			current_file.put_string (c_arrow)
-			current_file.put_string (c_in_assertion)
-			print_assign_to
-			current_file.put_character ('0')
-			print_semicolon_newline
+			print_reset_in_assertion
 			print_indentation
 			current_file.put_string (c_ac)
 			current_file.put_string (c_arrow)
 			current_file.put_string (c_last_rescue)
 			print_assign_to
-			current_file.put_character ('r')
-			current_file.put_character ('a')
+			current_file.put_string (c_ra)
 			current_file.put_character ('.')
 			current_file.put_string (c_previous)
 			print_semicolon_newline
@@ -50311,7 +50216,6 @@ feature {NONE} -- Constants
 	c_not_not: STRING = ""
 	c_object: STRING = "object"
 	c_offsetof: STRING = "offsetof"
-	c_old_in_assertion: STRING = "old_in_assertion"
 	c_once_objects: STRING = "once_objects"
 	c_onces: STRING = "onces"
 	c_or_else: STRING = "||"
@@ -50343,6 +50247,7 @@ feature {NONE} -- Constants
 	c_struct: STRING = "struct"
 	c_switch: STRING = "switch"
 	c_synchronization: STRING = "synchronization"
+	c_tassert: STRING = "tassert"
 	c_tc: STRING = "tc"
 	c_tc_address: STRING = "&tc"
 	c_thread_onces: STRING = "thread_onces"
