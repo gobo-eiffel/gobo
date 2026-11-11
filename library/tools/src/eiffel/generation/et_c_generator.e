@@ -440,6 +440,9 @@ feature -- Compilation options
 
 	finalize_mode: BOOLEAN
 			-- Compilation with optimizations turned on?
+		do
+			Result := current_system.finalize_mode
+		end
 
 	split_mode: BOOLEAN
 			-- Should generated C code be split over several C files
@@ -465,14 +468,6 @@ feature -- Compilation options
 			-- Should the application be compiled with the Boehm GC?
 
 feature -- Compilation options setting
-
-	set_finalize_mode (b: BOOLEAN)
-			-- Set `finalize_mode' to `b'.
-		do
-			finalize_mode := b
-		ensure
-			finalize_mode_set: finalize_mode = b
-		end
 
 	set_split_mode (b: BOOLEAN)
 			-- Set `split_mode' to `b'.
@@ -2833,7 +2828,7 @@ feature {NONE} -- Feature generation
 				print_supplier_preconditions_declaration
 				if
 					current_type.base_class.preconditions_enabled or
-					supplier_preconditions_enabled or
+					class_supplier_preconditions_enabled (current_type.base_class) or
 					current_type.base_class.postconditions_enabled
 				then
 					print_in_assertion_declaration
@@ -2894,7 +2889,7 @@ feature {NONE} -- Feature generation
 					print_all_invariants (True)
 					l_print_body := True
 				end
-				l_preconditions_enabled := current_type.base_class.preconditions_enabled or supplier_preconditions_enabled
+				l_preconditions_enabled := current_type.base_class.preconditions_enabled or class_supplier_preconditions_enabled (current_type.base_class)
 				if l_preconditions_enabled or l_has_separate_formal_arguments then
 					print_all_preconditions (a_feature, l_preconditions_enabled)
 					l_print_body := True
@@ -7118,7 +7113,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 					not current_feature.has_separate_argument and then
 					not (current_type.base_class.invariants_enabled and not current_closure.is_static) and then
 					not current_type.base_class.preconditions_enabled and then
-					not supplier_preconditions_enabled and then
+					not class_supplier_preconditions_enabled (current_type.base_class) and then
 					not current_type.base_class.postconditions_enabled and then
 					(not attached a_feature.compound as l_compound or else l_compound.is_empty) and then
 					a_feature.rescue_clause = Void
@@ -7378,7 +7373,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 			if
 				l_rescue /= Void and assertions_enabled or
 				current_type.base_class.preconditions_enabled or
-				supplier_preconditions_enabled or
+				class_supplier_preconditions_enabled (current_type.base_class) or
 				current_type.base_class.postconditions_enabled
 			then
 				print_in_assertion_declaration
@@ -7411,7 +7406,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 				print_all_invariants (True)
 				l_print_body := True
 			end
-			l_preconditions_enabled := current_type.base_class.preconditions_enabled or supplier_preconditions_enabled
+			l_preconditions_enabled := current_type.base_class.preconditions_enabled or class_supplier_preconditions_enabled (current_type.base_class)
 			if l_preconditions_enabled or l_has_separate_formal_arguments then
 				print_all_preconditions (a_feature, l_preconditions_enabled)
 				l_print_body := True
@@ -8113,7 +8108,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 			if
 				a_feature.has_self_initializing_code or
 				(current_type.base_class.preconditions_enabled and then not current_feature.preconditions.is_empty) or
-				(supplier_preconditions_enabled and then not current_feature.preconditions.is_empty) or
+				(class_supplier_preconditions_enabled (current_type.base_class) and then not current_feature.preconditions.is_empty) or
 				(current_type.base_class.postconditions_enabled and then not current_feature.postconditions.is_empty) or
 				current_type.base_class.invariants_enabled
 			then
@@ -40407,6 +40402,17 @@ feature {NONE} -- Assertion generation
 			Result := current_system.supplier_preconditions_enabled
 		end
 
+	class_supplier_preconditions_enabled (a_class: ET_CLASS): BOOLEAN
+			-- Are supplier preconditions monitored in some classes of `current_system`,
+			-- and is `finalize_mode` false or else is `a_class` a basic class?
+			-- Note that in finalized mode, assertions of basic classes are not monitored.
+		require
+			a_class_not_void: a_class /= Void
+		do
+			Result := supplier_preconditions_enabled and
+				(finalize_mode implies not a_class.is_basic)
+		end
+
 	print_all_invariants (a_on_entry: BOOLEAN)
 			-- Print to `current_file' a call to procedure which checks all invariants
 			-- (even those inherited from ancestors) of `current_type'.
@@ -40499,7 +40505,7 @@ feature {NONE} -- Assertion generation
 				if l_count > 0 and l_preconditions /= Void then
 					print_preconditions_comment
 					if not l_all_preconditions_use_separate_formal_arguments then
-						print_before_assertions (supplier_preconditions_enabled and then not current_type.base_class.preconditions_enabled)
+						print_before_assertions (class_supplier_preconditions_enabled (current_type.base_class) and then not current_type.base_class.preconditions_enabled)
 					else
 						print_indentation
 						current_file.put_character ('{')
@@ -40553,7 +40559,7 @@ feature {NONE} -- Assertion generation
 											current_file.put_new_line
 											indent
 										elseif l_all_preconditions_use_separate_formal_arguments then
-											print_before_assertions (supplier_preconditions_enabled and then not current_type.base_class.preconditions_enabled)
+											print_before_assertions (class_supplier_preconditions_enabled (current_type.base_class) and then not current_type.base_class.preconditions_enabled)
 										end
 										print_operand (l_expression)
 										fill_call_operands (1)
@@ -41377,14 +41383,14 @@ feature {NONE} -- Inlining
 			a_target_type_not_void: a_target_type /= Void
 			call_operands_not_empty: not call_operands.is_empty
 		do
-			if exception_trace_mode then
+			if exception_trace_mode and (finalize_mode implies not a_target_type.base_class.is_basic) then
 					-- Exception trace mode makes the code too big to inline.
 				Result := False
 			elseif use_scoop and then a_feature.has_separate_argument then
 				Result := False
 			elseif a_feature.target_type.base_class.preconditions_enabled and then not a_feature.preconditions.is_empty then
 				Result := False
-			elseif supplier_preconditions_enabled and then not a_feature.preconditions.is_empty then
+			elseif class_supplier_preconditions_enabled (a_feature.target_type.base_class) and then not a_feature.preconditions.is_empty then
 				Result := False
 			elseif a_feature.target_type.base_class.postconditions_enabled and then not a_feature.postconditions.is_empty then
 				Result := False
@@ -41437,14 +41443,14 @@ feature {NONE} -- Inlining
 		local
 			l_result_type: ET_DYNAMIC_TYPE
 		do
-			if exception_trace_mode then
+			if exception_trace_mode and (finalize_mode implies not a_target_type.base_class.is_basic) then
 					-- Exception trace mode makes the code too big to inline.
 				Result := False
 			elseif use_scoop and then a_feature.has_separate_argument then
 				Result := False
 			elseif a_feature.target_type.base_class.preconditions_enabled and then not a_feature.preconditions.is_empty then
 				Result := False
-			elseif supplier_preconditions_enabled and then not a_feature.preconditions.is_empty then
+			elseif class_supplier_preconditions_enabled (a_feature.target_type.base_class) and then not a_feature.preconditions.is_empty then
 				Result := False
 			elseif a_feature.target_type.base_class.postconditions_enabled and then not a_feature.postconditions.is_empty then
 				Result := False

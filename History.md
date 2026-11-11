@@ -25,6 +25,8 @@
 * Do not propagate anymore assertion options (nor any other options)
   from ECF targets to the libraries they use (interoperability with
   ISE Eiffel).
+* In finalize mode, inline routines from basic types and do not
+  check their assertions (interoperability with ISE Eiffel).
 
 ### gelsp
 

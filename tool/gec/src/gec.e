@@ -363,7 +363,6 @@ feature {NONE} -- Processing
 				l_generator.set_use_boehm_gc (use_boehm_gc)
 			end
 			l_generator.set_scoop_exceptions_stop_when_dirty (scoop_exceptions_stop_when_dirty)
-			l_generator.set_finalize_mode (is_finalize)
 			l_generator.set_split_mode (not no_split)
 			if split_size > 0 then
 				l_generator.set_split_threshold (split_size)
