@@ -5,7 +5,7 @@
 		"Adapted .NET assemblies of classes read from ECF file"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2011-2024, Eric Bezault and others"
+	copyright: "Copyright (c) 2011-2026, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_ECF_ADAPTED_DOTNET_ASSEMBLY
@@ -43,7 +43,6 @@ feature {NONE} -- Initialization
 			universe := a_universe
 			target := a_target
 			create options.make
-			options.set_secondary_options (a_target.options)
 			make_adapted_dotnet_assembly (a_name.name, tokens.unknown_dotnet_assembly)
 		ensure
 			name_id_set: name_id = a_name

@@ -11,10 +11,25 @@
   level in finalize mode.
 * Fixed implementation of unique attribute synonyms which
   should have their own values.
-* Implemented routines `collection_on`, `collection_off`
-  and `collecting` in class `MEMORY`.
-* Use C flag `-O2` by default when using `gcc` as backend
-  C compiler.
+* Implemented routines `collection_on`, `collection_off` and
+  `collecting` in class `MEMORY`.
+* Use C flag `-O2` by default when using `gcc` as backend C compiler.
+* Fixed bug where `check` assertions were not checked even when
+  turned on in the ECF file.
+* Fixed bug where loop `variant` assertions were not correctly
+  checked (decreasing after each iteration) even when turned on
+  in the ECF file.
+* Implemented support for `supplier_precondition` assertion
+  monitoring.
+* Do not call `setjmp/longjmp` anymore when checking assertions.
+* Do not propagate anymore assertion options (nor any other options)
+  from ECF targets to the libraries they use (interoperability with
+  ISE Eiffel).
+* In finalize mode, inline routines from basic types and do not
+  check their assertions (interoperability with ISE Eiffel).
+* Raise a postcondition violation when a postcondition is the
+  'False' entity, even when postcondition assertions are not
+  monitored (interoperability with ISE Eiffel).
 
 ### gelsp
 

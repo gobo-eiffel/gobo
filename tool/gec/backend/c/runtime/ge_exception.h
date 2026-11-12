@@ -139,10 +139,11 @@ struct GE_rescue_struct {
 typedef volatile struct GE_context_struct GE_context;
 struct GE_context_struct {
 	GE_call* volatile call; /* Call stack */
-	uint32_t volatile in_assertion; /* Is an assertion evaluated? */
+	uint8_t volatile in_assertion; /* Is an assertion evaluated? */
 	GE_rescue* volatile last_rescue; /* Context of last feature entered containing a rescue clause */
 	uint32_t volatile in_rescue; /* Number of rescue clauses currently being executed */
-	uint32_t volatile in_qualified_call; /* Is the current call a qualified call? 1 means that it is a regular call, 2 means that it is a creation call. */
+	uint8_t volatile in_qualified_call; /* Is the current call a qualified call? 1 means that it is a regular call, 2 means that it is a creation call. */
+	uint8_t volatile preconditions_enabled; /* Should preconditions be checked? (`supplier_precondition` assertion mode)*/
 	EIF_REFERENCE volatile exception_manager; /* Exception manager */
 	char volatile raising_exception; /* Is an exception currently being raised? */
 	char volatile exception_trace_enabled; /* Should exception trace be displayed? */

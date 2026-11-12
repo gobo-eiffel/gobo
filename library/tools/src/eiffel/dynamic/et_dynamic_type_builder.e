@@ -637,7 +637,7 @@ feature {NONE} -- Generation
 				else
 					check_feature_validity (l_static_feature, l_current_type)
 				end
-				if l_current_type.base_class.preconditions_enabled or a_feature.has_separate_argument then
+				if l_current_type.base_class.preconditions_enabled or current_system.supplier_preconditions_enabled or a_feature.has_separate_argument then
 					check_all_preconditions_validity (l_static_feature, l_current_type)
 				end
 				if l_current_type.base_class.postconditions_enabled then

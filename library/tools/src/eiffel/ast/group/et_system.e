@@ -324,6 +324,9 @@ feature -- Setting
 
 feature -- Compilation options
 
+	finalize_mode: BOOLEAN
+			-- Compilation with optimizations turned on?
+
 	console_application_mode: BOOLEAN
 			-- Should the generated application be a console application
 			-- (or a Windows GUI application)?
@@ -407,6 +410,14 @@ feature -- Compilation options
 			-- External linker flags
 
 feature -- Compilation options setting
+
+	set_finalize_mode (b: BOOLEAN)
+			-- Set `finalize_mode' to `b'.
+		do
+			finalize_mode := b
+		ensure
+			finalize_mode_set: finalize_mode = b
+		end
 
 	set_console_application_mode (b: BOOLEAN)
 			-- Set `console_application_mode' to `b'.
@@ -614,6 +625,30 @@ feature -- Compilation options setting
 			external_linker_flags := a_flags
 		ensure
 			external_linker_flags_set: external_linker_flags = a_flags
+		end
+
+feature -- Assertions
+
+	assertions_enabled: BOOLEAN
+			-- Are some assertions monitored in some classes of current system?
+
+	supplier_preconditions_enabled: BOOLEAN
+			-- Are supplier preconditions monitored in some classes of current system?
+
+	set_assertions_enabled (b: BOOLEAN)
+			-- Set `assertions_enabled' to `b'.
+		do
+			assertions_enabled := b
+		ensure
+			assertions_enabled_set: assertions_enabled = b
+		end
+
+	set_supplier_preconditions_enabled (b: BOOLEAN)
+			-- Set `supplier_preconditions_enabled' to `b'.
+		do
+			supplier_preconditions_enabled := b
+		ensure
+			supplier_preconditions_enabled_set: supplier_preconditions_enabled = b
 		end
 
 feature -- Parsing

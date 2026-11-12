@@ -2308,6 +2308,35 @@ feature -- Iteration
 			end
 		end
 
+	classes_there_exists (a_test: FUNCTION [ET_CLASS, BOOLEAN]): BOOLEAN
+			-- Is `a_test' true for at least one of the classes declared locally in current universe.
+			-- Do not take into account overridden classes.
+		require
+			a_test_not_void: a_test /= Void
+		local
+			l_cursor: DS_HASH_TABLE_CURSOR [ET_MASTER_CLASS, ET_CLASS_NAME]
+			l_master_class: ET_MASTER_CLASS
+			l_class: ET_CLASS
+		do
+			l_cursor := master_classes.new_cursor
+			from l_cursor.start until l_cursor.after loop
+				l_master_class := l_cursor.item
+				if not l_master_class.is_mapped then
+					l_class := l_master_class.actual_class
+					if l_class.universe = Current then
+						if a_test.item ([l_class]) then
+							Result := True
+						end
+					end
+				end
+				if Result then
+					l_cursor.go_after
+				else
+					l_cursor.forth
+				end
+			end
+		end
+
 	classes_do_recursive (an_action: PROCEDURE [ET_CLASS])
 			-- Apply `an_action' on all classes declared locally in current universe
 			-- as well as on the classes that are declared in the universes it depends
@@ -2380,6 +2409,17 @@ feature -- Iteration
 			else
 				universes_do_recursive_until (agent {ET_UNIVERSE}.classes_do_if_until (an_action, a_test, a_stop_request), a_stop_request)
 			end
+		end
+
+	classes_there_exists_recursive (a_test: FUNCTION [ET_CLASS, BOOLEAN]): BOOLEAN
+			-- Is `a_test' true for at least one of the classes declared
+			-- locally in current universe as well as on the classes that
+			-- are declared in the universes it depends on recursively.
+			-- Do not take into account overridden classes.
+		require
+			a_test_not_void: a_test /= Void
+		do
+			Result := universes_there_exists_recursive (agent {ET_UNIVERSE}.classes_there_exists (a_test))
 		end
 
 	master_classes_do_all (an_action: PROCEDURE [ET_MASTER_CLASS])
@@ -2612,6 +2652,28 @@ feature -- Iteration
 						end
 						l_visited.forth
 					end
+				end
+			end
+		end
+
+	universes_there_exists_recursive (a_test: FUNCTION [ET_UNIVERSE, BOOLEAN]): BOOLEAN
+			-- Is `a_test' true for current universe or recursively for at least 
+			-- one the universes it depends on.
+		require
+			a_test_not_void: a_test /= Void
+		local
+			l_visited: DS_HASH_SET [ET_UNIVERSE]
+			l_universe: ET_UNIVERSE
+		do
+			create l_visited.make (initial_universes_capacity)
+			add_universe_recursive (l_visited)
+			from l_visited.start until l_visited.after loop
+				l_universe := l_visited.item_for_iteration
+				if a_test.item ([l_universe]) then
+					Result := True
+					l_visited.go_after
+				else
+					l_visited.forth
 				end
 			end
 		end

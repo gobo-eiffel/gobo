@@ -874,6 +874,7 @@ feature {NONE} -- Features
 					l_do_procedure.rescue_clause /= Void or else
 					base_class.invariants_enabled or else
 					base_class.preconditions_enabled or else
+					base_class.current_system.supplier_preconditions_enabled or else
 					base_class.postconditions_enabled
 			end
 		end

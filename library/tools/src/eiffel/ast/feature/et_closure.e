@@ -54,6 +54,13 @@ feature -- Status report
 			-- Result := False
 		end
 
+	has_false_postcondition_recursive: BOOLEAN
+			-- Is one of the postconditions the 'False' entity (possibly parenthesized)?
+			-- Take into account inherited postconditions recursively.
+		do
+			Result := attached postconditions as l_postconditions and then l_postconditions.has_false
+		end
+
 feature -- Access
 
 	type: detachable ET_TYPE

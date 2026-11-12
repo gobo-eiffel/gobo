@@ -37,6 +37,7 @@ inherit
 			as_feature,
 			first_note,
 			is_static,
+			has_false_postcondition_recursive,
 			hash_code
 		end
 
@@ -504,6 +505,37 @@ feature -- Status report
 					loop
 						l_other_precursor := l_other_precursors.item (i)
 						if l_other_precursor.has_class_postcondition_recursive then
+							Result := True
+								-- Jump out of the loop
+							i := nb
+						end
+						i := i + 1
+					end
+				end
+			end
+		end
+
+	has_false_postcondition_recursive: BOOLEAN
+			-- Is one of the postconditions the 'False' entity (possibly parenthesized)?
+			-- Take into account inherited postconditions recursively.
+		local
+			i, nb: INTEGER
+			l_other_precursor: ET_FEATURE
+		do
+			if attached postconditions as l_postconditions and then l_postconditions.has_false then
+				Result := True
+			elseif attached first_precursor as l_first_precursor then
+				if l_first_precursor.has_false_postcondition_recursive then
+					Result := True
+				elseif attached other_precursors as l_other_precursors then
+					from
+						i := 1
+						nb := l_other_precursors.count
+					until
+						i > nb
+					loop
+						l_other_precursor := l_other_precursors.item (i)
+						if l_other_precursor.has_false_postcondition_recursive then
 							Result := True
 								-- Jump out of the loop
 							i := nb

@@ -49,6 +49,7 @@ inherit
 			arguments,
 			first_note,
 			is_static,
+			has_false_postcondition_recursive,
 			implementation_feature,
 			hash_code
 		end

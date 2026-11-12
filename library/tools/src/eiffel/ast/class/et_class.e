@@ -1272,7 +1272,8 @@ feature -- Assertions
 			-- Are preconditions monitored?
 
 	supplier_preconditions_enabled: BOOLEAN
-			-- Are supplier preconditions (preconditions in qualified calls) monitored?
+			-- Are supplier preconditions (preconditions of all routines called from current class,
+			-- even routines written in classes where `preconditions_enabled` is False) monitored?
 
 	postconditions_enabled: BOOLEAN
 			-- Are postconditions monitored?
@@ -1285,6 +1286,24 @@ feature -- Assertions
 
 	loop_assertions_enabled: BOOLEAN
 			-- Are loop assertions monitored?
+
+	assertions_enabled: BOOLEAN
+			-- Are some assertions monitored?
+		do
+			Result := preconditions_enabled or
+				supplier_preconditions_enabled or
+				postconditions_enabled or
+				invariants_enabled or
+				check_assertions_enabled or
+				loop_assertions_enabled
+		ensure
+			definition: Result = (preconditions_enabled or
+				supplier_preconditions_enabled or
+				postconditions_enabled or
+				invariants_enabled or
+				check_assertions_enabled or
+				loop_assertions_enabled)
+		end
 
 	set_preconditions_enabled (b: BOOLEAN)
 			-- Set `preconditions_enabled' to `b'.
