@@ -3199,6 +3199,12 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 				if current_type.base_class.postconditions_enabled then
 					print_all_postconditions (a_feature)
 					l_print_footer := True
+				elseif a_feature.has_false_postcondition_recursive then
+						-- ISE Eiffel (as of 26.09.9.9100) raises a postcondition violation when
+						-- a postcondition is the 'False' entity, even when postcondition
+						-- assertions are not monitored.
+					print_false_postcondition
+					l_print_footer := True
 				end
 				if l_print_footer then
 					print_footer_comment
@@ -7573,6 +7579,12 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 			if current_type.base_class.postconditions_enabled then
 				print_all_postconditions (a_feature)
 				l_print_footer := True
+			elseif a_feature.has_false_postcondition_recursive then
+					-- ISE Eiffel (as of 26.09.9.9100) raises a postcondition violation when
+					-- a postcondition is the 'False' entity, even when postcondition
+					-- assertions are not monitored.
+				print_false_postcondition
+				l_print_footer := True
 			end
 			if l_print_footer then
 				print_footer_comment
@@ -8338,6 +8350,12 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 				end
 				if current_type.base_class.postconditions_enabled then
 					print_all_postconditions (a_feature)
+					l_print_footer := True
+				elseif a_feature.has_false_postcondition_recursive then
+						-- ISE Eiffel (as of 26.09.9.9100) raises a postcondition violation when
+						-- a postcondition is the 'False' entity, even when postcondition
+						-- assertions are not monitored.
+					print_false_postcondition
 					l_print_footer := True
 				end
 				if l_print_footer then
@@ -40665,6 +40683,20 @@ feature {NONE} -- Assertion generation
 				index_offset := l_old_index_offset
 			end
 			l_separate_formal_arguments.wipe_out
+		end
+
+	print_false_postcondition
+			-- Print a False postcondition to `current_file`.
+		do
+			print_postconditions_comment
+			print_indentation
+			current_file.put_string (c_ge_raise_with_message)
+			current_file.put_character ('(')
+			current_file.put_string (c_ge_ex_post)
+			print_comma
+			print_escaped_string (tokens.false_keyword.text)
+			current_file.put_character (')')
+			print_semicolon_newline
 		end
 
 	print_all_postconditions (a_feature: ET_CLOSURE)

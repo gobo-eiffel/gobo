@@ -27,6 +27,9 @@
   ISE Eiffel).
 * In finalize mode, inline routines from basic types and do not
   check their assertions (interoperability with ISE Eiffel).
+* Raise a postcondition violation when a postcondition is the
+  'False' entity, even when postcondition assertions are not
+  monitored (interoperability with ISE Eiffel).
 
 ### gelsp
 
