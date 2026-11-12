@@ -60,6 +60,12 @@
   are part of two *Conversion_query*s with the same feature name `fn`.
   There is no ambiguity in that case.
 
+### Miscellaneous
+
+* Nightly and release builds are compiled on older versions of operating
+  systems (the oldest available on Github build runners) so that they can
+  run on old computers.
+
 ## Version 26.10.18 - 18 October 2026
 
 ### gec
