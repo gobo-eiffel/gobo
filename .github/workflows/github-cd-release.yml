@@ -23,7 +23,7 @@ jobs:
 
   linux_x86_64_build:
     if: ${{ github.repository == 'gobo-eiffel/gobo' }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v6
       - name: build
@@ -37,7 +37,7 @@ jobs:
 
   linux_arm64_build:
     if: ${{ github.repository == 'gobo-eiffel/gobo' }}
-    runs-on: ubuntu-24.04-arm
+    runs-on: ubuntu-22.04-arm
     steps:
       - uses: actions/checkout@v6
       - name: build
@@ -51,7 +51,7 @@ jobs:
 
   macos_x86_64_build:
     if: ${{ github.repository == 'gobo-eiffel/gobo' }}
-    runs-on: macos-26-intel
+    runs-on: macos-15-intel
     steps:
       - uses: actions/checkout@v6
       - name: build
@@ -65,7 +65,7 @@ jobs:
 
   macos_arm64_build:
     if: ${{ github.repository == 'gobo-eiffel/gobo' }}
-    runs-on: macos-latest
+    runs-on: macos-15
     steps:
       - uses: actions/checkout@v6
       - name: build
@@ -79,7 +79,7 @@ jobs:
 
   windows_x86_64_build:
     if: ${{ github.repository == 'gobo-eiffel/gobo' }}
-    runs-on: windows-latest
+    runs-on: windows-2022
     steps:
       - uses: actions/checkout@v6
       - name: build
@@ -206,7 +206,7 @@ jobs:
         shell: pwsh
 
   windows_x86_64_test:
-    runs-on: windows-2022
+    runs-on: windows-latest
     needs: windows_x86_64_build
     strategy:
       fail-fast: false
