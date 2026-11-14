@@ -384,7 +384,7 @@ static void GE_print_exception_trace(GE_context* a_context, long a_code, const c
 		l_class_name = l_root_class;
 		l_feature_name = l_root_feature;
 	}
-	if (a_tag) {
+	if (a_tag && strlen(a_tag) > 0) {
 		sprintf(l_tag_buf, "%.254s:", a_tag);
 		l_tag = l_tag_buf;
 	} else {
