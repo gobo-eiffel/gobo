@@ -40694,7 +40694,8 @@ feature {NONE} -- Assertion generation
 			current_file.put_character ('(')
 			current_file.put_string (c_ge_ex_post)
 			print_comma
-			print_escaped_string (tokens.false_keyword.text)
+			current_file.put_character ('%"')
+			current_file.put_character ('%"')
 			current_file.put_character (')')
 			print_semicolon_newline
 		end
@@ -41426,6 +41427,8 @@ feature {NONE} -- Inlining
 				Result := False
 			elseif a_feature.target_type.base_class.postconditions_enabled and then not a_feature.postconditions.is_empty then
 				Result := False
+			elseif a_feature.static_feature.has_false_postcondition_recursive then
+				Result := False
 			elseif
 				a_feature.target_type.base_class.invariants_enabled and then
 				attached a_feature.target_type.invariants as l_invariants and then
@@ -41485,6 +41488,8 @@ feature {NONE} -- Inlining
 			elseif class_supplier_preconditions_enabled (a_feature.target_type.base_class) and then not a_feature.preconditions.is_empty then
 				Result := False
 			elseif a_feature.target_type.base_class.postconditions_enabled and then not a_feature.postconditions.is_empty then
+				Result := False
+			elseif a_feature.static_feature.has_false_postcondition_recursive then
 				Result := False
 			elseif
 				a_feature.target_type.base_class.invariants_enabled and then
